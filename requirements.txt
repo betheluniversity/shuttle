@@ -1,2 +1,4 @@
-Flasksentry_sdk
+Flask
+Flask-Classy
+sentry_sdk
 blinker

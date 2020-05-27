@@ -5,7 +5,6 @@ import sentry_sdk
 
 app = Flask(__name__)
 app.config.from_object('config')
-app.url_map.strict_slashes = False
 
 if app.config['ENVIRON'] == 'prod' and app.config['SENTRY_URL']:
     from sentry_sdk.integrations.flask import FlaskIntegration
