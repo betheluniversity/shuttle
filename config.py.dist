@@ -1,3 +1,5 @@
-ENVIRON = ""
+ENVIRON = ''
 
-SENTRY_URL = ""
+SENTRY_URL = ''
+
+LOGOUT_URL = ''
