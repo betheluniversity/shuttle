@@ -4,6 +4,7 @@ from flask_classy import FlaskView, route
 
 from shuttle import app
 
+
 class View(FlaskView):
     def index(self):
         return render_template('index.html')

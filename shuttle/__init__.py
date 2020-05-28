@@ -1,4 +1,8 @@
-from flask import Flask, render_template
+import logging
+
+from flask import Flask, request
+from flask import session as flask_session
+from datetime import datetime
 
 import sentry_sdk
 
@@ -13,6 +17,7 @@ if app.config['ENVIRON'] == 'prod' and app.config['SENTRY_URL']:
 
 # Declaring and registering the views
 from shuttle.views import View
+from shuttle.shuttle_controller import ShuttleController as sc
 
 View.register(app)
 
