@@ -9,6 +9,7 @@ app.config.from_object('config')
 if app.config['ENVIRON'] == 'prod' and app.config['SENTRY_URL']:
     from sentry_sdk.integrations.flask import FlaskIntegration
     sentry_sdk.init(dsn=app.config['SENTRY_URL'], integrations=[FlaskIntegration()])
+    from shuttle import error
 
 # Declaring and registering the views
 from shuttle.views import View
