@@ -1,5 +1,7 @@
 ENVIRON = ''
 
+TEST_USERNAME = ''
+
 DB_CONSTR = ''
 
 SECRET_KEY = ''
