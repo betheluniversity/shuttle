@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark background-blue">
     <a class="navbar-brand" href="{{ url_for('View:index') }}">
-        <img height="32" src="https://confluence.bethel.edu/download/attachments/327682/global.logo?version=4&amp;modificationDate=1462424762000&amp;api=v2">
+        <img height="48" src="https://confluence.bethel.edu/download/attachments/327682/global.logo?version=4&amp;modificationDate=1462424762000&amp;api=v2">
         <span class="ml-2  h6 lab-title">Shuttle</span>
     </a>
 
@@ -11,20 +11,9 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="form-inline nav-item dropdown">
-            <a class="nav-link dropdown-toggle {{ 'nav-bar-active' if 'AppointmentsView' in request.url_rule.endpoint }}" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">Appointments</a>
+            <a class="nav-link dropdown-toggle {{ 'nav-bar-active' if 'View' in request.url_rule.endpoint }}" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">Test</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                {% if 'Student' in session['USER-ROLES'] or 'Administrator' in session['USER-ROLES'] %}
-                    <a class="dropdown-item" href="{{ url_for('AppointmentsView:schedule_appointment_landing') }}">Schedule An Appointment</a>
-                    <a class="dropdown-item" href="{{ url_for('AppointmentsView:student_view_appointments') }}">View Your Appointments</a>
-                {% endif %}
-                {% if 'Tutor' in session['USER-ROLES'] or 'Administrator' in session['USER-ROLES'] %}
-                    <a class="dropdown-item" href="{{ url_for('AppointmentsView:appointments_and_walk_ins') }}">Begin a Session</a>
-                {% endif %}
-                {% if 'Observer' in session['USER-ROLES'] or 'Administrator' in session['USER-ROLES'] %}
-                    <a class="dropdown-item" href="{{ url_for('AppointmentsView:view_appointments') }}">View All Appointments</a>
-                    <a class="dropdown-item" href="{{ url_for('AppointmentsView:search_appointments') }}">Search Appointments</a>
-                {% endif %}
             </div>
         </div>
 
