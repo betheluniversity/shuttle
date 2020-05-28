@@ -1,5 +1,9 @@
 ENVIRON = ''
 
+DB_CONSTR = ''
+
+SECRET_KEY = ''
+
 SENTRY_URL = ''
 
 LOGOUT_URL = ''
