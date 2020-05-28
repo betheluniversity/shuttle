@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+
+{% block html_attribs %}
+    <html lang="en">
+{% endblock %}
+
+{% block html %}
+    <head>
+        {% block head %}
             <link rel="apple-touch-icon" href="{{ url_for('static', filename='favicons/apple-icon-57x57.png') }}">
             <link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename='favicons/apple-icon-57x57.png') }}">
             <link rel="apple-touch-icon" sizes="60x60" href="{{ url_for('static', filename='favicons/apple-icon-60x60.png') }}">
@@ -16,6 +25,73 @@
             <meta name="msapplication-TileColor" content="#ffffff">
             <meta name="msapplication-TileImage" content="{{ url_for('static', filename='favicons/ms-icon-144x144.png') }}">
             <meta name="theme-color" content="#ffffff">
-            <meta name="apple-mobile-web-app-title" content="Writing Center">
+            <meta name="apple-mobile-web-app-title" content="Shuttle">
             <link rel="shortcut icon" sizes="16x16" href="{{ url_for('static', filename='favicons/favicon-16x16.png') }}">
             <link rel="apple-touch-icon-precomposed" href="{{ url_for('static', filename='favicons/apple-icon-precomposed.png') }}">
+
+
+
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+            <title>Shuttle | {% block page_title %}Welcome{% endblock %}</title>
+            <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
+            <meta name="viewport" content="width=device-width"/>
+
+            <!-- Latest compiled and minified CSS -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+            <!-- Shuttle CSS -->
+            <link href="{{ url_for('static', filename='assets/css/shuttle.css') }}" rel="stylesheet"/>
+        {% endblock %}
+    </head>
+
+    <body>
+        {% block scripts %}
+            <!-- jQuery library -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+            <!-- Latest compiled boostrap JavaScript -->
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
+
+            <!-- Font Awesome -->
+            <script src="https://kit.fontawesome.com/ef15f9ef70.js" crossorigin="anonymous"></script>
+
+            {% block styles %}
+                <!-- FontAwesome CSS -->
+                <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+            {% endblock %}
+
+        {% endblock %}
+
+        {% block nav %}{% include 'nav.html' %}{% endblock %}
+
+         <div class="nav margins">{% block subnav %}{% endblock %}</div>
+
+        {# SHOWS ALERTS #}
+        {% if alert %}
+            {% for a in alert %}
+                <div>
+                    <div class="alert alert-{{ a.type }} alert-dismissible fade show" role="alert">
+                        {{ a.message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+         <div class="shuttle-margins">{% block body_content %}{% endblock %}</div>
+
+        <div class="footer">
+            <div class="card-body">
+                {% block footer %}
+                    <p class="card-text">&copy; 2013-{{ now.strftime('%Y') }} Bethel University</p>
+                {% endblock %}
+            </div>
+        </div>
+    </body>
+{% endblock %}
+
+</html>
