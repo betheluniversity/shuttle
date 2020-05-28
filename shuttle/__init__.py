@@ -10,6 +10,8 @@ import sentry_sdk
 app = Flask(__name__)
 app.config.from_object('config')
 
+from shuttle.db import db_functions as db
+
 if app.config['ENVIRON'] == 'prod' and app.config['SENTRY_URL']:
     from sentry_sdk.integrations.flask import FlaskIntegration
     sentry_sdk.init(dsn=app.config['SENTRY_URL'], integrations=[FlaskIntegration()])
@@ -44,5 +46,12 @@ def before_request():
         if 'ALERT' not in flask_session.keys():
             flask_session['ALERT'] = []
     else:
+        if 'USERNAME' not in flask_session.keys():
+            if app.config['ENVIRON'] == 'prod':
+                flask_session['USERNAME'] = request.environ.get('REMOTE_USER')
+            else:
+                flask_session['USERNAME'] = app.config['TEST_USERNAME']
+        if 'NAME' not in flask_session.keys():
+            flask_session['NAME'] = db.portal_common_profile(flask_session['USERNAME'])[0]['pref_first_last_name']
         if 'ALERT' not in flask_session.keys():
             flask_session['ALERT'] = []
