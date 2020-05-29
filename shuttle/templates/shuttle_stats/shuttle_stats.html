@@ -1,0 +1,34 @@
+{% extends 'shuttle_base.html' %}
+
+{% block body_content %}
+    <div class="stat-page">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Shuttle Stats</h4>
+                </div>
+                <div class="content">
+                    <div class="icon-big icon-warning text-center">
+                        <a href="{{ url_for('View:index') }}">
+                            <i class="fa fa-arrows-alt fa-4x" aria-hidden="true" style='width:100%'></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Shuttle Schedule</h4>
+                </div>
+                <div class="content">
+                    <div class="icon-big icon-warning text-center">
+                        <a href="{{ url_for('View:index') }}">
+                            <h1>test</h1>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
