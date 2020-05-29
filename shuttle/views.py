@@ -11,7 +11,7 @@ class View(FlaskView):
 
     @route('/shuttle-stats')
     def stats(self):
-        return render_template('shuttle_stats/shuttle_stats.html')
+        return render_template('shuttle_stats.html')
 
     @route('/logout', methods=['GET'])
     def logout(self):
