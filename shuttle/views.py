@@ -9,10 +9,6 @@ class View(FlaskView):
     def index(self):
         return render_template('index.html')
 
-    @route('/shuttle-stats')
-    def stats(self):
-        return render_template('shuttle_stats.html')
-
     @route('/logout', methods=['GET'])
     def logout(self):
         flask_session.clear()
