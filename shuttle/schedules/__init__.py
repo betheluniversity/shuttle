@@ -10,3 +10,7 @@ class SchedulesView(FlaskView):
     @route('/request-shuttle')
     def request(self):
         return render_template('/schedules/request_shuttle.html')
+
+    @route('/shuttle-schedules')
+    def schedule(self):
+        return render_template('schedules/shuttle_schedules.html')
