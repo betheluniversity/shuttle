@@ -9,7 +9,7 @@ class SchedulesView(FlaskView):
 
     @route('/request-shuttle')
     def request(self):
-        return render_template('request_shuttle.html')
+        return render_template('/schedules/request_shuttle.html')
 
     @route('/shuttle-schedules')
     def schedule(self):
