@@ -19,8 +19,10 @@ if app.config['ENVIRON'] == 'prod' and app.config['SENTRY_URL']:
 
 # Declaring and registering the views
 from shuttle.views import View
+from shuttle.schedules import SchedulesView
 from shuttle.shuttle_controller import ShuttleController as sc
 
+SchedulesView.register(app)
 View.register(app)
 
 
