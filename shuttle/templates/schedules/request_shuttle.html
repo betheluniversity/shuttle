@@ -1,0 +1,40 @@
+{% extends 'shuttle_base.html' %}
+<!-- TODO: Restrict roles to Bethel people -->
+<!-- TODO: Have actual locations and times for Bethel shuttle. Also actual waitlist numbers -->
+{% block body_content %}
+
+    <div class="wrapper">
+        <h4>Select a location and time below to request the shuttle:</h4>
+    </div>
+
+    <div class="wrapper">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Location
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">*Insert location here*</a>
+                <a class="dropdown-item" href="#">*Insert more locations*</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Time
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+               <a class="dropdown-item" href="#">*Insert time here*</a>
+                <a class="dropdown-item" href="#">*Insert more times here*</a>
+            </div>
+        </div>
+
+        <div class="submit">
+            <input class="btn btn-warning btn-sm" type="submit" value="Request Shuttle">
+        </div>
+    </div>
+
+    <div class="wrapper">
+       <h4>Students awaiting shuttle: <span class="badge badge-light">*Insert number here*</span></h4>
+    </div>
+
+{% endblock %}
