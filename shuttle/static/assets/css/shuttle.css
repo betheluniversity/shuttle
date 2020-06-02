@@ -63,3 +63,7 @@ nav.navbar {
     margin: 20px auto;
     max-width: 95%;
 }
+
+.txt-underline:hover {
+    text-decoration: underline;
+}
