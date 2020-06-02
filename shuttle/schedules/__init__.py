@@ -14,3 +14,7 @@ class SchedulesView(FlaskView):
     @route('/shuttle-schedules')
     def schedule(self):
         return render_template('schedules/shuttle_schedules.html')
+
+    @route('/driver-check-in')
+    def check_in(self):
+        return render_template('schedules/shuttle_driver_check_in.html')

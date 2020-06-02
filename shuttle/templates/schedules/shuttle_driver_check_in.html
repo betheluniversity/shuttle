@@ -1,0 +1,38 @@
+{% extends 'shuttle_base.html' %}
+
+{% block body_content %}
+    <div class="center-page">
+        <h4>Leaving from:</h4>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">*Insert location here*</a>
+                <a class="dropdown-item" href="#">*Insert more locations*</a>
+            </div>
+        </div>
+        <input class="btn btn-warning btn-sm" type="submit" value="Submit">
+    </div>
+    <div class="center-page">
+        <h4>Arriving at:</h4>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">*Insert location here*</a>
+                <a class="dropdown-item" href="#">*Insert more locations*</a>
+            </div>
+        </div>
+        <input class="btn btn-warning btn-sm" type="submit" value="Submit">
+    </div>
+    <hr>
+    <div class="center-page">
+        <div class="submit">
+            <input class="btn btn-primary btn-sm" type="submit" value="Check out for break">
+        </div>
+        <div class="submit">
+            <input class="btn btn-primary btn-sm" type="submit" value="Check in from break">
+        </div>
+    </div>
+    <div class="center-page">
+       <h4>Current status:<span class="badge badge-light">*Insert "on break"/"working"*</span></h4>
+    </div>
+{% endblock %}
