@@ -1,9 +1,10 @@
 <nav class="navbar navbar-expand-lg navbar-dark background-blue">
     <a class="navbar-brand" href="{{ url_for('View:index') }}">
         <img height="48" src="https://confluence.bethel.edu/download/attachments/327682/global.logo?version=4&amp;modificationDate=1462424762000&amp;api=v2">
-        <a class="navbar-brand" href="{{ url_for('View:index') }}">Shuttle</a>
-        <a class="navbar-brand" href="{{ url_for('SchedulesView:stats') }}">Shuttle Stats</a>
-        <a class="navbar-brand" href="{{ url_for('View:request') }}">Request Shuttle</a>
+        <a class="navbar-brand" href="{{ url_for('View:index') }}">Shuttle Home</a>
+        <a class="navbar-brand" href="{{ url_for('SchedulesView:stats') }}">Shuttle Statistics</a>
+        <a class="navbar-brand" href="{{ url_for('SchedulesView:request') }}">Request Shuttle</a>
+        <a class="navbar-brand" href="{{ url_for('SchedulesView:schedule') }}">Shuttle Scheduling</a>
     </a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -11,6 +12,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!--
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="form-inline nav-item dropdown">
             <a class="nav-link dropdown-toggle {{ 'nav-bar-active' if 'View' in request.url_rule.endpoint }}" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -18,6 +20,7 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             </div>
         </div>
+    -->
 
         <div class="mr-auto"></div>
 

@@ -1,6 +1,7 @@
 {% extends 'shuttle_base.html' %}
 <!--TODO: Restrict roles to Bethel people-->
 <!--TODO: Have actual locations and times for Bethel shuttle. Also actual waitlist numbers-->
+<title>Shuttle | {% block page_title %}Request{% endblock %}</title>
 {% block body_content %}
 
     <div class="wrapper">
@@ -11,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-    <div class="wrapper">
+    <div class="center-page">
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Location
@@ -37,7 +38,7 @@
         </div>
     </div>
 
-    <div class="wrapper">
+    <div class="center-page">
        <h4>Students awaiting shuttle: <span class="badge badge-light">*Insert number here*</span></h4>
     </div>
 
