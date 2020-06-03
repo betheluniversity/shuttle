@@ -1,0 +1,72 @@
+{% extends 'shuttle_base.html' %}
+<!-- TODO: Make only viewable by admins/drivers. Make logs real data -->
+<!-- TODO: Maybe reset data after every day and send report to driver supervisors -->
+<title>Shuttle | {% block page_title %}Driver Logs{% endblock %}</title>
+{% block body_content %}
+<!-- TODO: Use for loop to fill table with values. Set it up to send info as txt file? Maybe sort tables by driver -->
+    <h4>Driver Shuttle Logs</h4>
+    <div class="card">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Driver</th>
+                <th scope="col">Location</th>
+                <th scope="col">Check In</th>
+                <th scope="col">Check Out</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="driver">*Insert Driver here*</td>
+                    <td class="location">*Insert location here*</td>
+                    <td class="check-in">*Insert time in here*</td>
+                    <td class="check-out">*Insert time out here*</td>
+                </tr>
+                <tr>
+                    <td class="driver">*Insert Driver here*</td>
+                    <td class="location">*Insert location here*</td>
+                    <td class="check-in">*Insert time in here*</td>
+                    <td class="check-out">*Insert time out here*</td>
+                </tr>
+                <tr>
+                    <td scope="driver">*Insert Driver here*</td>
+                    <td scope="location">*Insert location here*</td>
+                    <td class="check-in">*Insert time in here*</td>
+                    <td class="check-out">*Insert time out here*</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <h4>Driver Break Logs</h4>
+    <div class="card">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Driver</th>
+                <th scope="col">Break Time In</th>
+                <th scope="col">Break Time Out</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="driver">*Insert Driver here*</td>
+                    <td class="check-in-break">*Insert time in here*</td>
+                    <td class="check-out-break">*Insert time out here*</td>
+                </tr>
+                <tr>
+                    <td scope="driver">*Insert Driver here*</td>
+                    <td class="check-in-break">*Insert time out here*</td>
+                    <td class="check-out-break">*Insert time out here*</td>
+                </tr>
+                <tr>
+                    <td scope="driver">*Insert Driver here*</td>
+                    <td class="check-in-break">*Insert time in here*</td>
+                    <td class="check-out-break">*Insert time out here*</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}
