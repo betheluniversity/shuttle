@@ -12,6 +12,12 @@ body {
     cursor: auto;
 }
 
+.btn-primary {
+    color: #fff;
+    background-color: #0056B5;
+    border-color: #0056B5;
+}
+
 .center-page {
     width: 100%;
     margin-bottom: 20px;
@@ -56,4 +62,8 @@ nav.navbar {
     width: 100%;
     margin: 20px auto;
     max-width: 95%;
+}
+
+.txt-underline:hover {
+    text-decoration: underline;
 }
