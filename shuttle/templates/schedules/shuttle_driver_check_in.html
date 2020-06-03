@@ -1,6 +1,8 @@
 {% extends 'shuttle_base.html' %}
-
+<!-- TODO: add in actual locations/ make submit buttons work/ select next location after submitting so it is easier for drivers -->
 {% block body_content %}
+<title>Shuttle | {% block page_title %}Driver Check In{% endblock %}</title>
+
     <div class="center-page">
         <h4>Leaving from:</h4>
         <div class="dropdown">
@@ -35,4 +37,5 @@
     <div class="center-page">
        <h4>Current status:<span class="badge badge-light">*Insert "on break"/"working"*</span></h4>
     </div>
+
 {% endblock %}
