@@ -1,3 +1,22 @@
+@media (max-width: 1212px) {
+    .collapse a {
+        display: block;
+        border-bottom: 1px solid #EAEAEB;
+    }
+    .row {
+        display:block;
+    }
+}
+
+.align-side-by-side {
+    display: inline-block;
+}
+
+.background-blue {
+    background-color: #123563;
+    border-color: #0F2C52;
+}
+
 body {
     background: #fff;
     color: #222;
@@ -19,23 +38,7 @@ body {
 }
 
 .center-page {
-    width: 100%;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.dropdown {
-    margin: 10px;
-}
-
-.submit {
-    margin: 10px;
-}
-
-html, body {
-    background-color: #fafafa;
+    text-align: center;
 }
 
 div.footer {
@@ -48,14 +51,25 @@ div.footer {
     font-size: 0.9em;
 }
 
+.dropdown {
+    margin: 10px;
+}
+
+html, body {
+    background-color: #fafafa;
+}
+
 nav.navbar {
     color: white;
     padding: 0 10px;
 }
 
-.background-blue {
-    background-color: #123563;
-    border-color: #0F2C52;
+nav a {
+    padding: 0 10px;
+}
+
+.submit {
+    margin: 10px;
 }
 
 .shuttle-margins {

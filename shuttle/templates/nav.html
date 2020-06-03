@@ -1,16 +1,21 @@
-<nav class="navbar navbar-expand-lg navbar-dark background-blue">
-    <a class="navbar-brand" href="{{ url_for('View:index') }}">
-        <img height="48" src="https://confluence.bethel.edu/download/attachments/327682/global.logo?version=4&amp;modificationDate=1462424762000&amp;api=v2">
-        <a class="navbar-brand" href="{{ url_for('View:index') }}"><span class="txt-underline">Shuttle Home</span></a>
-        <a class="navbar-brand" href="{{ url_for('SchedulesView:stats') }}"><span class="txt-underline">Shuttle Statistics</span></a>
-        <a class="navbar-brand" href="{{ url_for('SchedulesView:request') }}"><span class="txt-underline">Request Shuttle</span></a>
-        <a class="navbar-brand" href="{{ url_for('SchedulesView:schedule') }}"><span class="txt-underline">Shuttle Schedule</span></a>
-        <a class="navbar-brand" href="{{ url_for('SchedulesView:check_in') }}"><span class="txt-underline">Driver Check In</span></a>
-        <a class="navbar-brand" href="{{ url_for('SchedulesView:logs') }}"><span class="txt-underline">Driver logs</span></a>
-    </a>
+<!-- width 1072 to 992 makes the rightmost side of the navbar shrink... why? -->
+<nav class="navbar navbar-expand-md navbar-dark background-blue">
+    <div id="navbarCollapse" class="collapse navbar-collapse">
+        <a class="navbar-brand" href="{{ url_for('View:index') }}">
+            <div class="div-image">
+            <img height="48" src="https://confluence.bethel.edu/download/attachments/327682/global.logo?version=4&amp;modificationDate=1462424762000&amp;api=v2">
+            </div>
+            <a class="navbar-brand" href="{{ url_for('View:index') }}"><span class="txt-underline">Shuttle Home</span></a>
+            <a class="navbar-brand" href="{{ url_for('SchedulesView:stats') }}"><span class="txt-underline">Shuttle Statistics</span></a>
+            <a class="navbar-brand" href="{{ url_for('SchedulesView:request') }}"><span class="txt-underline">Request Shuttle</span></a>
+            <a class="navbar-brand" href="{{ url_for('SchedulesView:schedule') }}"><span class="txt-underline">Shuttle Schedule</span></a>
+            <a class="navbar-brand" href="{{ url_for('SchedulesView:check_in') }}"><span class="txt-underline">Driver Check In</span></a>
+            <a class="navbar-brand" href="{{ url_for('SchedulesView:logs') }}"><span class="txt-underline">Driver logs</span></a>
+        </a>
+    </div>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+          aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
