@@ -1,5 +1,5 @@
 <!-- width 1072 to 992 makes the rightmost side of the navbar shrink... why? -->
-<nav class="navbar navbar-expand-md navbar-dark background-blue">
+<nav class="navbar navbar-expand-custom navbar-dark background-blue">
     <div id="navbarCollapse" class="collapse navbar-collapse">
         <a class="navbar-brand" href="{{ url_for('View:index') }}">
             <div class="div-image">
@@ -32,5 +32,4 @@
                 <a class="nav-link" id="navbarLogin" role="button" href="{{ url_for('View:index') }}">Login</a>
             {% endif %}
         </div>
-    </div>
 </nav>
