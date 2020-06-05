@@ -1,38 +1,3 @@
-/* screen gets funky when smaller than 1247px. This changes the nav to a hamburger menu when it reaches that size. There might be a better fix */
-@media (min-width: 1247px){
-    .navbar-expand-custom {
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-    }
-    .navbar-expand-custom .navbar-collapse {
-        display: flex;
-    }
-    .navbar-toggler {
-        display: none;
-    }
-}
-
-@media (max-width: 1246px){
-    div.div-image {
-        margin-left: 95%;
-    }
-    .mr-auto {
-        margin-left: 5%;
-    }
-    #navbarCollapse a{
-        display: block;!important;
-        border-bottom: 1px solid #EAEAEB;
-    }
-    .navbar-toggler {
-        position: absolute;
-        top: 10px;
-    }
-    .row {
-        display: block;
-    }
-}
-
 .align-side-by-side {
     display: inline-block;
 }
@@ -89,18 +54,26 @@ nav.navbar {
     padding: 0 10px;
 }
 
-nav a {
-    padding: 0 10px;
+.navbar-brand {
+    font-size: 0.9em;
 }
 
-.submit {
-    margin: 10px;
+.row {
+    display: block;
 }
 
 .shuttle-margins {
     width: 100%;
     margin: 20px auto;
     max-width: 95%;
+}
+
+span.shuttle-title {
+    color: #ffc600;
+}
+
+.submit {
+    margin: 0.3em;
 }
 
 .txt-underline:hover {
