@@ -11,11 +11,13 @@
 
     <div id="navbarCollapse" class="collapse navbar-collapse">
         <div class="form-inline nav-item dropdown">
+            <ul class="nav navbar-nav">
                 <a class="navbar-brand" href="{{ url_for('SchedulesView:stats') }}"><span class="txt-underline">Shuttle Statistics</span></a>
                 <a class="navbar-brand" href="{{ url_for('SchedulesView:request') }}"><span class="txt-underline">Request Shuttle</span></a>
                 <a class="navbar-brand" href="{{ url_for('SchedulesView:schedule') }}"><span class="txt-underline">Shuttle Schedule</span></a>
                 <a class="navbar-brand" href="{{ url_for('SchedulesView:check_in') }}"><span class="txt-underline">Driver Check In</span></a>
                 <a class="navbar-brand" href="{{ url_for('SchedulesView:logs') }}"><span class="txt-underline">Driver logs</span></a>
+            </ul>
         </div>
 
         <div class="mr-auto"></div>
