@@ -6,3 +6,4 @@ config/*.py
 *.csv
 *.log
 *venv
+gs_client_secret.json
