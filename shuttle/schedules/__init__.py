@@ -1,6 +1,8 @@
 from flask import render_template
 from flask_classy import FlaskView, route
 
+from shuttle.schedules.google_sheets_controller import sheets_controller
+
 
 class SchedulesView(FlaskView):
     @route('/shuttle-stats')
@@ -22,3 +24,7 @@ class SchedulesView(FlaskView):
     @route('/driver-logs')
     def logs(self):
         return render_template('schedules/driver_logs.html')
+
+    def send_schedule_path(self):
+        sent = sheets_controller.send_schedule(self)
+        return sent

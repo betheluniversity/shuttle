@@ -13,7 +13,19 @@
         <iframe width="600" height="500" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTy3uE_5hm1xmXyHdlAUwh3UF31yNw_lE1fACWoj1f3ND-UsMsveEe_FDHLLc8pHxgd4YwmdGBqMWRU/pubhtml?widget=true&amp;headers=false"></iframe>
     </div>
     <div class="center-page">
-         <input class="btn btn-warning btn-sm" type="submit" value="Submit to Database">
+         <input id="database-button" class="btn btn-warning btn-sm" type="submit" value="Submit to Database">
     </div>
+
+    <script>
+    $(document).ready(function() {
+        $("#database-button").click(function () {
+             $.ajax({
+              url: "{{ url_for('SchedulesView:send_schedule_path') }}",
+            }).done(function() {
+             alert('Sent!');
+            });
+        });
+    });
+    </script>
 
 {% endblock %}
