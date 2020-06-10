@@ -6,7 +6,6 @@ from datetime import datetime
 
 import sentry_sdk
 
-
 app = Flask(__name__)
 app.config.from_object('config')
 
