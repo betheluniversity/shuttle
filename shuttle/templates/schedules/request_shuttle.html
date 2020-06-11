@@ -1,6 +1,6 @@
 {% extends 'shuttle_base.html' %}
 <!-- TODO: Restrict roles to Bethel people -->
-<!-- TODO: Have actual locations and times for Bethel shuttle. Also actual waitlist numbers -->
+<!-- TODO: Have actual locations and times for Bethel shuttle. Also actual waitlist numbers. Maybe make submenu to shorten dropdown-->
 <title>Shuttle | {% block page_title %}Request{% endblock %}</title>
 {% block body_content %}
 
@@ -10,28 +10,42 @@
 
     <div class="center-page">
         <div class="dropdown">
-            <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
+            <button class="btn btn-primary btn-lg dropdown-toggle location-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">*Insert location here*</a>
-                <a class="dropdown-item" href="#">*Insert more locations*</a>
-            </div>
-        </div>
-
-        <div class="dropdown">
-            <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Time</button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-               <a class="dropdown-item" href="#">*Insert time here*</a>
-                <a class="dropdown-item" href="#">*Insert more times here*</a>
+                <a class="dropdown-item" href="#">CLC</a>
+                <a class="dropdown-item" href="#">Anderson</a>
+                <a class="dropdown-item" href="#">Pine Tree</a>
+                <a class="dropdown-item" href="#">Kresge</a>
+                <a class="dropdown-item" href="#">Scandia</a>
+                <a class="dropdown-item" href="#">North</a>
+                <a class="dropdown-item" href="#">Rosedale Center</a>
+                <a class="dropdown-item" href="#">HealthPartner Clinic</a>
+                <a class="dropdown-item" href="#">Target</a>
+                <a class="dropdown-item" href="#">Lexington Station</a>
+                <a class="dropdown-item" href="#">Cub Foods</a>
             </div>
         </div>
 
         <div class="submit">
-            <input class="btn btn-warning btn-lg" type="submit" value="Request Shuttle">
+            <input class="btn btn-warning btn-lg submit-btn" type="submit" value="Request Shuttle">
         </div>
     </div>
 
     <div class="center-page">
        <h4>Students awaiting shuttle: <span class="badge badge-light">*Insert number here*</span></h4>
     </div>
+    <script>
+        $(function(){
+            $(".dropdown-menu a").click(function(){
+                $(".location-menu:first-child").text($(this).text());
+                $(".location-menu:first-child").val($(this).text());
+            });
+        });
+        $(function(){
+            $('.submit-btn').click(function(){
+                alert($('.location-menu').val());
+            });
+        });
+    </script>
 
 {% endblock %}
