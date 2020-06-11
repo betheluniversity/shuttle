@@ -32,5 +32,5 @@ class SchedulesView(FlaskView):
     @route('/send-schedule', methods=['Get', 'POST'])
     def send_shuttle_request_path(self):
         jsonData = request.get_json()
-        commit_shuttle_request_to_db(jsonData['location'])
-        return "success"
+        response = commit_shuttle_request_to_db(jsonData['location'])
+        return response

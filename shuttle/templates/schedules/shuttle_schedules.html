@@ -21,8 +21,8 @@
         $("#database-button").click(function () {
              $.ajax({
               url: "{{ url_for('SchedulesView:send_schedule_path') }}",
-            }).done(function() {
-             alert('Sent!');
+            }).done(function(data) {
+             alert(data);
             });
         });
     });

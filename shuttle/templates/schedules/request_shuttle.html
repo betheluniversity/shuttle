@@ -49,8 +49,8 @@
                 contentType: 'application/json',
                 url: "{{ url_for('SchedulesView:send_shuttle_request_path') }}",
                 data: JSON.stringify((data)),
-            }).done(function () {
-                alert('Sent!');
+            }).done(function (data) {
+                alert(data);
             });
         });
     });
