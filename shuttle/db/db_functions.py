@@ -1,5 +1,7 @@
-from flask import abort
+import datetime
 
+from flask import abort
+from flask import session as flask_session
 from shuttle.db.db_connection import engine
 from shuttle import app, sentry_sdk
 
@@ -148,5 +150,13 @@ def commit_schedule_to_db(table):
 
 
 def commit_shuttle_request_to_db(location):
-    print(location)
+    if location != "":
+        now = datetime.datetime.now()
+        date = now.strftime('%d-%b-%Y %I:%M %p')
+        username = flask_session['USERNAME']
+        single_quote = "\'"
+        sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION,ACTIVE) VALUES (TO_DATE(" + \
+        single_quote + date + "\', \'dd-mon-yyyy hh:mi PM\')," + single_quote + username + single_quote + \
+        "," + single_quote + location + single_quote + ",\'y" + single_quote + ")"
+        query(sql, 'write')
     return "success"
