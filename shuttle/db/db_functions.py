@@ -145,3 +145,8 @@ def commit_schedule_to_db(table):
                 return "data in calendar does not match specified format"
 
     return "success"
+
+
+def commit_shuttle_request_to_db(location):
+    print(location)
+    return "success"

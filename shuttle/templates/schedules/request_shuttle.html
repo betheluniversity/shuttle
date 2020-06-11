@@ -35,17 +35,25 @@
        <h4>Students awaiting shuttle: <span class="badge badge-light">*Insert number here*</span></h4>
     </div>
     <script>
+    $(document).ready(function() {
         $(function(){
             $(".dropdown-menu a").click(function(){
                 $(".location-menu:first-child").text($(this).text());
                 $(".location-menu:first-child").val($(this).text());
             });
         });
-        $(function(){
-            $('.submit-btn').click(function(){
-                alert($('.location-menu').val());
+        $('.submit-btn').click(function () {
+            var data = {"location":$('.location-menu').val()}
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: "{{ url_for('SchedulesView:send_shuttle_request_path') }}",
+                data: JSON.stringify((data)),
+            }).done(function () {
+                alert('Sent!');
             });
         });
+    });
     </script>
 
 {% endblock %}

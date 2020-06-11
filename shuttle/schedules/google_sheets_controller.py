@@ -4,7 +4,7 @@ from shuttle import app
 from shuttle.db.db_functions import commit_schedule_to_db
 
 
-class sheets_controller:
+class SheetsController:
     def __init__(self):
         pass
 

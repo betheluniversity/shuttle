@@ -1,7 +1,7 @@
-from flask import render_template
+from flask import render_template, request
 from flask_classy import FlaskView, route
-
-from shuttle.schedules.google_sheets_controller import sheets_controller
+from shuttle.db.db_functions import commit_shuttle_request_to_db
+from shuttle.schedules.google_sheets_controller import SheetsController
 
 
 class SchedulesView(FlaskView):
@@ -26,5 +26,11 @@ class SchedulesView(FlaskView):
         return render_template('schedules/driver_logs.html')
 
     def send_schedule_path(self):
-        sent = sheets_controller.send_schedule(self)
+        sent = SheetsController.send_schedule(self)
         return sent
+
+    @route('/send-schedule', methods=['Get', 'POST'])
+    def send_shuttle_request_path(self):
+        jsonData = request.get_json()
+        commit_shuttle_request_to_db(jsonData['location'])
+        return "success"
