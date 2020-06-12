@@ -27,5 +27,4 @@ class SheetsController:
         client = SheetsController.credentials(self)
         sheet = client.open("Bethel Shuttle Scheduling Spreadsheet").worksheet("Shuttle Locations")
         list_of_lists = sheet.col_values(1)
-        print(list_of_lists)
         return list_of_lists
