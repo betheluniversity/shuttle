@@ -4,38 +4,58 @@
 <title>Shuttle | {% block page_title %}Driver Check In{% endblock %}</title>
 
     <div class="center-page">
-        <h4>Leaving from:</h4>
-        <div class="dropdown">
-            <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">*Insert location here*</a>
-                <a class="dropdown-item" href="#">*Insert more locations*</a>
+        <div class="align-side-by-side">
+            <h4>Leaving from:</h4>
+        </div>
+       <div class="align-side-by-side">
+            <div class="align-side-by-side">
+                <div class="dropdown">
+                    <button class="btn floated btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">*Insert location here*</a>
+                        <a class="dropdown-item" href="#">*Insert more locations*</a>
+                    </div>
+                </div>
+            </div>
+            <div class="align-side-by-side">
+                <input class="btn floated btn-warning btn-lg" type="submit" value="Submit">
             </div>
         </div>
-        <input class="btn btn-warning btn-lg" type="submit" value="Submit">
     </div>
     <div class="center-page">
-        <h4>Arriving at:</h4>
-        <div class="dropdown">
-            <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">*Insert location here*</a>
-                <a class="dropdown-item" href="#">*Insert more locations*</a>
+        <div class="align-side-by-side">
+            <h4>Arriving at:</h4>
+        </div>
+        <div class="align-side-by-side">
+            <div class="align-side-by-side">
+                <div class="dropdown">
+                    <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">*Insert location here*</a>
+                        <a class="dropdown-item" href="#">*Insert more locations*</a>
+                    </div>
+                </div>
+            </div>
+            <div class="align-side-by-side">
+                <input class="btn btn-warning btn-lg" type="submit" value="Submit">
             </div>
         </div>
-        <input class="btn btn-warning btn-lg" type="submit" value="Submit">
     </div>
     <hr>
     <div class="center-page">
-        <div class="submit">
-            <input class="btn btn-primary btn-lg" type="submit" value="Check out for break">
+        <div class="align-side-by-side">
+            <div class="submit">
+                <input class="btn btn-primary btn-sm" type="submit" value="Check out for break">
+            </div>
         </div>
-        <div class="submit">
-            <input class="btn btn-primary btn-lg" type="submit" value="Check in from break">
+        <div class="align-side-by-side">
+            <div class="submit">
+                <input class="btn btn-primary btn-sm" type="submit" value="Check in from break">
+            </div>
         </div>
     </div>
     <div class="center-page">
-       <h4>Current status:<span class="badge badge-light">*Insert "on break"/"working"*</span></h4>
+       <h5>Current status:<span class="badge badge-light">*Insert "on break"/"working"*</span></h5>
     </div>
 
 {% endblock %}
