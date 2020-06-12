@@ -43,7 +43,6 @@ def before_request():
             or '/assets/' in request.path \
             or '/cron/' in request.path \
             or '/no-cas/' in request.path:
-
         if 'ALERT' not in flask_session.keys():
             flask_session['ALERT'] = []
     else:
@@ -54,5 +53,6 @@ def before_request():
                 flask_session['USERNAME'] = app.config['TEST_USERNAME']
         if 'NAME' not in flask_session.keys():
             flask_session['NAME'] = db.portal_common_profile(flask_session['USERNAME'])[0]['pref_first_last_name']
+        flask_session['USER-ROLES'] = app.config['TEST_ROLES']
         if 'ALERT' not in flask_session.keys():
             flask_session['ALERT'] = []

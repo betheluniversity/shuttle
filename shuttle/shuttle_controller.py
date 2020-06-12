@@ -1,9 +1,16 @@
-from flask import session as flask_session
+from flask import session as flask_session, abort
 
 
 class ShuttleController(object):
     def __init__(self):
         pass
+
+    # Used to make sure the correct roles are viewing the route
+    def check_roles_and_route(self, allowed_roles):
+        for role in allowed_roles:
+            if role in flask_session['USER-ROLES']:
+                return True
+        abort(403)
 
     # This method get's the current alert (if there is one) and then resets alert to nothing
     def get_alert(self):
