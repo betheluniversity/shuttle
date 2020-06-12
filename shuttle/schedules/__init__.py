@@ -1,6 +1,6 @@
 from flask import render_template, request
 from flask_classy import FlaskView, route
-from shuttle.db.db_functions import commit_shuttle_request_to_db, number_active_in_db
+from shuttle.db.db_functions import number_active_in_db, commit_shuttle_request_to_db
 from shuttle.schedules.google_sheets_controller import SheetsController
 
 
@@ -11,7 +11,8 @@ class SchedulesView(FlaskView):
 
     @route('/request-shuttle')
     def request(self):
-        return render_template('/schedules/request_shuttle.html')
+        location_list = SheetsController.grab_locations(self)
+        return render_template('/schedules/request_shuttle.html', locations=location_list)
 
     @route('/shuttle-schedules')
     def schedule(self):
@@ -38,3 +39,5 @@ class SchedulesView(FlaskView):
     def check_waitlist(self):
         num_waiting = number_active_in_db()
         return num_waiting
+
+

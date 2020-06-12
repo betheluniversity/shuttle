@@ -116,61 +116,50 @@ def portal_common_profile(username):
         return abort(503)
 
 
-def commit_schedule_to_db(table):
+def commit_schedule_to_db(table, all_locations):
     sql = "DELETE FROM SHUTTLE_SCHEDULE"
     query(sql, 'write')
-
+    all_locations = [i.upper() for i in all_locations]
     for i in range(len(table)):
         location = ""
         for j in range(len(table[i])):
-            try:
-                arrival_time = 0
-                if table[i][j].lower() == 'clc' or table[i][j].lower() == 'anderson' or table[i][j].lower() == 'pine tree' \
-                        or table[i][j].lower() == 'kresge' or table[i][j].lower() == 'scandia' or table[i][j].lower() == 'north':
-                    location = table[i][j].upper()
-                elif table[i][j] == '-' or table[i][j] == 'DROP':
-                    arrival_time = '01-AUG-00 01.00.00.000000000 AM'
-                elif table[i][j].split(':') is not None:
-                    split_time = table[i][j].split(':')
-                    if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
-                        joined_time = '.'.join(split_time)
-                        arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 PM'
-                    else:
-                        joined_time = '.'.join(split_time)
-                        arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 AM'
+            arrival_time = 0
+            if table[i][j].upper() in all_locations:
+                location = table[i][j].upper()
+            elif table[i][j] == '-' or table[i][j] == 'DROP':
+                arrival_time = '01-AUG-00 01.00.00.000000000 AM'
+            elif table[i][j].split(':') is not None:
+                split_time = table[i][j].split(':')
+                if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
+                    joined_time = '.'.join(split_time)
+                    arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 PM'
                 else:
-                    return "data in calendar does not match specified format"
-                if j is not 0:
-                    sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION,ARRIVAL_TIME) VALUES (" + "\'" + location + \
-                          "\',\'" + arrival_time + "\')"
-                    query(sql, 'write')
-            except:
-                return "Something went wrong. Please check that the table formatting is correct or call the " \
-                       "ITS Help Desk at 651-638-6500"
-    return "The Calendar has been submitted"
+                    joined_time = '.'.join(split_time)
+                    arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 AM'
+            else:
+                return "data in calendar does not match specified format"
+            if j is not 0:
+                sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION,ARRIVAL_TIME) VALUES (" + "\'" + location + \
+                      "\',\'" + arrival_time + "\')"
+                query(sql, 'write')
+    return "The Schedule has been submitted"
 
 
 def commit_shuttle_request_to_db(location):
     if location != "":
-        try:
-            now = datetime.datetime.now()
-            date = now.strftime('%d-%b-%Y %I:%M %p')
-            username = flask_session['USERNAME']
-            single_quote = "\'"
-            sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION,ACTIVE) VALUES (TO_DATE(" + \
-                single_quote + date + "\', \'dd-mon-yyyy hh:mi PM\')," + single_quote + username + single_quote + \
-                "," + single_quote + location + single_quote + ",\'y" + single_quote + ")"
-            query(sql, 'write')
-            return "Your request has been submitted"
-        except:
-            return "Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500"
+        now = datetime.datetime.now()
+        date = now.strftime('%d-%b-%Y %I:%M %p')
+        username = flask_session['USERNAME']
+        single_quote = "\'"
+        sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION) VALUES (TO_DATE(" + \
+            single_quote + date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + single_quote + username + \
+            single_quote + "," + single_quote + location + single_quote + ")"
+        query(sql, 'write')
+        return "Your request has been submitted"
     return "Please select a location"
 
 
 def number_active_in_db():
-    try:
-        sql = "SELECT ACTIVE FROM SHUTTLE_REQUEST_LOGS"
-        results = query(sql, 'read')
-        return str(len(results))
-    except:
-        return "error"
+    sql = "SELECT ACTIVE FROM SHUTTLE_REQUEST_LOGS"
+    results = query(sql, 'read')
+    return str(len(results))
