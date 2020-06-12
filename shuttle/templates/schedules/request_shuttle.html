@@ -1,6 +1,6 @@
 {% extends 'shuttle_base.html' %}
 <!-- TODO: Restrict roles to Bethel people -->
-<!-- TODO: Have actual locations and times for Bethel shuttle. Also actual waitlist numbers. Maybe make submenu to shorten dropdown-->
+<!-- TODO: Maybe make submenu to shorten dropdown-->
 <title>Shuttle | {% block page_title %}Request{% endblock %}</title>
 {% block body_content %}
 
@@ -32,17 +32,26 @@
     </div>
 
     <div class="center-page">
-       <h4>Students awaiting shuttle: <span class="badge badge-light">*Insert number here*</span></h4>
+       <h4>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning"></span></h4>
     </div>
     <script>
-    $(document).ready(function() {
-        $(function(){
-            $(".dropdown-menu a").click(function(){
-                $(".location-menu:first-child").text($(this).text());
-                $(".location-menu:first-child").val($(this).text());
+    function waitlist() {
+        // Updates waitlist
+        $.ajax({
+              url: "{{ url_for('SchedulesView:check_waitlist') }}",
+            }).done(function(data) {
+             $(".badge").text(data);
             });
+    }
+    window.onload = waitlist();
+    $(document).ready(function() {
+        $(".dropdown-menu a").click(function(){
+            // Dropdown shows location selected
+            $(".location-menu:first-child").text($(this).text());
+            $(".location-menu:first-child").val($(this).text());
         });
         $('.submit-btn').click(function () {
+            // Sends selected location and user info to database. Updates waitlist
             var data = {"location":$('.location-menu').val()}
             $.ajax({
                 type: 'POST',
@@ -51,6 +60,7 @@
                 data: JSON.stringify((data)),
             }).done(function (data) {
                 alert(data);
+                waitlist();
             });
         });
     });

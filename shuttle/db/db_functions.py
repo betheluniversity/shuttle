@@ -133,11 +133,11 @@ def commit_schedule_to_db(table):
                 elif table[i][j].split(':') is not None:
                     split_time = table[i][j].split(':')
                     if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
-                            joined_time = '.'.join(split_time)
-                            arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 PM'
+                        joined_time = '.'.join(split_time)
+                        arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 PM'
                     else:
-                            joined_time = '.'.join(split_time)
-                            arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 AM'
+                        joined_time = '.'.join(split_time)
+                        arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 AM'
                 else:
                     return "data in calendar does not match specified format"
                 if j is not 0:
@@ -158,10 +158,19 @@ def commit_shuttle_request_to_db(location):
             username = flask_session['USERNAME']
             single_quote = "\'"
             sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION,ACTIVE) VALUES (TO_DATE(" + \
-            single_quote + date + "\', \'dd-mon-yyyy hh:mi PM\')," + single_quote + username + single_quote + \
-            "," + single_quote + location + single_quote + ",\'y" + single_quote + ")"
+                single_quote + date + "\', \'dd-mon-yyyy hh:mi PM\')," + single_quote + username + single_quote + \
+                "," + single_quote + location + single_quote + ",\'y" + single_quote + ")"
             query(sql, 'write')
             return "Your request has been submitted"
         except:
             return "Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500"
     return "Please select a location"
+
+
+def number_active_in_db():
+    try:
+        sql = "SELECT ACTIVE FROM SHUTTLE_REQUEST_LOGS"
+        results = query(sql, 'read')
+        return str(len(results))
+    except:
+        return "error"

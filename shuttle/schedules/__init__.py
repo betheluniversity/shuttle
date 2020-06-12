@@ -1,6 +1,6 @@
 from flask import render_template, request
 from flask_classy import FlaskView, route
-from shuttle.db.db_functions import commit_shuttle_request_to_db
+from shuttle.db.db_functions import commit_shuttle_request_to_db, number_active_in_db
 from shuttle.schedules.google_sheets_controller import SheetsController
 
 
@@ -34,3 +34,7 @@ class SchedulesView(FlaskView):
         jsonData = request.get_json()
         response = commit_shuttle_request_to_db(jsonData['location'])
         return response
+
+    def check_waitlist(self):
+        num_waiting = number_active_in_db()
+        return num_waiting
