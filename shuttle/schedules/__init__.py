@@ -14,6 +14,7 @@ class SchedulesView(FlaskView):
 
     @route('/request-shuttle')
     def request(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         return render_template('/schedules/request_shuttle.html')
 
     @route('/shuttle-schedules')

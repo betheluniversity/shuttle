@@ -13,7 +13,9 @@
         <div class="form-inline nav-item dropdown">
             <ul class="nav navbar-nav">
                 <a class="navbar-brand" href="{{ url_for('SchedulesView:stats') }}"><span class="txt-underline">Shuttle Statistics</span></a>
+                {% if 'Administrator' in session['USER-ROLES'] or 'Driver' in session['USER-ROLES'] or 'User' in session['USER-ROLES'] %}
                 <a class="navbar-brand" href="{{ url_for('SchedulesView:request') }}"><span class="txt-underline">Request Shuttle</span></a>
+                {% endif %}
                 {% if 'Administrator' in session['USER-ROLES'] %}
                     <a class="navbar-brand" href="{{ url_for('SchedulesView:schedule') }}"><span class="txt-underline">Shuttle Schedule</span></a>
                 {% endif %}
