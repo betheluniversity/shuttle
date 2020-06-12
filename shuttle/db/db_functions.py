@@ -60,6 +60,15 @@ def get_formatted_results(query_results):
     return results
 
 
+def get_user_by_username(username):
+    ret = []
+    sql = "SELECT * FROM SHUTTLE_USERS WHERE USERNAME = '{0}'".format(username)
+    results = query(sql, 'read')
+    for key, columns in results.items():
+        ret.append(columns['role'])
+    return ret
+
+
 def get_table_columns(table):
     ret = []
     # 'table' needs to be uppercase to run correctly

@@ -19,6 +19,7 @@ if app.config['ENVIRON'] == 'prod' and app.config['SENTRY_URL']:
 # Declaring and registering the views
 from shuttle.views import View
 from shuttle.schedules import SchedulesView
+from shuttle.db import db_functions as db
 from shuttle.shuttle_controller import ShuttleController as sc
 
 SchedulesView.register(app)
@@ -43,7 +44,6 @@ def before_request():
             or '/assets/' in request.path \
             or '/cron/' in request.path \
             or '/no-cas/' in request.path:
-
         if 'ALERT' not in flask_session.keys():
             flask_session['ALERT'] = []
     else:
@@ -54,5 +54,10 @@ def before_request():
                 flask_session['USERNAME'] = app.config['TEST_USERNAME']
         if 'NAME' not in flask_session.keys():
             flask_session['NAME'] = db.portal_common_profile(flask_session['USERNAME'])[0]['pref_first_last_name']
+        if 'USER-ROLES' not in flask_session.keys():
+            try:
+                flask_session['USER-ROLES'] = db.get_user_by_username(flask_session['USERNAME'])[0]
+            except:
+                flask_session['USER-ROLES'] = ['User']
         if 'ALERT' not in flask_session.keys():
             flask_session['ALERT'] = []
