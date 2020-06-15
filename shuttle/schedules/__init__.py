@@ -1,6 +1,6 @@
 from flask import render_template, request
 from flask_classy import FlaskView, route
-from shuttle.db.db_functions import number_active_in_db, commit_shuttle_request_to_db
+from shuttle.db import db_functions as db
 from shuttle.schedules.google_sheets_controller import SheetsController
 
 from shuttle.shuttle_controller import ShuttleController
@@ -9,6 +9,7 @@ from shuttle.shuttle_controller import ShuttleController
 class SchedulesView(FlaskView):
     def __init__(self):
         self.sc = ShuttleController()
+        self.shc = SheetsController()
 
     @route('/shuttle-stats')
     def stats(self):
@@ -36,17 +37,17 @@ class SchedulesView(FlaskView):
         return render_template('schedules/driver_logs.html')
 
     def send_schedule_path(self):
-        sent = SheetsController.send_schedule(self)
+        sent = self.shc.send_schedule()
         return sent
 
-    @route('/send-schedule', methods=['Get', 'POST'])
+    @route('/send-schedule', methods=['GET', 'POST'])
     def send_shuttle_request_path(self):
         jsonData = request.get_json()
-        response = commit_shuttle_request_to_db(jsonData['location'])
+        response = db.commit_shuttle_request_to_db(jsonData['location'])
         return response
 
     def check_waitlist(self):
-        num_waiting = number_active_in_db()
+        num_waiting = db.number_active_in_db()
         return num_waiting
 
 

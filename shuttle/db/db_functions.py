@@ -173,6 +173,6 @@ def number_active_in_db():
     results = query(sql, 'read')
     currently_active = 0
     for key in results:
-        if results[key]['active'].lower() == 'y':
+        if results[key]['active'].upper() == 'Y':
             currently_active = currently_active + 1
     return str(currently_active)
