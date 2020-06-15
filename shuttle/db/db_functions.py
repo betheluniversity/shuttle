@@ -176,3 +176,12 @@ def number_active_in_db():
         if results[key]['active'].lower() == 'y':
             currently_active = currently_active + 1
     return str(currently_active)
+
+
+
+def commit_leaving_location(location):
+    return location
+
+
+def commit_arriving_location(location):
+    return location

@@ -1,6 +1,7 @@
 from flask import render_template, request
 from flask_classy import FlaskView, route
-from shuttle.db.db_functions import number_active_in_db, commit_shuttle_request_to_db
+from shuttle.db.db_functions import number_active_in_db, commit_shuttle_request_to_db, commit_leaving_location, \
+    commit_arriving_location
 from shuttle.schedules.google_sheets_controller import SheetsController
 
 from shuttle.shuttle_controller import ShuttleController
@@ -27,8 +28,9 @@ class SchedulesView(FlaskView):
 
     @route('/driver-check-in')
     def check_in(self):
+        location_list = SheetsController.grab_locations(self)
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
-        return render_template('schedules/shuttle_driver_check_in.html')
+        return render_template('schedules/shuttle_driver_check_in.html', locations=location_list)
 
     @route('/driver-logs')
     def logs(self):
@@ -48,5 +50,17 @@ class SchedulesView(FlaskView):
     def check_waitlist(self):
         num_waiting = number_active_in_db()
         return num_waiting
+
+    @route('/leaving', methods=['Get', 'POST'])
+    def send_leaving_location(self):
+        jsonData = request.get_json()
+        response = commit_leaving_location(jsonData['location'])
+        return response
+
+    @route('/arriving', methods=['Get', 'POST'])
+    def send_arriving_location(self):
+        jsonData = request.get_json()
+        response = commit_arriving_location(jsonData['location'])
+        return response
 
 
