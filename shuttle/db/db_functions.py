@@ -88,32 +88,13 @@ def check_if_table_exists(table):
     return False
 
 
-def mybethel_roles(username):
+def username_search(username):
     conn = None
     try:
         conn = engine.raw_connection()
         call_cursor = conn.cursor()
         result_cursor = conn.cursor()
-        call_cursor.callproc("bth_websrv_api.user_to_roles", (username, result_cursor))
-        result = result_cursor.fetchall()
-        conn.close()
-
-        return get_results(result)
-    except Exception as error:
-        send_sentry_message(username, error)
-        if conn:
-            conn.close()
-        # if mybethel can't get the data, then prevent anything from loading
-        return abort(503)
-
-
-def portal_common_profile(username):
-    conn = None
-    try:
-        conn = engine.raw_connection()
-        call_cursor = conn.cursor()
-        result_cursor = conn.cursor()
-        call_cursor.callproc('bth_portal_channel_api.bu_profile_name_photo', (username, result_cursor,))
+        call_cursor.callproc('bth_websrv_api.username_search', (username, result_cursor,))
         r = result_cursor.fetchall()
         conn.close()
         return get_results(r)
