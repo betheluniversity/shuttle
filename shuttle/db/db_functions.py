@@ -178,10 +178,31 @@ def number_active_in_db():
     return str(currently_active)
 
 
-
 def commit_leaving_location(location):
-    return location
+    if location != "":
+        now = datetime.datetime.now()
+        date = now.strftime('%d-%b-%Y')
+        full_date = now.strftime('%d-%b-%Y %I:%M %p')
+        username = flask_session['USERNAME']
+        single_quote = "\'"
+        sql = "INSERT INTO SHUTTLE_DRIVER_LOGS(LOG_DATE,USERNAME,LOCATION,DEPARTURE_TIME) VALUES (" + single_quote + \
+              date + single_quote + "," + single_quote + username + single_quote + "," + single_quote + location + \
+              single_quote + "," + "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\'))"
+        query(sql, 'write')
+        return "Your departure has been submitted"
+    return "Please select a location"
 
 
 def commit_arriving_location(location):
-    return location
+    if location != "":
+        now = datetime.datetime.now()
+        date = now.strftime('%d-%b-%Y')
+        full_date = now.strftime('%d-%b-%Y %I:%M %p')
+        username = flask_session['USERNAME']
+        single_quote = "\'"
+        sql = "INSERT INTO SHUTTLE_DRIVER_LOGS(LOG_DATE,USERNAME,LOCATION,ARRIVAL_TIME) VALUES (" + single_quote + \
+              date + single_quote + "," + single_quote + username + single_quote + "," + single_quote + location + \
+              single_quote + "," + "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\'))"
+        query(sql, 'write')
+        return "Your arrival has been submitted"
+    return "Please select a location"
