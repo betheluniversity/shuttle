@@ -62,37 +62,6 @@
 
     <script>
     $(document).ready(function() {
-        $('.submit-leaving').click(function () {
-            // Sends selected location and user info to database.
-            var data = {"location":$('.leaving-menu').val()}
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json',
-                url: "{{ url_for('SchedulesView:send_leaving_location') }}",
-                data: JSON.stringify((data)),
-            }).done(function (data) {
-                alert(data);
-            });
-            .fail(function () {
-                alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
-            });
-        });
-        $('.submit-arriving').click(function () {
-            // Sends selected location and user info to database.
-            var data = {"location":$('.arriving-menu').val()}
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json',
-                url: "{{ url_for('SchedulesView:send_arriving_location') }}",
-                data: JSON.stringify((data)),
-            }).done(function (data) {
-                alert(data);
-            });
-            .fail(function () {
-                alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
-            });
-        });
-
         $(".leaving-drop a").click(function () {
             // Dropdown shows leaving location selected
             $(".leaving-menu:first-child").text($(this).text());
@@ -104,11 +73,68 @@
             $(".arriving-menu:first-child").val($(this).text());
         });
 
+        $('.submit-leaving').click(function () {
+            // Sends selected location and user info to database.
+            var data = {"location": $('.leaving-menu').val(), "direction": "departure"}
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
+                data: JSON.stringify((data)),
+            }).done(function (data) {
+                alert(data);
+            })
+                .fail(function () {
+                    alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
+                });
+        });
+        $('.submit-arriving').click(function () {
+            // Sends selected location and user info to database.
+            var data = {"location": $('.arriving-menu').val(), "direction": "arrival"}
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
+                data: JSON.stringify((data)),
+            }).done(function (data) {
+                alert(data);
+            })
+                .fail(function () {
+                    alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
+                });
+        });
+
         $('.check-out-btn').click(function () {
-            $(".badge").text("On Break");
+            // Sends break info to database
+            var data = {"break": "Y"}
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
+                data: JSON.stringify((data)),
+            }).done(function (data) {
+                $(".badge").text("On Break");
+                alert(data);
+            })
+                .fail(function () {
+                    alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
+                });
         });
         $('.check-in-btn').click(function () {
-            $(".badge").text("Not on Break");
+            // sends check-in from break info to database
+            var data = {"break": "N"}
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
+                data: JSON.stringify((data)),
+            }).done(function (data) {
+                $(".badge").text("Not on Break");
+                alert(data);
+            })
+                .fail(function () {
+                    alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
+                });
         });
     });
     </script>
