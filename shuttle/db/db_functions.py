@@ -171,4 +171,8 @@ def commit_shuttle_request_to_db(location):
 def number_active_in_db():
     sql = "SELECT ACTIVE FROM SHUTTLE_REQUEST_LOGS"
     results = query(sql, 'read')
-    return str(len(results))
+    currently_active = 0
+    for key in results:
+        if results[key]['active'].lower() == 'y':
+            currently_active = currently_active + 1
+    return str(currently_active)

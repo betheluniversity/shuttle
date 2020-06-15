@@ -18,13 +18,13 @@ class SheetsController:
     def send_schedule(self):
         client = SheetsController.credentials(self)
         sheet = client.open("Bethel Shuttle Scheduling Spreadsheet").worksheet("Shuttle Schedule")
-        list_of_lists = sheet.get_all_values()
+        list_of_times = sheet.get_all_values()
         locations = SheetsController.grab_locations(self)
-        sent = commit_schedule_to_db(list_of_lists, locations)
+        sent = commit_schedule_to_db(list_of_times, locations)
         return sent
 
     def grab_locations(self):
         client = SheetsController.credentials(self)
         sheet = client.open("Bethel Shuttle Scheduling Spreadsheet").worksheet("Shuttle Locations")
-        list_of_lists = sheet.col_values(1)
-        return list_of_lists
+        locations = sheet.col_values(1)
+        return locations
