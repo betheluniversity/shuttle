@@ -106,7 +106,7 @@ def username_search(username):
         return abort(503)
 
 
-def commit_schedule_to_db(table, all_locations):
+def commit_schedule(table, all_locations):
     sql = "DELETE FROM SHUTTLE_SCHEDULE"
     query(sql, 'write')
     all_locations = [i.upper() for i in all_locations]
@@ -117,7 +117,7 @@ def commit_schedule_to_db(table, all_locations):
             if table[i][j].upper() in all_locations:
                 location = table[i][j].upper()
             elif table[i][j] == '-' or table[i][j] == 'DROP':
-                arrival_time = '01-AUG-00 01.00.00.000000000 AM'
+                continue
             elif table[i][j].split(':') is not None:
                 split_time = table[i][j].split(':')
                 if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
@@ -135,7 +135,7 @@ def commit_schedule_to_db(table, all_locations):
     return "The Schedule has been submitted"
 
 
-def commit_shuttle_request_to_db(location):
+def commit_shuttle_request(location):
     if location != "":
         now = datetime.datetime.now()
         date = now.strftime('%d-%b-%Y %I:%M %p')
@@ -149,11 +149,7 @@ def commit_shuttle_request_to_db(location):
     return "Please select a location"
 
 
-def number_active_in_db():
-    sql = "SELECT ACTIVE FROM SHUTTLE_REQUEST_LOGS"
+def number_active_requests():
+    sql = "SELECT COUNT(*) FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
     results = query(sql, 'read')
-    currently_active = 0
-    for key in results:
-        if results[key]['active'].upper() == 'Y':
-            currently_active = currently_active + 1
-    return str(currently_active)
+    return str(results[0]['COUNT(*)'])

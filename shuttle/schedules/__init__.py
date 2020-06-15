@@ -17,9 +17,9 @@ class SchedulesView(FlaskView):
 
     @route('/request-shuttle')
     def request(self):
-        location_list = SheetsController.grab_locations(self)
+        locations = self.shc.grab_locations()
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
-        return render_template('/schedules/request_shuttle.html', locations=location_list)
+        return render_template('/schedules/request_shuttle.html', **locals())
 
     @route('/shuttle-schedules')
     def schedule(self):
@@ -43,11 +43,11 @@ class SchedulesView(FlaskView):
     @route('/send-schedule', methods=['GET', 'POST'])
     def send_shuttle_request_path(self):
         jsonData = request.get_json()
-        response = db.commit_shuttle_request_to_db(jsonData['location'])
+        response = db.commit_shuttle_request(jsonData['location'])
         return response
 
     def check_waitlist(self):
-        num_waiting = db.number_active_in_db()
+        num_waiting = db.number_active_requests()
         return num_waiting
 
 

@@ -20,7 +20,7 @@ class SheetsController:
         sheet = client.open("Bethel Shuttle Scheduling Spreadsheet").worksheet("Shuttle Schedule")
         list_of_times = sheet.get_all_values()
         locations = SheetsController.grab_locations(self)
-        sent = db.commit_schedule_to_db(list_of_times, locations)
+        sent = db.commit_schedule(list_of_times, locations)
         return sent
 
     def grab_locations(self):
