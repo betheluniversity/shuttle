@@ -46,6 +46,8 @@ def before_request():
             or '/no-cas/' in request.path:
         if 'ALERT' not in flask_session.keys():
             flask_session['ALERT'] = []
+    elif '/clear' in request.path:
+        pass
     else:
         if 'USERNAME' not in flask_session.keys():
             if app.config['ENVIRON'] == 'prod':
