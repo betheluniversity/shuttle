@@ -55,7 +55,9 @@ def before_request():
             else:
                 flask_session['USERNAME'] = app.config['TEST_USERNAME']
         if 'NAME' not in flask_session.keys():
-            flask_session['NAME'] = db.portal_common_profile(flask_session['USERNAME'])[0]['pref_first_last_name']
+            name = db.username_search(flask_session['USERNAME'])[0]['firstName'] + ' ' + \
+                   db.username_search(flask_session['USERNAME'])[0]['lastName']
+            flask_session['NAME'] = name
         if 'USER-ROLES' not in flask_session.keys():
             try:
                 flask_session['USER-ROLES'] = db.get_user_by_username(flask_session['USERNAME'])[0]
