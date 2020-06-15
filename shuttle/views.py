@@ -10,6 +10,11 @@ class View(FlaskView):
     def index(self):
         return render_template('index.html')
 
+    @route('/clear')
+    def clear_session(self):
+        flask_session.clear()
+        return 'success'
+
     @route('/logout', methods=['GET'])
     def logout(self):
         flask_session.clear()
