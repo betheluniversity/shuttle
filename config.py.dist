@@ -9,3 +9,5 @@ SECRET_KEY = ''
 SENTRY_URL = ''
 
 LOGOUT_URL = ''
+
+GS_CLIENT_SECRET = ''
