@@ -79,3 +79,7 @@ span.shuttle-title {
 .txt-underline:hover {
     text-decoration: underline;
 }
+
+.user-search{
+    margin-bottom: 10px;
+}

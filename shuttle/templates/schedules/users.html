@@ -4,7 +4,7 @@
 {% block body_content %}
 <!-- TODO: Use for loop to fill table with values. Sort alphabetically. -->
     <h4>Users</h4>
-    <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+    <input class="form-control user-search" type="text" placeholder="Search" aria-label="Search">
     <div class="card">
         <table class="table table-hover">
             <thead>
@@ -12,8 +12,8 @@
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Role</th>
-                <th scope="col">Change User</th>
                 <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
             </tr>
             </thead>
             <tbody>
@@ -21,22 +21,22 @@
                     <td class="name">*Insert Name here*</td>
                     <td class="email">*Insert email in here*</td>
                     <td class="role">*Insert role here*</td>
-                    <td class="change_user"><input class="btn btn-primary" type="submit" value="Act as User"></td>
                     <td class="edit"><input class="btn btn-primary" type="submit" value="Edit"></td>
+                    <td class="edit"><input class="btn btn-danger" type="submit" value="Delete"></td>
                 </tr>
                 <tr>
                     <td class="name">*Insert Name here*</td>
                     <td class="email">*Insert email in here*</td>
                     <td class="role">*Insert role here*</td>
-                    <td class="change_user"><input class="btn btn-primary" type="submit" value="Act As User"></td>
                     <td class="edit"><input class="btn btn-primary" type="submit" value="Edit"></td>
+                    <td class="edit"><input class="btn btn-danger" type="submit" value="Delete"></td>
                 </tr>
                 <tr>
                     <td class="name">*Insert Name here*</td>
                     <td class="email">*Insert email in here*</td>
                     <td class="role">*Insert role here*</td>
-                    <td class="change_user"><input class="btn btn-primary" type="submit" value="Act As User"></td>
                     <td class="edit"><input class="btn btn-primary" type="submit" value="Edit"></td>
+                    <td class="edit"><input class="btn btn-danger" type="submit" value="Delete"></td>
                 </tr>
             </tbody>
         </table>
