@@ -31,3 +31,8 @@ class SchedulesView(FlaskView):
     def logs(self):
         self.sc.check_roles_and_route(['Administrator'])
         return render_template('schedules/driver_logs.html')
+
+    @route('/users')
+    def users(self):
+        self.sc.check_roles_and_route(['Administrator'])
+        return render_template('/schedules/users.html')
