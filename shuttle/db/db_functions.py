@@ -102,3 +102,8 @@ def username_search(username):
             conn.close()
         # if mybethel can't get the data, then prevent anything from loading
         return abort(503)
+
+def get_users():
+    sql = "SELECT * FROM SHUTTLE_USERS"
+    results = query(sql, 'read')
+    return results

@@ -10,37 +10,23 @@
             <thead>
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Email</th>
+                <th scope="col">Username</th>
                 <th scope="col">Role</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
             </tr>
             </thead>
             <tbody>
+            {% for key,parent_dict_item in shuttle_user.items()%}
                 <tr>
-                    <td class="name">*Insert Name here*</td>
-                    <td class="email">*Insert email in here*</td>
-                    <td class="role">*Insert role here*</td>
+                    <td class="name">{{ parent_dict_item['name'] }}</td>
+                    <td class="username">{{ parent_dict_item['username'] }}</td>
+                    <td class="role">{{ parent_dict_item['role'] }}</td>
                     <td class="edit"><input class="btn btn-primary" type="submit" value="Edit"></td>
                     <td class="edit"><input class="btn btn-danger" type="submit" value="Delete"></td>
                 </tr>
-                <tr>
-                    <td class="name">*Insert Name here*</td>
-                    <td class="email">*Insert email in here*</td>
-                    <td class="role">*Insert role here*</td>
-                    <td class="edit"><input class="btn btn-primary" type="submit" value="Edit"></td>
-                    <td class="edit"><input class="btn btn-danger" type="submit" value="Delete"></td>
-                </tr>
-                <tr>
-                    <td class="name">*Insert Name here*</td>
-                    <td class="email">*Insert email in here*</td>
-                    <td class="role">*Insert role here*</td>
-                    <td class="edit"><input class="btn btn-primary" type="submit" value="Edit"></td>
-                    <td class="edit"><input class="btn btn-danger" type="submit" value="Delete"></td>
-                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
-
-
 {% endblock %}

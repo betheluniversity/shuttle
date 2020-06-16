@@ -1,5 +1,6 @@
 from flask import render_template
 from flask_classy import FlaskView, route
+from shuttle.db import db_functions as db
 
 from shuttle.shuttle_controller import ShuttleController
 
@@ -35,4 +36,10 @@ class SchedulesView(FlaskView):
     @route('/users')
     def users(self):
         self.sc.check_roles_and_route(['Administrator'])
-        return render_template('/schedules/users.html')
+        shuttle_user = db.get_users()
+
+        for key in shuttle_user:
+            shuttle_user[key]['name'] = db.username_search(shuttle_user[key]['username'])[0]['firstName'] + \
+                                        ' ' + db.username_search(shuttle_user[key]['username'])[0]['lastName']
+
+        return render_template('/schedules/users.html', **locals())
