@@ -154,6 +154,7 @@ def commit_shuttle_request(location):
     except:
         return "failure"
 
+
 def number_active_requests():
     try:
         sql = "SELECT COUNT(*) FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
