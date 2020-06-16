@@ -16,24 +16,16 @@
             </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="driver">*Insert Driver here*</td>
-                    <td class="location">*Insert location here*</td>
-                    <td class="check-in">*Insert time in here*</td>
-                    <td class="check-out">*Insert time out here*</td>
-                </tr>
-                <tr>
-                    <td class="driver">*Insert Driver here*</td>
-                    <td class="location">*Insert location here*</td>
-                    <td class="check-in">*Insert time in here*</td>
-                    <td class="check-out">*Insert time out here*</td>
-                </tr>
-                <tr>
-                    <td scope="driver">*Insert Driver here*</td>
-                    <td scope="location">*Insert location here*</td>
-                    <td class="check-in">*Insert time in here*</td>
-                    <td class="check-out">*Insert time out here*</td>
-                </tr>
+                {% for key,parent_dict_item in shuttle_logs.items() %}
+                    <tr>
+                        {% if parent_dict_item['location'] != None %}
+                            <td class="driver">{{ parent_dict_item['username'] }}</td>
+                            <td class="location">{{ parent_dict_item['location'] }}</td>
+                            <td class="check-in">{{ parent_dict_item['arrival_time'] }}</td>
+                            <td class="check-out">{{ parent_dict_item['departure_time'] }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -49,21 +41,15 @@
             </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="driver">*Insert Driver here*</td>
-                    <td class="check-in-break">*Insert time in here*</td>
-                    <td class="check-out-break">*Insert time out here*</td>
-                </tr>
-                <tr>
-                    <td scope="driver">*Insert Driver here*</td>
-                    <td class="check-in-break">*Insert time out here*</td>
-                    <td class="check-out-break">*Insert time out here*</td>
-                </tr>
-                <tr>
-                    <td scope="driver">*Insert Driver here*</td>
-                    <td class="check-in-break">*Insert time in here*</td>
-                    <td class="check-out-break">*Insert time out here*</td>
-                </tr>
+                {% for key,parent_dict_item in shuttle_logs.items() %}
+                    <tr>
+                        {% if parent_dict_item['location'] == None %}
+                            <td class="driver">{{ parent_dict_item['username'] }}</td>
+                            <td class="check-in">{{ parent_dict_item['arrival_time'] }}</td>
+                            <td class="check-out">{{ parent_dict_item['departure_time'] }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

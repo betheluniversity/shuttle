@@ -1,6 +1,6 @@
 from flask import render_template
 from flask_classy import FlaskView, route
-
+from shuttle.db import db_functions as db
 from shuttle.shuttle_controller import ShuttleController
 
 
@@ -30,4 +30,7 @@ class SchedulesView(FlaskView):
     @route('/driver-logs')
     def logs(self):
         self.sc.check_roles_and_route(['Administrator'])
-        return render_template('schedules/driver_logs.html')
+        shuttle_logs = db.get_shuttle_logs()
+        for item in shuttle_logs.keys():
+            del shuttle_logs[item]['id']
+        return render_template('schedules/driver_logs.html', **locals())
