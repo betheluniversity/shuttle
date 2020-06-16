@@ -62,7 +62,4 @@ class SchedulesView(FlaskView):
 
     def check_waitlist(self):
         num_waiting = db.number_active_requests()
-        if num_waiting == "failure":
-            self.shc.set_alert('danger', 'The waitlist is not responding. Please call the ITS Help '
-                                         'Desk at 651-638-6500 for support')
         return num_waiting

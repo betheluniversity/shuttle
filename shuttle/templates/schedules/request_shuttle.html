@@ -7,7 +7,7 @@
     <div class="center-page shuttle-margins">
        <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning"></span></h3>
     </div>
-
+    <hr>
     <div class="center-page">
         <h4>Select a location and time below to request the shuttle:</h4>
     </div>
@@ -38,9 +38,6 @@
             .done(function(data) {
                 $(".badge").text(data);
             })
-            .fail(function () {
-               location.reload()
-            });
     }
     window.onload = waitlist();
     $(document).ready(function() {
@@ -60,9 +57,6 @@
             }).done(function (data) {
                 location.reload();
             })
-            .fail(function () {
-                location.reload();
-            });
         });
     });
     </script>

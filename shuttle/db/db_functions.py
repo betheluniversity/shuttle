@@ -160,4 +160,4 @@ def number_active_requests():
         results = query(sql, 'read')
         return str(results[0]['COUNT(*)'])
     except:
-        return "failure"
+        return "Error"
