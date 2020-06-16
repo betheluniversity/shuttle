@@ -1,6 +1,6 @@
 from flask import render_template, request
 from flask_classy import FlaskView, route
-from shuttle.db.db_functions import number_active_in_db, commit_shuttle_request_to_db, commit_driver_check_in
+from shuttle.db import db_functions as db
 from shuttle.schedules.google_sheets_controller import SheetsController
 
 from shuttle.shuttle_controller import ShuttleController
@@ -9,6 +9,7 @@ from shuttle.shuttle_controller import ShuttleController
 class SchedulesView(FlaskView):
     def __init__(self):
         self.sc = ShuttleController()
+        self.shc = SheetsController()
 
     @route('/shuttle-stats')
     def stats(self):
@@ -16,9 +17,9 @@ class SchedulesView(FlaskView):
 
     @route('/request-shuttle')
     def request(self):
-        location_list = SheetsController.grab_locations(self)
+        locations = self.shc.grab_locations()
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
-        return render_template('/schedules/request_shuttle.html', locations=location_list)
+        return render_template('/schedules/request_shuttle.html', **locals())
 
     @route('/shuttle-schedules')
     def schedule(self):
@@ -37,19 +38,33 @@ class SchedulesView(FlaskView):
         return render_template('schedules/driver_logs.html')
 
     def send_schedule_path(self):
-        sent = SheetsController.send_schedule(self)
+        sent = self.shc.send_schedule()
+        if sent == "success":
+            self.shc.set_alert('success', 'The schedule has been submitted')
+        elif sent == "no match":
+            self.shc.set_alert('danger', 'Data in calendar does not match specified format')
+        else:
+            self.shc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                         'Desk at 651-638-6500 for support')
         return sent
 
-    @route('/send-schedule', methods=['Get', 'POST'])
+    @route('/send-schedule', methods=['GET', 'POST'])
     def send_shuttle_request_path(self):
         json_data = request.get_json()
-        response = commit_shuttle_request_to_db(json_data['location'])
+        response = db.commit_shuttle_request(json_data['location'])
+        if response == "success":
+            self.shc.set_alert('success', 'Your request has been submitted')
+        elif response == "bad location":
+            self.shc.set_alert('danger', 'Please select a location')
+        else:
+            self.shc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                         'Desk at 651-638-6500 for support')
         return response
 
     def check_waitlist(self):
-        num_waiting = number_active_in_db()
+        num_waiting = db.number_active_requests()
         return num_waiting
-
+      
     @route('/driver-check', methods=['Get', 'POST'])
     def send_driver_check_in_info(self):
         json_data = request.get_json()
@@ -58,6 +73,3 @@ class SchedulesView(FlaskView):
         else:
             response = commit_driver_check_in("","",json_data['break'])
         return response
-
-
-

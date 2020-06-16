@@ -4,6 +4,10 @@
 <title>Shuttle | {% block page_title %}Request{% endblock %}</title>
 {% block body_content %}
 
+    <div class="center-page shuttle-margins">
+       <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning"></span></h3>
+    </div>
+    <hr>
     <div class="center-page">
         <h4>Select a location and time below to request the shuttle:</h4>
     </div>
@@ -26,9 +30,6 @@
         </div>
     </div>
 
-    <div class="center-page">
-       <h4>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning"></span></h4>
-    </div>
     <script>
     function waitlist() {
         // Updates waitlist
@@ -38,9 +39,6 @@
             .done(function(data) {
                 $(".badge").text(data);
             })
-            .fail(function () {
-                alert("The waitlist is not responding. Please call the ITS Help Desk at 651-638-6500 for support");
-            });
     }
     window.onload = waitlist();
     $(document).ready(function() {
@@ -58,12 +56,8 @@
                 url: "{{ url_for('SchedulesView:send_shuttle_request_path') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                alert(data);
-                waitlist();
+                location.reload();
             })
-            .fail(function () {
-                alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
-            });
         });
     });
     </script>

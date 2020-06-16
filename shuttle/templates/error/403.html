@@ -1,0 +1,14 @@
+{% extends 'writing_center_base.html' %}
+
+{% block page_title %}403 Error{% endblock %}
+
+{% block body_content %}
+
+    <h1>Permission Denied</h1>
+    <h5>It looks like you don't have permission to view this page.</h5>
+
+    <p>Sorry about that! If you think that this is a mistake, please reach out to the Shuttle administrator or
+        contact the Help Desk at <a href="mailto:helpdesk@bethel.edu">helpdesk@bethel.edu</a>. Otherwise, you can try
+        returning to the <a href="{{ url_for('View:index') }}">Shuttle homepage</a>.</p>
+
+{% endblock %}
