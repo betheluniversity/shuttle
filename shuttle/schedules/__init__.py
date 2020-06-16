@@ -49,5 +49,3 @@ class SchedulesView(FlaskView):
     def check_waitlist(self):
         num_waiting = db.number_active_requests()
         return num_waiting
-
-
