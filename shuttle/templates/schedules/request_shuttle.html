@@ -39,7 +39,7 @@
                 $(".badge").text(data);
             })
             .fail(function () {
-                alert("The waitlist is not responding. Please call the ITS Help Desk at 651-638-6500 for support");
+               location.reload()
             });
     }
     window.onload = waitlist();
@@ -58,11 +58,10 @@
                 url: "{{ url_for('SchedulesView:send_shuttle_request_path') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                alert(data);
-                waitlist();
+                location.reload();
             })
             .fail(function () {
-                alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
+                location.reload();
             });
         });
     });

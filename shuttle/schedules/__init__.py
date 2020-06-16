@@ -38,14 +38,31 @@ class SchedulesView(FlaskView):
 
     def send_schedule_path(self):
         sent = self.shc.send_schedule()
+        if sent == "success":
+            self.shc.set_alert('success', 'The schedule has been submitted')
+        elif sent == "no match":
+            self.shc.set_alert('danger', 'Data in calendar does not match specified format')
+        else:
+            self.shc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                         'Desk at 651-638-6500 for support')
         return sent
 
     @route('/send-schedule', methods=['GET', 'POST'])
     def send_shuttle_request_path(self):
-        jsonData = request.get_json()
-        response = db.commit_shuttle_request(jsonData['location'])
+        json_data = request.get_json()
+        response = db.commit_shuttle_request(json_data['location'])
+        if response == "success":
+            self.shc.set_alert('success', 'Your request has been submitted')
+        elif response == "bad location":
+            self.shc.set_alert('danger', 'Please select a location')
+        else:
+            self.shc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                         'Desk at 651-638-6500 for support')
         return response
 
     def check_waitlist(self):
         num_waiting = db.number_active_requests()
+        if num_waiting == "failure":
+            self.shc.set_alert('danger', 'The waitlist is not responding. Please call the ITS Help '
+                                         'Desk at 651-638-6500 for support')
         return num_waiting

@@ -23,11 +23,10 @@
             $.ajax({
                 url: "{{ url_for('SchedulesView:send_schedule_path') }}",
             }).done(function(data) {
-                alert(data);
+                location.reload()
             })
             .fail(function () {
-                    alert("Something went wrong. Please check that the table formatting is correct or call the " +
-                        "ITS Help Desk at 651-638-6500");
+                location.reload()
             });
         });
     });

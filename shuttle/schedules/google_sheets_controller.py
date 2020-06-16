@@ -2,6 +2,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from shuttle import app
 from shuttle.db import db_functions as db
+from flask import session as flask_session
 
 
 class SheetsController:
@@ -28,3 +29,11 @@ class SheetsController:
         sheet = client.open("Bethel Shuttle Scheduling Spreadsheet").worksheet("Shuttle Locations")
         locations = sheet.col_values(1)
         return locations
+
+    # This method sets the alert for when one is needed next
+    def set_alert(self, message_type, message):
+        flask_session['ALERT'].append({
+            'type': message_type,
+            'message': message
+        })
+        flask_session.modified = True

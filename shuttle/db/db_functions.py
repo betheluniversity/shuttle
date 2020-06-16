@@ -107,49 +107,57 @@ def username_search(username):
 
 
 def commit_schedule(table, all_locations):
-    sql = "DELETE FROM SHUTTLE_SCHEDULE"
-    query(sql, 'write')
-    all_locations = [i.upper() for i in all_locations]
-    for i in range(len(table)):
-        location = ""
-        for j in range(len(table[i])):
-            arrival_time = 0
-            if table[i][j].upper() in all_locations:
-                location = table[i][j].upper()
-            elif table[i][j] == '-' or table[i][j] == 'DROP':
-                continue
-            elif table[i][j].split(':') is not None:
-                split_time = table[i][j].split(':')
-                if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
-                    joined_time = '.'.join(split_time)
-                    arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 PM'
+    try:
+        sql = "DELETE FROM SHUTTLE_SCHEDULE"
+        query(sql, 'write')
+        all_locations = [i.upper() for i in all_locations]
+        for i in range(len(table)):
+            location = ""
+            for j in range(len(table[i])):
+                arrival_time = 0
+                if table[i][j].upper() in all_locations:
+                    location = table[i][j].upper()
+                elif table[i][j] == '-' or table[i][j] == 'DROP':
+                    continue
+                elif ':' in table[i][j]:
+                    split_time = table[i][j].split(':')
+                    if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
+                        joined_time = '.'.join(split_time)
+                        arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 PM'
+                    else:
+                        joined_time = '.'.join(split_time)
+                        arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 AM'
                 else:
-                    joined_time = '.'.join(split_time)
-                    arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 AM'
-            else:
-                return "data in calendar does not match specified format"
-            if j is not 0:
-                sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION,ARRIVAL_TIME) VALUES (" + "\'" + location + \
-                      "\',\'" + arrival_time + "\')"
-                query(sql, 'write')
-    return "The Schedule has been submitted"
+                    return "no match"
+                if j is not 0:
+                    sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION,ARRIVAL_TIME) VALUES (" + "\'" + location + \
+                          "\',\'" + arrival_time + "\')"
+                    query(sql, 'write')
+        return "success"
+    except:
+        return "failure"
 
 
 def commit_shuttle_request(location):
-    if location != "":
-        now = datetime.datetime.now()
-        date = now.strftime('%d-%b-%Y %I:%M %p')
-        username = flask_session['USERNAME']
-        single_quote = "\'"
-        sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION) VALUES (TO_DATE(" + \
-            single_quote + date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + single_quote + username + \
-            single_quote + "," + single_quote + location + single_quote + ")"
-        query(sql, 'write')
-        return "Your request has been submitted"
-    return "Please select a location"
-
+    try:
+        if location != "":
+            now = datetime.datetime.now()
+            date = now.strftime('%d-%b-%Y %I:%M %p')
+            username = flask_session['USERNAME']
+            single_quote = "\'"
+            sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION) VALUES (TO_DATE(" + \
+                single_quote + date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + single_quote + username + \
+                single_quote + "," + single_quote + location + single_quote + ")"
+            query(sql, 'write')
+            return "success"
+        return "bad location"
+    except:
+        return "failure"
 
 def number_active_requests():
-    sql = "SELECT COUNT(*) FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
-    results = query(sql, 'read')
-    return str(results[0]['COUNT(*)'])
+    try:
+        sql = "SELECT COUNT(*) FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
+        results = query(sql, 'read')
+        return str(results[0]['COUNT(*)'])
+    except:
+        return "failure"
