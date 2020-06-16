@@ -52,11 +52,11 @@ class SchedulesView(FlaskView):
 
     @route('/driver-check', methods=['Get', 'POST'])
     def send_driver_check_in_info(self):
-        jsonData = request.get_json()
-        if 'location' in jsonData.keys():
-            response = commit_driver_check_in(jsonData['location'],jsonData['direction'], "")
+        json_data = request.get_json()
+        if 'location' in json_data.keys():
+            response = commit_driver_check_in(json_data['location'],json_data['direction'], "")
         else:
-            response = commit_driver_check_in("","",jsonData['break'])
+            response = commit_driver_check_in("","",json_data['break'])
         return response
 
 

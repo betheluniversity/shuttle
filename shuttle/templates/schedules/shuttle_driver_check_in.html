@@ -113,7 +113,7 @@
                 url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                $(".badge").text("On Break");
+                $(".badge").text("On break");
                 alert(data);
             })
                 .fail(function () {
@@ -129,7 +129,7 @@
                 url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                $(".badge").text("Not on Break");
+                $(".badge").text("Not on break");
                 alert(data);
             })
                 .fail(function () {
