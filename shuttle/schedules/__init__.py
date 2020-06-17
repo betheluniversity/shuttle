@@ -73,16 +73,16 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
         if 'location' in json_data.keys():
-            response = db.commit_driver_check_in(json_data['location'],json_data['direction'], "")
+            response = db.commit_driver_check_in(json_data['location'], json_data['direction'], "")
             if response == "success arrival":
                 self.sc.set_alert('success', 'Your arrival has been recorded')
             elif response == "success departure":
                 self.sc.set_alert('success', 'Your departure has been recorded')
         else:
-            response = db.commit_driver_check_in("","",json_data['break'])
+            response = db.commit_driver_check_in("", "", json_data['break'])
         if response == "bad location":
             self.sc.set_alert('danger', 'Please select a location')
         elif response == "Error":
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
-                                         'call the ITS Help Desk at 651-638-6500')
+                                        'call the ITS Help Desk at 651-638-6500')
         return response
