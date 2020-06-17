@@ -19,7 +19,7 @@
                     <tr>
                         {% if parent_dict_item['location'] != None %}
                             {% if parent_dict_item['name'] == None %}
-                                <td class="driver">N/A</td>
+                                <td class="driver"></td>
                             {% else %}
                                 <td class="driver">{{ parent_dict_item['name'] }}</td>
                             {% endif %}
@@ -60,7 +60,7 @@
                     <tr>
                         {% if parent_dict_item['location'] == None %}
                             {% if parent_dict_item['name'] == None %}
-                                <td class="driver">N/A</td>
+                                <td class="driver"></td>
                             {% else %}
                                 <td class="driver">{{ parent_dict_item['name'] }}</td>
                             {% endif %}
