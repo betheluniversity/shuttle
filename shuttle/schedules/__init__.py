@@ -38,6 +38,7 @@ class SchedulesView(FlaskView):
         return render_template('schedules/driver_logs.html')
 
     def send_schedule_path(self):
+        self.sc.check_roles_and_route(['Administrator'])
         sent = self.shc.send_schedule()
         if sent == "success":
             self.sc.set_alert('success', 'The schedule has been submitted')
@@ -50,6 +51,7 @@ class SchedulesView(FlaskView):
 
     @route('/send-schedule', methods=['GET', 'POST'])
     def send_shuttle_request_path(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         json_data = request.get_json()
         response = db.commit_shuttle_request(json_data['location'])
         if response == "success":
@@ -62,11 +64,13 @@ class SchedulesView(FlaskView):
         return response
 
     def check_waitlist(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         num_waiting = db.number_active_requests()
         return num_waiting
       
     @route('/driver-check', methods=['Get', 'POST'])
     def send_driver_check_in_info(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
         if 'location' in json_data.keys():
             response = db.commit_driver_check_in(json_data['location'],json_data['direction'], "")
