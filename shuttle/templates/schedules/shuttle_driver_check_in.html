@@ -82,11 +82,8 @@
                 url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                alert(data);
+                location.reload();
             })
-                .fail(function () {
-                    alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
-                });
         });
         $('.submit-arriving').click(function () {
             // Sends selected location and user info to database.
@@ -97,11 +94,8 @@
                 url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                alert(data);
+                location.reload();
             })
-                .fail(function () {
-                    alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
-                });
         });
 
         $('.check-out-btn').click(function () {
@@ -113,12 +107,8 @@
                 url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                $(".badge").text("On break");
-                alert(data);
+                $(".badge").text(data);
             })
-                .fail(function () {
-                    alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
-                });
         });
         $('.check-in-btn').click(function () {
             // sends check-in from break info to database
@@ -129,12 +119,8 @@
                 url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                $(".badge").text("Not on break");
-                alert(data);
+                $(".badge").text(data);
             })
-                .fail(function () {
-                    alert("Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500");
-                });
         });
     });
     </script>

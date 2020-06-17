@@ -135,7 +135,7 @@ def commit_schedule(table, all_locations):
                     query(sql, 'write')
         return "success"
     except:
-        return "failure"
+        return "Error"
 
 
 def commit_shuttle_request(location):
@@ -152,7 +152,7 @@ def commit_shuttle_request(location):
             return "success"
         return "bad location"
     except:
-        return "failure"
+        return "Error"
 
 
 def number_active_requests():
@@ -164,36 +164,43 @@ def number_active_requests():
         return "Error"
       
       
-def commit_driver_check_in(location,direction,driver_break):
-    now = datetime.datetime.now()
-    date = now.strftime('%d-%b-%Y')
-    full_date = now.strftime('%d-%b-%Y %I:%M %p')
-    username = flask_session['USERNAME']
-    single_quote = "\'"
-    if location != "":
-        if direction == 'departure':
-            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS(LOG_DATE,USERNAME,LOCATION,DEPARTURE_TIME) VALUES (" + single_quote + \
-                  date + single_quote + "," + single_quote + username + single_quote + "," + single_quote + location + \
-                  single_quote + "," + "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\'))"
-        elif direction == 'arrival':
-            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS(LOG_DATE,USERNAME,LOCATION,ARRIVAL_TIME) VALUES (" + single_quote + \
-                  date + single_quote + "," + single_quote + username + single_quote + "," + single_quote + location + \
-                  single_quote + "," + "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\'))"
-        else:
-            return "Something went wrong. Please try again or call the ITS Help Desk at 651-638-6500"
-        query(sql, 'write')
-        return "Your location has been submitted"
-    elif driver_break != "":
-        if driver_break == 'N':
-            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS(LOG_DATE,USERNAME,ARRIVAL_TIME,ON_BREAK) VALUES (" + \
-                single_quote + date + single_quote + "," + single_quote + username + single_quote + "," + \
-                "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + \
-                single_quote + driver_break + single_quote + ")"
-        elif driver_break == 'Y':
-            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS(LOG_DATE,USERNAME,DEPARTURE_TIME,ON_BREAK) VALUES (" + \
-                single_quote + date + single_quote + "," + single_quote + username + single_quote + "," + \
-                "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + \
-                single_quote + driver_break + single_quote + ")"
-        query(sql, 'write')
-        return "Your break has been submitted"
-    return "Please select a location"
+def commit_driver_check_in(location, direction, driver_break):
+    try:
+        now = datetime.datetime.now()
+        date = now.strftime('%d-%b-%Y')
+        full_date = now.strftime('%d-%b-%Y %I:%M %p')
+        username = flask_session['USERNAME']
+        single_quote = "\'"
+        if location != "":
+            if direction == 'departure':
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES (" + single_quote + \
+                      date + single_quote + "," + single_quote + username + single_quote + "," + single_quote + location + \
+                      single_quote + "," + "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\'))"
+            elif direction == 'arrival':
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, ARRIVAL_TIME) VALUES (" + single_quote + \
+                      date + single_quote + "," + single_quote + username + single_quote + "," + single_quote + location + \
+                      single_quote + "," + "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\'))"
+            else:
+                return "Error"
+            query(sql, 'write')
+            return "success"
+        elif driver_break != "":
+            if driver_break == 'N':
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, ARRIVAL_TIME, ON_BREAK) VALUES (" + \
+                    single_quote + date + single_quote + "," + single_quote + username + single_quote + "," + \
+                    "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + \
+                    single_quote + driver_break + single_quote + ")"
+                query(sql, 'write')
+                return "On break"
+            elif driver_break == 'Y':
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, DEPARTURE_TIME, ON_BREAK) VALUES (" + \
+                    single_quote + date + single_quote + "," + single_quote + username + single_quote + "," + \
+                    "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + \
+                    single_quote + driver_break + single_quote + ")"
+                query(sql, 'write')
+                return "Not on break"
+            else:
+                return "Error"
+        return "bad location"
+    except:
+        return "Error"

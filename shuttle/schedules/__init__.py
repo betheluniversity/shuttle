@@ -28,9 +28,9 @@ class SchedulesView(FlaskView):
 
     @route('/driver-check-in')
     def check_in(self):
-        location_list = SheetsController.grab_locations(self)
+        locations = self.shc.grab_locations()
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
-        return render_template('schedules/shuttle_driver_check_in.html', locations=location_list)
+        return render_template('schedules/shuttle_driver_check_in.html', **locals())
 
     @route('/driver-logs')
     def logs(self):
@@ -69,7 +69,14 @@ class SchedulesView(FlaskView):
     def send_driver_check_in_info(self):
         json_data = request.get_json()
         if 'location' in json_data.keys():
-            response = commit_driver_check_in(json_data['location'],json_data['direction'], "")
+            response = db.commit_driver_check_in(json_data['location'],json_data['direction'], "")
+            if response == "success":
+                self.shc.set_alert('success', 'Your location has been recorded')
         else:
-            response = commit_driver_check_in("","",json_data['break'])
+            response = db.commit_driver_check_in("","",json_data['break'])
+        if response == "bad location":
+            self.shc.set_alert('danger', 'Please select a location')
+        elif response == "Error":
+            self.shc.set_alert('danger', 'Something went wrong. Please try again or '
+                                         'call the ITS Help Desk at 651-638-6500')
         return response
