@@ -40,11 +40,11 @@ class SchedulesView(FlaskView):
     def send_schedule_path(self):
         sent = self.shc.send_schedule()
         if sent == "success":
-            self.shc.set_alert('success', 'The schedule has been submitted')
+            self.sc.set_alert('success', 'The schedule has been submitted')
         elif sent == "no match":
-            self.shc.set_alert('danger', 'Data in calendar does not match specified format')
+            self.sc.set_alert('danger', 'Data in calendar does not match specified format')
         else:
-            self.shc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+            self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
                                          'Desk at 651-638-6500 for support')
         return sent
 
@@ -53,11 +53,11 @@ class SchedulesView(FlaskView):
         json_data = request.get_json()
         response = db.commit_shuttle_request(json_data['location'])
         if response == "success":
-            self.shc.set_alert('success', 'Your request has been submitted')
+            self.sc.set_alert('success', 'Your request has been submitted')
         elif response == "bad location":
-            self.shc.set_alert('danger', 'Please select a location')
+            self.sc.set_alert('danger', 'Please select a location')
         else:
-            self.shc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+            self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
                                          'Desk at 651-638-6500 for support')
         return response
 
@@ -71,14 +71,14 @@ class SchedulesView(FlaskView):
         if 'location' in json_data.keys():
             response = db.commit_driver_check_in(json_data['location'],json_data['direction'], "")
             if response == "success arrival":
-                self.shc.set_alert('success', 'Your arrival has been recorded')
+                self.sc.set_alert('success', 'Your arrival has been recorded')
             elif response == "success departure":
-                self.shc.set_alert('success', 'Your departure has been recorded')
+                self.sc.set_alert('success', 'Your departure has been recorded')
         else:
             response = db.commit_driver_check_in("","",json_data['break'])
         if response == "bad location":
-            self.shc.set_alert('danger', 'Please select a location')
+            self.sc.set_alert('danger', 'Please select a location')
         elif response == "Error":
-            self.shc.set_alert('danger', 'Something went wrong. Please try again or '
+            self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                          'call the ITS Help Desk at 651-638-6500')
         return response
