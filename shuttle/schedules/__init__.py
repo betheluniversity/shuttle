@@ -70,8 +70,10 @@ class SchedulesView(FlaskView):
         json_data = request.get_json()
         if 'location' in json_data.keys():
             response = db.commit_driver_check_in(json_data['location'],json_data['direction'], "")
-            if response == "success":
-                self.shc.set_alert('success', 'Your location has been recorded')
+            if response == "success arrival":
+                self.shc.set_alert('success', 'Your arrival has been recorded')
+            elif response == "success departure":
+                self.shc.set_alert('success', 'Your departure has been recorded')
         else:
             response = db.commit_driver_check_in("","",json_data['break'])
         if response == "bad location":

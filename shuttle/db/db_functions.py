@@ -176,14 +176,16 @@ def commit_driver_check_in(location, direction, driver_break):
                 sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES (" + single_quote + \
                       date + single_quote + "," + single_quote + username + single_quote + "," + single_quote + location + \
                       single_quote + "," + "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\'))"
+                query(sql, 'write')
+                return "success departure"
             elif direction == 'arrival':
                 sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, ARRIVAL_TIME) VALUES (" + single_quote + \
                       date + single_quote + "," + single_quote + username + single_quote + "," + single_quote + location + \
                       single_quote + "," + "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\'))"
+                query(sql, 'write')
+                return "success arrival"
             else:
                 return "Error"
-            query(sql, 'write')
-            return "success"
         elif driver_break != "":
             if driver_break == 'N':
                 sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, ARRIVAL_TIME, ON_BREAK) VALUES (" + \
