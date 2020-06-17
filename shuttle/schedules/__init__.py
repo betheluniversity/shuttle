@@ -17,8 +17,8 @@ class SchedulesView(FlaskView):
 
     @route('/request-shuttle')
     def request(self):
-        locations = self.shc.grab_locations()
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
+        locations = self.shc.grab_locations()
         return render_template('/schedules/request_shuttle.html', **locals())
 
     @route('/shuttle-schedules')
@@ -28,8 +28,8 @@ class SchedulesView(FlaskView):
 
     @route('/driver-check-in')
     def check_in(self):
-        locations = self.shc.grab_locations()
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
+        locations = self.shc.grab_locations()
         return render_template('schedules/shuttle_driver_check_in.html', **locals())
 
     @route('/driver-logs')
