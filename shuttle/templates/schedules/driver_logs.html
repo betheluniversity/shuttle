@@ -1,9 +1,8 @@
 {% extends 'shuttle_base.html' %}
-<!-- TODO: Make only viewable by admins/drivers. Make logs real data -->
 <!-- TODO: Maybe reset data after every day and send report to driver supervisors -->
 <title>Shuttle | {% block page_title %}Driver Logs{% endblock %}</title>
 {% block body_content %}
-<!-- TODO: Use for loop to fill table with values. Set it up to send info as txt file? Maybe sort tables by driver -->
+<!-- TODO: Set it up to send info as txt file? Maybe sort tables by driver -->
     <h4>Driver Shuttle Logs</h4>
     <div class="card">
         <table class="table table-hover">
@@ -19,10 +18,26 @@
                 {% for key,parent_dict_item in shuttle_logs.items() %}
                     <tr>
                         {% if parent_dict_item['location'] != None %}
-                            <td class="driver">{{ parent_dict_item['username'] }}</td>
-                            <td class="location">{{ parent_dict_item['location'] }}</td>
-                            <td class="check-in">{{ parent_dict_item['arrival_time'] }}</td>
-                            <td class="check-out">{{ parent_dict_item['departure_time'] }}</td>
+                            {% if parent_dict_item['username'] == None %}
+                                <td class="driver">N/A</td>
+                            {% else %}
+                                <td class="driver">{{ parent_dict_item['username'] }}</td>
+                            {% endif %}
+                            {% if parent_dict_item['location'] == None %}
+                                <td class="location">N/A</td>
+                            {% else %}
+                                <td class="location">{{ parent_dict_item['location'] }}</td>
+                            {% endif %}
+                            {% if parent_dict_item['arrival_time'] == None %}
+                                <td class="check-in"></td>
+                            {% else %}
+                                <td class="check-in">{{ parent_dict_item['arrival_time'] }}</td>
+                            {% endif %}
+                            {% if parent_dict_item['departure_time'] == None %}
+                                <td class="check-out"></td>
+                            {% else %}
+                                <td class="check-out">{{ parent_dict_item['departure_time'] }}</td>
+                            {% endif %}
                         {% endif %}
                     </tr>
                 {% endfor %}
@@ -44,15 +59,26 @@
                 {% for key,parent_dict_item in shuttle_logs.items() %}
                     <tr>
                         {% if parent_dict_item['location'] == None %}
-                            <td class="driver">{{ parent_dict_item['username'] }}</td>
-                            <td class="check-in">{{ parent_dict_item['arrival_time'] }}</td>
-                            <td class="check-out">{{ parent_dict_item['departure_time'] }}</td>
+                            {% if parent_dict_item['username'] == None %}
+                                <td class="driver">N/A</td>
+                            {% else %}
+                                <td class="driver">{{ parent_dict_item['username'] }}</td>
+                            {% endif %}
+                            {% if parent_dict_item['arrival_time'] == None %}
+                                <td class="check-in"></td>
+                            {% else %}
+                                <td class="check-in">{{ parent_dict_item['arrival_time'] }}</td>
+                            {% endif %}
+                            {% if parent_dict_item['departure_time'] == None %}
+                                <td class="check-out"></td>
+                            {% else %}
+                                <td class="check-out">{{ parent_dict_item['departure_time'] }}</td>
+                            {% endif %}
                         {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-
 
 {% endblock %}
