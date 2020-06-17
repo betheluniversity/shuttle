@@ -191,14 +191,14 @@ def commit_driver_check_in(location, direction, driver_break):
                     "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + \
                     single_quote + driver_break + single_quote + ")"
                 query(sql, 'write')
-                return "On break"
+                return "Not on break"
             elif driver_break == 'Y':
                 sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, DEPARTURE_TIME, ON_BREAK) VALUES (" + \
                     single_quote + date + single_quote + "," + single_quote + username + single_quote + "," + \
                     "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + \
                     single_quote + driver_break + single_quote + ")"
                 query(sql, 'write')
-                return "Not on break"
+                return "On break"
             else:
                 return "Error"
         return "bad location"
