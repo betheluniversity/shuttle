@@ -17,23 +17,15 @@ class SheetsController:
         return client
 
     def send_schedule(self):
-        client = SheetsController.credentials(self)
+        client = self.credentials()
         sheet = client.open("Bethel Shuttle Scheduling Spreadsheet").worksheet("Shuttle Schedule")
         list_of_times = sheet.get_all_values()
-        locations = SheetsController.grab_locations(self)
+        locations = self.grab_locations()
         sent = db.commit_schedule(list_of_times, locations)
         return sent
 
     def grab_locations(self):
-        client = SheetsController.credentials(self)
+        client = self.credentials()
         sheet = client.open("Bethel Shuttle Scheduling Spreadsheet").worksheet("Shuttle Locations")
         locations = sheet.col_values(1)
         return locations
-
-    # This method sets the alert for when one is needed next
-    def set_alert(self, message_type, message):
-        flask_session['ALERT'].append({
-            'type': message_type,
-            'message': message
-        })
-        flask_session.modified = True
