@@ -31,4 +31,7 @@ class SchedulesView(FlaskView):
     def logs(self):
         self.sc.check_roles_and_route(['Administrator'])
         shuttle_logs = db.get_shuttle_logs()
+        for key in shuttle_logs:
+            shuttle_logs[key]['name'] = db.username_search(shuttle_logs[key]['username'])[0]['firstName'] + \
+                                        ' ' + db.username_search(shuttle_logs[key]['username'])[0]['lastName']
         return render_template('schedules/driver_logs.html', **locals())

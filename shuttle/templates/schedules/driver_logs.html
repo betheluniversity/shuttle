@@ -18,10 +18,10 @@
                 {% for key,parent_dict_item in shuttle_logs.items() %}
                     <tr>
                         {% if parent_dict_item['location'] != None %}
-                            {% if parent_dict_item['username'] == None %}
+                            {% if parent_dict_item['name'] == None %}
                                 <td class="driver">N/A</td>
                             {% else %}
-                                <td class="driver">{{ parent_dict_item['username'] }}</td>
+                                <td class="driver">{{ parent_dict_item['name'] }}</td>
                             {% endif %}
                             {% if parent_dict_item['location'] == None %}
                                 <td class="location">N/A</td>
@@ -59,10 +59,10 @@
                 {% for key,parent_dict_item in shuttle_logs.items() %}
                     <tr>
                         {% if parent_dict_item['location'] == None %}
-                            {% if parent_dict_item['username'] == None %}
+                            {% if parent_dict_item['name'] == None %}
                                 <td class="driver">N/A</td>
                             {% else %}
-                                <td class="driver">{{ parent_dict_item['username'] }}</td>
+                                <td class="driver">{{ parent_dict_item['name'] }}</td>
                             {% endif %}
                             {% if parent_dict_item['arrival_time'] == None %}
                                 <td class="check-in"></td>
