@@ -3,7 +3,6 @@ from flask import session as flask_session
 from flask_classy import FlaskView, route
 
 from shuttle import app
-from shuttle.db import db_functions as db
 
 
 class View(FlaskView):

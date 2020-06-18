@@ -1,8 +1,8 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+
 from shuttle import app
 from shuttle.db import db_functions as db
-from flask import session as flask_session
 
 
 class SheetsController:

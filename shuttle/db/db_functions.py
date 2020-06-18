@@ -2,6 +2,7 @@ import datetime
 
 from flask import abort
 from flask import session as flask_session
+
 from shuttle.db.db_connection import engine
 from shuttle import app, sentry_sdk
 

@@ -1,8 +1,8 @@
 from flask import render_template, request
 from flask_classy import FlaskView, route
+
 from shuttle.db import db_functions as db
 from shuttle.schedules.google_sheets_controller import SheetsController
-
 from shuttle.shuttle_controller import ShuttleController
 
 
