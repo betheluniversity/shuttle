@@ -4,81 +4,120 @@
 {% block body_content %}
 <!-- TODO: Set it up to send info as txt file? Maybe sort tables by driver -->
     <h4>Driver Shuttle Logs</h4>
-    <div class="card">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">Driver</th>
-                <th scope="col">Location</th>
-                <th scope="col">Check In</th>
-                <th scope="col">Check Out</th>
-            </tr>
-            </thead>
-            <tbody>
-                {% for key,parent_dict_item in shuttle_logs.items() %}
-                    <tr>
-                        {% if parent_dict_item['location'] != None %}
-                            {% if parent_dict_item['name'] == None %}
-                                <td class="driver"></td>
-                            {% else %}
-                                <td class="driver">{{ parent_dict_item['name'] }}</td>
-                            {% endif %}
-                            {% if parent_dict_item['location'] == None %}
-                                <td class="location">N/A</td>
-                            {% else %}
-                                <td class="location">{{ parent_dict_item['location'] }}</td>
-                            {% endif %}
-                            {% if parent_dict_item['arrival_time'] == None %}
-                                <td class="check-in"></td>
-                            {% else %}
-                                <td class="check-in">{{ parent_dict_item['arrival_time'] }}</td>
-                            {% endif %}
-                            {% if parent_dict_item['departure_time'] == None %}
-                                <td class="check-out"></td>
-                            {% else %}
-                                <td class="check-out">{{ parent_dict_item['departure_time'] }}</td>
-                            {% endif %}
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    {% for i in range(date_list|length) %}
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="heading-tw">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#shuttle-log-collapse-{{ i }}" aria-expanded="true" aria-controls="shuttle-log-collapse-{{ i }}">
+                            {{ date_list[i] }}
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="shuttle-log-collapse-{{ i }}" class="collapse" aria-labelledby="heading-tw">
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Driver</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Check In</th>
+                                <th scope="col">Check Out</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for j in range(shuttle_logs|length) %}
+                                    <tr>
+                                    {% if shuttle_logs[j]['log_date'] == date_list[i] and shuttle_logs[j]['location'] != None %}
+                                        <td class="driver">
+                                            {% if shuttle_logs[j]['name'] != None %}
+                                                {{ shuttle_logs[j]['name'] }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="location">
+                                            {% if shuttle_logs[j]['location'] != None %}
+                                               {{ shuttle_logs[j]['location'] }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="check-in">
+                                            {% if shuttle_logs[j]['arrival_time'] != None %}
+                                                {{ shuttle_logs[j]['arrival_time'] }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="check-out">
+                                            {% if shuttle_logs[j]['departure_time'] != None %}
+                                                {{ shuttle_logs[j]['departure_time'] }}
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+
+
+
     <hr>
+
+
     <h4>Driver Break Logs</h4>
-    <div class="card">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">Driver</th>
-                <th scope="col">Break Time In</th>
-                <th scope="col">Break Time Out</th>
-            </tr>
-            </thead>
-            <tbody>
-                {% for key,parent_dict_item in shuttle_logs.items() %}
-                    <tr>
-                        {% if parent_dict_item['location'] == None %}
-                            {% if parent_dict_item['name'] == None %}
-                                <td class="driver"></td>
-                            {% else %}
-                                <td class="driver">{{ parent_dict_item['name'] }}</td>
-                            {% endif %}
-                            {% if parent_dict_item['arrival_time'] == None %}
-                                <td class="check-in"></td>
-                            {% else %}
-                                <td class="check-in">{{ parent_dict_item['arrival_time'] }}</td>
-                            {% endif %}
-                            {% if parent_dict_item['departure_time'] == None %}
-                                <td class="check-out"></td>
-                            {% else %}
-                                <td class="check-out">{{ parent_dict_item['departure_time'] }}</td>
-                            {% endif %}
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+
+    {% for i in range(date_list|length) %}
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="heading-tw">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#break-log-collapse-{{ i }}" aria-expanded="true" aria-controls="break-log-collapse-{{ i }}">
+                            {{ date_list[i] }}
+                        </button>
+                    </h5>
+                </div>
+
+            <div id="break-log-collapse-{{ i }}" class="collapse" aria-labelledby="heading-tw">
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Driver</th>
+                                <th scope="col">Break Time In</th>
+                                <th scope="col">Break Time Out</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for j in range(shuttle_logs|length) %}
+                                    <tr>
+                                    {% if shuttle_logs[j]['log_date'] == date_list[i] and shuttle_logs[j]['location'] == None %}
+                                        <td class="driver">
+                                            {% if shuttle_logs[j]['name'] != None %}
+                                                {{ shuttle_logs[j]['name'] }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="check-in">
+                                            {% if shuttle_logs[j]['arrival_time'] != None %}
+                                                {{ shuttle_logs[j]['arrival_time'] }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="check-out">
+                                            {% if shuttle_logs[j]['departure_time'] != None %}
+                                                {{ shuttle_logs[j]['departure_time'] }}
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 
 {% endblock %}

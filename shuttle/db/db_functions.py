@@ -105,6 +105,6 @@ def username_search(username):
 
 
 def get_shuttle_logs():
-    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS"
+    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS ORDER BY LOG_DATE"
     results = query(sql, 'read')
     return results
