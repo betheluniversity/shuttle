@@ -1,8 +1,8 @@
 {% block body_content %}
-    {% set ns = namespace(first_time_shuttle = true) %}
+    {% set nss = namespace(first_time_shuttle = true) %}
     {% for i in range(logs|length) %}
         {% if logs[i]['log_date'] == date and logs[i]['location'] != None %}
-            {% if ns.first_time_shuttle == true %}
+            {% if nss.first_time_shuttle == true %}
                 <h4>Driver Shuttle Logs</h4>
                 <div class="card">
                 <div class="card-header" id="heading-tw">
@@ -20,7 +20,7 @@
                 </thead>
                 <tbody>
                 <tr>
-                {% set ns.first_time_shuttle = false %}
+                {% set nss.first_time_shuttle = false %}
             {% endif %}
             <td class="driver">
                 {% if logs[i]['name'] != None %}
@@ -50,14 +50,14 @@
 </div>
 </div>
 
-    {% if ns.first_time_shuttle == false %}
+    {% if nss.first_time_shuttle == false %}
         <hr>
     {% endif %}
 
-    {% set ns = namespace(first_time_break = true) %}
+    {% set nsb = namespace(first_time_break = true) %}
     {% for i in range(logs|length) %}
         {% if logs[i]['log_date'] == date and logs[i]['location'] == None %}
-            {% if ns.first_time_break == true %}
+            {% if nsb.first_time_break == true %}
                 <h4>Driver Break Logs</h4>
                 <div class="card">
                     <div class="card-header" id="heading-tw">
@@ -74,7 +74,7 @@
                             </thead>
                             <tbody>
                 <tr>
-                {% set ns.first_time_break = false %}
+                {% set nsb.first_time_break = false %}
             {% endif %}
             <td class="driver">
                 {% if logs[i]['name'] != None %}
@@ -98,5 +98,12 @@
 </table>
 </div>
 </div>
+
+    <div class="center-page">
+        {% if nss.first_time_shuttle == true and nsb.first_time_break == true %}
+            <h4>There are no logs available for today's date</h4>
+        {% endif %}
+    </div>
+
 
 {% endblock %}

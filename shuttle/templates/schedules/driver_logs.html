@@ -13,38 +13,30 @@
                 </div>
             </div>
         </div>
-
-        <div class="align-side-by-side">
-            <div class="submit">
-                <input class="btn btn-warning btn-lg submit-btn" type="submit" value="Submit">
-            </div>
-        </div>
     </div>
 
-    <div id="includedContent"></div>
+    <div id="driver_log_display"></div>
 
     <script>
      $(document).ready(function() {
-        $(".dropdown-menu a").click(function(){
-            // Dropdown shows location selected
-            $(".date-menu:first-child").text($(this).text());
-            $(".date-menu:first-child").val($(this).text());
-        });
-        $('.submit-btn').click(function () {
-            // Sends selected location and user info to database. Updates waitlist
-            var data = {"date":$('.date-menu').val()}
-            $.ajax({
+         window.onload = load_data("today's date");
+         function load_data(data){
+             $.ajax({
                 type: 'POST',
                 contentType: 'application/json',
                 url: "{{ url_for('SchedulesView:shuttle_logs') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                if (data == "no log") {
-                    location.reload()
-                } else {
-                    $("#includedContent").html(data);
-                }
+                $("#driver_log_display").html(data);
             });
+         }
+        $(".dropdown-menu a").click(function() {
+            // Dropdown shows location selected
+            $(".date-menu:first-child").text($(this).text());
+            $(".date-menu:first-child").val($(this).text());
+            // Sends data to be shown on screen
+            var data = {"date": $('.date-menu').val()}
+            load_data(data);
         });
     });
     </script>

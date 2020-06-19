@@ -1,3 +1,5 @@
+import datetime
+
 from flask import render_template, request
 from flask_classy import FlaskView, route
 from shuttle.db import db_functions as db
@@ -48,9 +50,10 @@ class SchedulesView(FlaskView):
     @route('/shuttle-logs', methods=['GET', 'POST'])
     def shuttle_logs(self):
         json_data = request.get_json()
-        date = json_data['date']
+        if json_data == "today's date":
+            now = datetime.datetime.now()
+            date = now.strftime('%Y-%m-%d')
+        else:
+            date = json_data['date']
         logs = shuttle_logs
-        if date == '':
-            self.sc.set_alert('danger', 'Please select a log')
-            return "no log"
         return render_template('schedules/load_logs.html', **locals())
