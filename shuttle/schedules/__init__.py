@@ -45,7 +45,7 @@ class SchedulesView(FlaskView):
                 date_list.append(date)
         return render_template('schedules/driver_logs.html', **locals())
 
-    @route('/shuttle_logs', methods=['GET', 'POST'])
+    @route('/shuttle-logs', methods=['GET', 'POST'])
     def shuttle_logs(self):
         json_data = request.get_json()
         date = json_data['date']
