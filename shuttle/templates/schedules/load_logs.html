@@ -1,0 +1,102 @@
+{% block body_content %}
+    {% set ns = namespace(first_time_shuttle = true) %}
+    {% for i in range(logs|length) %}
+        {% if logs[i]['log_date'] == date and logs[i]['location'] != None %}
+            {% if ns.first_time_shuttle == true %}
+                <h4>Driver Shuttle Logs</h4>
+                <div class="card">
+                <div class="card-header" id="heading-tw">
+                    {{ date }}
+                </div>
+                <div class="card-body">
+                <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Driver</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Check In</th>
+                    <th scope="col">Check Out</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                {% set ns.first_time_shuttle = false %}
+            {% endif %}
+            <td class="driver">
+                {% if logs[i]['name'] != None %}
+                    {{ logs[i]['name'] }}
+                {% endif %}
+            </td>
+            <td class="location">
+            {% if logs[i]['location'] != None %}
+                {{ logs[i]['location'] }}
+            {% endif %}
+        </td>
+            <td class="check-in">
+                {% if logs[i]['arrival_time'] != None %}
+                    {{ logs[i]['arrival_time'] }}
+                {% endif %}
+            </td>
+            <td class="check-out">
+                {% if logs[i]['departure_time'] != None %}
+                    {{ logs[i]['departure_time'] }}
+                {% endif %}
+            </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+
+    {% if ns.first_time_shuttle == false %}
+        <hr>
+    {% endif %}
+
+    {% set ns = namespace(first_time_break = true) %}
+    {% for i in range(logs|length) %}
+        {% if logs[i]['log_date'] == date and logs[i]['location'] == None %}
+            {% if ns.first_time_break == true %}
+                <h4>Driver Break Logs</h4>
+                <div class="card">
+                    <div class="card-header" id="heading-tw">
+                        {{ date }}
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Driver</th>
+                                <th scope="col">Break Time In</th>
+                                <th scope="col">Break Time Out</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                <tr>
+                {% set ns.first_time_break = false %}
+            {% endif %}
+            <td class="driver">
+                {% if logs[i]['name'] != None %}
+                    {{ logs[i]['name'] }}
+                {% endif %}
+            </td>
+            <td class="check-in">
+                {% if logs[i]['arrival_time'] != None %}
+                    {{ logs[i]['arrival_time'] }}
+                {% endif %}
+            </td>
+            <td class="check-out">
+                {% if logs[i]['departure_time'] != None %}
+                    {{ logs[i]['departure_time'] }}
+                {% endif %}
+            </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+
+{% endblock %}

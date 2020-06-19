@@ -27,6 +27,10 @@ body {
     border-color: #0056B5;
 }
 
+.card-body{
+    padding: 0rem;
+}
+
 .center-page {
     text-align: center;
 }
@@ -60,6 +64,12 @@ nav.navbar {
 
 .row {
     display: block;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
 }
 
 .shuttle-margins {
