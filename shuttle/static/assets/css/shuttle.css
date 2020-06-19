@@ -89,3 +89,7 @@ span.shuttle-title {
 .txt-underline:hover {
     text-decoration: underline;
 }
+
+.table td{
+    padding: 0.5rem;
+}
