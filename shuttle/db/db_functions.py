@@ -164,12 +164,35 @@ def commit_shuttle_request(location):
 
 def number_active_requests():
     try:
-        sql = "SELECT COUNT(*) FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
+        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
         results = query(sql, 'read')
-        return str(results[0]['COUNT(*)'])
+        username = flask_session['USERNAME']
+        location = ''
+        for log in results:
+            if results[log]['username'] == username:
+                location = results[log]['location']
+        requests = {0: len(results), 1: location}
+        return requests
     except:
         return "Error"
-      
+
+
+def delete_current_request():
+    try:
+        username = flask_session['USERNAME']
+        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = '{0}'".format('Y')
+        all_requests = query(sql, 'read')
+        found = False
+        for request in all_requests:
+            if all_requests[request]['username'] == username:
+                found = True
+        if not found:
+            return "no requests"
+        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE USERNAME = '{0}'".format(username)
+        query(sql, 'write')
+        return "success"
+    except:
+        return "Error"
       
 def commit_driver_check_in(location, direction, driver_break):
     try:

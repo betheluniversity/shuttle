@@ -4,9 +4,10 @@
 {% block body_content %}
 
     <div class="center-page shuttle-margins">
-       <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning"></span></h3>
+       <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning waitlist"></span></h3>
+        <hr>
     </div>
-    <hr>
+
     <div class="center-page">
         <h4>Select a location and time below to request the shuttle:</h4>
     </div>
@@ -15,7 +16,7 @@
         <div class="align-side-by-side">
             <div class="dropdown">
                 <button class="btn btn-primary btn-lg dropdown-toggle location-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton">
                     {% for location in locations %}
                         <a class="dropdown-item" href="#">{{ location }}</a>
                     {% endfor %}
@@ -29,6 +30,12 @@
         </div>
     </div>
 
+    <div class="center-page shuttle-margins">
+        <hr>
+       <h4>Active Requests: <span class="badge badge-pill badge-warning status"></span></h4>
+        <div id="delete-request"><input class="btn btn-danger btn-sm delete-btn" type="submit" value="Delete Request"></div>
+    </div>
+
     <script>
     function waitlist() {
         // Updates waitlist
@@ -36,7 +43,12 @@
               url: "{{ url_for('SchedulesView:check_waitlist') }}",
         })
             .done(function(data) {
-                $(".badge").text(data);
+                $(".waitlist").text(data[0]);
+                if(data[1] != '') {
+                    $(".status").text(data[1]);
+                }else{
+                    $(".status").text("No current Requests");
+                }
             })
     }
     window.onload = waitlist();
@@ -54,7 +66,16 @@
                 contentType: 'application/json',
                 url: "{{ url_for('SchedulesView:send_shuttle_request_path') }}",
                 data: JSON.stringify((data)),
-            }).done(function (data) {
+            }).done(function () {
+                location.reload();
+            })
+        });
+        $('.delete-btn').click(function () {
+            // Deletes user's current shuttle request
+            console.log("test")
+            $.ajax({
+                url: "{{ url_for('SchedulesView:delete_request') }}",
+            }).done(function () {
                 location.reload();
             })
         });
