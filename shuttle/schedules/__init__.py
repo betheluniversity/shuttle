@@ -76,6 +76,8 @@ class SchedulesView(FlaskView):
             self.sc.set_alert('success', 'Your request has been submitted')
         elif response == "bad location":
             self.sc.set_alert('danger', 'Please select a location')
+        elif response == "user has active request":
+            self.sc.set_alert('danger', 'You already have an active request')
         else:
             self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
                                          'Desk at 651-638-6500 for support')

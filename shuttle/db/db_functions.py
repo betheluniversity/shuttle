@@ -141,10 +141,16 @@ def commit_schedule(table, all_locations):
 
 def commit_shuttle_request(location):
     try:
+        username = flask_session['USERNAME']
+        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
+        results = query(sql, 'read')
+        for log in results:
+            if results[log]['username'] == username:
+                return "user has active request"
+
         if location != "":
             now = datetime.datetime.now()
             date = now.strftime('%d-%b-%Y %I:%M %p')
-            username = flask_session['USERNAME']
             single_quote = "\'"
             sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION) VALUES (TO_DATE(" + \
                 single_quote + date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + single_quote + username + \
