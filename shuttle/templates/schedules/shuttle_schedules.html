@@ -13,7 +13,20 @@
         <iframe width="100%" height=265 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTy3uE_5hm1xmXyHdlAUwh3UF31yNw_lE1fACWoj1f3ND-UsMsveEe_FDHLLc8pHxgd4YwmdGBqMWRU/pubhtml?widget=true&amp;headers=false"></iframe>
     </div>
     <div class="center-page">
-         <input class="btn btn-warning btn-sm" type="submit" value="Submit to Database">
+         <input id="submit-schedule-button" class="btn btn-warning btn-sm" type="submit" value="Submit to Database">
     </div>
+
+    <script>
+    $(document).ready(function() {
+        $("#submit-schedule-button").click(function () {
+            // Sends google sheets schedule to database (erases old schedule)
+            $.ajax({
+                url: "{{ url_for('SchedulesView:send_schedule_path') }}",
+            }).done(function(data) {
+                location.reload()
+            })
+        });
+    });
+    </script>
 
 {% endblock %}

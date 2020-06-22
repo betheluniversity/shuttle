@@ -1,0 +1,14 @@
+{% extends 'writing_center_base.html' %}
+
+{% block page_title %}500 Error{% endblock %}
+
+{% block body_content %}
+
+    <h1>Server Error</h1>
+    <h5>Shuttle failed with the following error: <span class="error-span">{{ error }}</span></h5>
+
+    <p>This page is having trouble loading. Sorry about that! Try returning to the
+        <a href="{{ url_for('View:index') }}">Shuttle homepage</a>, or contact the Help Desk at
+        <a href="mailto:helpdesk@bethel.edu">helpdesk@bethel.edu</a> if you need assistance. </p>
+
+{% endblock %}

@@ -1,8 +1,8 @@
 import datetime
-
 from flask import render_template, request
 from flask_classy import FlaskView, route
 from shuttle.db import db_functions as db
+from shuttle.schedules.google_sheets_controller import SheetsController
 from shuttle.shuttle_controller import ShuttleController
 from shuttle.schedules.shuttle_schedules_controller import ScheduleController
 
@@ -11,6 +11,7 @@ class SchedulesView(FlaskView):
     def __init__(self):
         self.sc = ShuttleController()
         self.ssc = ScheduleController()
+        self.shc = SheetsController()
 
     @route('/shuttle-stats')
     def stats(self):
@@ -19,7 +20,8 @@ class SchedulesView(FlaskView):
     @route('/request-shuttle')
     def request(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
-        return render_template('/schedules/request_shuttle.html')
+        locations = self.shc.grab_locations()
+        return render_template('/schedules/request_shuttle.html', **locals())
 
     @route('/shuttle-schedules')
     def schedule(self):
@@ -29,7 +31,8 @@ class SchedulesView(FlaskView):
     @route('/driver-check-in')
     def check_in(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
-        return render_template('schedules/shuttle_driver_check_in.html')
+        locations = self.shc.grab_locations()
+        return render_template('schedules/shuttle_driver_check_in.html', **locals())
 
     @route('/driver-logs')
     def logs(self):
@@ -51,3 +54,53 @@ class SchedulesView(FlaskView):
         shuttle_logs = selected_logs[0]
         break_logs = selected_logs[1]
         return render_template('schedules/load_logs.html', **locals())
+
+    def send_schedule_path(self):
+        self.sc.check_roles_and_route(['Administrator'])
+        sent = self.shc.send_schedule()
+        if sent == "success":
+            self.sc.set_alert('success', 'The schedule has been submitted')
+        elif sent == "no match":
+            self.sc.set_alert('danger', 'Data in calendar does not match specified format')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                         'Desk at 651-638-6500 for support')
+        return sent
+
+    @route('/send-schedule', methods=['GET', 'POST'])
+    def send_shuttle_request_path(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
+        json_data = request.get_json()
+        response = db.commit_shuttle_request(json_data['location'])
+        if response == "success":
+            self.sc.set_alert('success', 'Your request has been submitted')
+        elif response == "bad location":
+            self.sc.set_alert('danger', 'Please select a location')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                         'Desk at 651-638-6500 for support')
+        return response
+
+    def check_waitlist(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
+        num_waiting = db.number_active_requests()
+        return num_waiting
+      
+    @route('/driver-check', methods=['Get', 'POST'])
+    def send_driver_check_in_info(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver'])
+        json_data = request.get_json()
+        if 'location' in json_data.keys():
+            response = db.commit_driver_check_in(json_data['location'], json_data['direction'], "")
+            if response == "success arrival":
+                self.sc.set_alert('success', 'Your arrival has been recorded')
+            elif response == "success departure":
+                self.sc.set_alert('success', 'Your departure has been recorded')
+        else:
+            response = db.commit_driver_check_in("", "", json_data['break'])
+        if response == "bad location":
+            self.sc.set_alert('danger', 'Please select a location')
+        elif response == "Error":
+            self.sc.set_alert('danger', 'Something went wrong. Please try again or '
+                                        'call the ITS Help Desk at 651-638-6500')
+        return response
