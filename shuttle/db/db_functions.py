@@ -106,7 +106,7 @@ def username_search(username):
         # if mybethel can't get the data, then prevent anything from loading
         return abort(503)
 
-
+  
 def commit_schedule(table, all_locations):
     try:
         sql = "DELETE FROM SHUTTLE_SCHEDULE"
@@ -207,3 +207,9 @@ def commit_driver_check_in(location, direction, driver_break):
         return "bad location"
     except:
         return "Error"
+
+      
+def get_shuttle_logs():
+    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS ORDER BY LOG_DATE"
+    results = query(sql, 'read')
+    return results

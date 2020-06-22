@@ -27,6 +27,10 @@ body {
     border-color: #0056B5;
 }
 
+.log-body{
+    padding: 0rem;
+}
+
 .center-page {
     text-align: center;
 }
@@ -62,6 +66,12 @@ nav.navbar {
     display: block;
 }
 
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
 .shuttle-margins {
     width: 100%;
     margin: 20px auto;
@@ -78,4 +88,8 @@ span.shuttle-title {
 
 .txt-underline:hover {
     text-decoration: underline;
+}
+
+.table td{
+    padding: 0.5rem;
 }
