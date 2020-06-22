@@ -4,13 +4,13 @@ from flask import render_template, request
 from flask_classy import FlaskView, route
 from shuttle.db import db_functions as db
 from shuttle.shuttle_controller import ShuttleController
-
-shuttle_logs = {}
+from shuttle.schedules.shuttle_schedules_controller import ScheduleController
 
 
 class SchedulesView(FlaskView):
     def __init__(self):
         self.sc = ShuttleController()
+        self.ssc = ScheduleController()
 
     @route('/shuttle-stats')
     def stats(self):
@@ -34,17 +34,9 @@ class SchedulesView(FlaskView):
     @route('/driver-logs')
     def logs(self):
         self.sc.check_roles_and_route(['Administrator'])
-        global shuttle_logs
-        shuttle_logs = db.get_shuttle_logs()
-        date = 0
-        date_list = []
-        for i in range(len(shuttle_logs)):
-            real_name = db.username_search(shuttle_logs[i]['username'])
-            shuttle_logs[i]['name'] = real_name[0]['firstName'] + " " + real_name[0]['lastName']
-            shuttle_logs[i]['log_date'] = str(shuttle_logs[i]['log_date']).split(" ")[0]
-            if date != shuttle_logs[i]['log_date']:
-                date = shuttle_logs[i]['log_date']
-                date_list.append(date)
+        grabbed_logs = self.ssc.grab_logs()
+        logs = grabbed_logs[0]
+        date_list = grabbed_logs[1]
         return render_template('schedules/driver_logs.html', **locals())
 
     @route('/shuttle-logs', methods=['GET', 'POST'])
@@ -55,5 +47,7 @@ class SchedulesView(FlaskView):
             date = now.strftime('%Y-%m-%d')
         else:
             date = json_data['date']
-        logs = shuttle_logs
+        selected_logs = self.ssc.grab_selected_logs(date)
+        shuttle_logs = selected_logs[0]
+        break_logs = selected_logs[1]
         return render_template('schedules/load_logs.html', **locals())
