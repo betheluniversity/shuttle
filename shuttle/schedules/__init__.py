@@ -104,3 +104,8 @@ class SchedulesView(FlaskView):
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                         'call the ITS Help Desk at 651-638-6500')
         return response
+
+    @route('/recent-data', methods=['Get', 'POST'])
+    def grab_recent_driver_data(self):
+        data = db.get_last_location()
+        return data
