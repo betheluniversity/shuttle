@@ -15,7 +15,8 @@ class SchedulesView(FlaskView):
 
     @route('/shuttle-schedule')
     def schedule(self):
-        return render_template('/schedules/shuttle_schedule.html')
+        schedule = self.shc.grab_schedule()
+        return render_template('/schedules/shuttle_schedule.html', **locals())
 
     @route('/request-shuttle')
     def request(self):
@@ -57,7 +58,9 @@ class SchedulesView(FlaskView):
 
     def send_schedule_path(self):
         self.sc.check_roles_and_route(['Administrator'])
-        sent = self.shc.send_schedule()
+        spreadsheet = self.shc.grab_schedule()
+        locations = self.shc.grab_locations()
+        sent = db.commit_schedule(spreadsheet, locations)
         if sent == "success":
             self.sc.set_alert('success', 'The schedule has been submitted')
         elif sent == "no match":

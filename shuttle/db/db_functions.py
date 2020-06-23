@@ -215,6 +215,7 @@ def get_shuttle_logs():
     return results
 
 
+# Method that grabs the last data that was inserted into the database. This assumes the latest data has the largest id
 def get_last_location():
     sql = "SELECT * FROM " \
           "(SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOCATION IS NOT NULL ORDER BY ID DESC) Where ROWNUM = 1"
