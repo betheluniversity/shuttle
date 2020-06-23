@@ -1,5 +1,27 @@
 {% extends 'shuttle_base.html' %}
 
 {% block body_content %}
-    <h1>Hello World</h1>
+    <div class="center-page">
+        <div class="align-side-by-side">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Shuttle Check In</h4><hr>
+                    <p class="card-text">The Shuttle was last checked in at: </p>
+                    <h5>*Insert location here*</h5><hr>
+                    <p class="card-text">At the time of: </p>
+                    <h5>*Insert time here*</h5>
+                </div>
+            </div>
+        </div>
+        <div class="align-side-by-side">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Shuttle Current Route</h4><hr>
+                    <p class="card-text">The Shuttle is in route to: </p>
+                    <h5>*Insert location here*</h5><hr>
+                    <p class="card-text">And should arrive at: </p>
+                    <h5>*Insert time here*</h5>
+                </div>
+            </div>
+        </div>
 {% endblock %}
