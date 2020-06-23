@@ -37,24 +37,24 @@
     </div>
 
     <script>
-    function waitlist() {
-        // Updates waitlist
-        $.ajax({
-              url: "{{ url_for('SchedulesView:check_waitlist') }}",
-        })
-            .done(function(data) {
-                $(".waitlist").text(data[0]);
-                if(data[1] != '') {
-                    $(".status").text(data[1]);
-                    document.getElementById("delete-request").style.display = "block"
-                }else{
-                    document.getElementById("delete-request").style.display = "none"
-                    $(".status").text("No current Requests");
-                }
-            })
-    }
-    window.onload = waitlist();
+
     $(document).ready(function() {
+        function waitlist() {
+            // Updates waitlist
+            $.ajax({
+                url: "{{ url_for('SchedulesView:check_waitlist') }}",
+            })
+                .done(function (data) {
+                    $(".waitlist").text(data["waitlist-num"]);
+                    if (data["requested-location"] != '') {
+                        $(".status").text(data["requested-location"]);
+                        document.getElementById("delete-request").style.display = "block"
+                    } else {
+                        $(".status").text("No current Requests");
+                    }
+                })
+        }
+        window.onload = waitlist();
         $(".dropdown-menu a").click(function(){
             // Dropdown shows location selected
             $(".location-menu:first-child").text($(this).text());
@@ -74,7 +74,6 @@
         });
         $('.delete-btn').click(function () {
             // Deletes user's current shuttle request
-            console.log("test")
             $.ajax({
                 url: "{{ url_for('SchedulesView:delete_request') }}",
             }).done(function () {

@@ -142,7 +142,7 @@ def commit_schedule(table, all_locations):
 def commit_shuttle_request(location):
     try:
         username = flask_session['USERNAME']
-        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = '{0}'".format('Y')
+        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
         results = query(sql, 'read')
         for log in results:
             if results[log]['username'] == username:
@@ -151,8 +151,8 @@ def commit_shuttle_request(location):
         if location != "":
             now = datetime.datetime.now()
             date = now.strftime('%d-%b-%Y %I:%M %p')
-            sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION) VALUES (TO_DATE('{0}','{1}'),'{2}','{3}')"\
-                .format(date, 'dd-mon-yyyy hh:mi PM', username, location)
+            sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION) VALUES (TO_DATE('{0}'," \
+                  "'dd-mon-yyyy hh:mi PM'),'{1}','{2}')".format(date, username, location)
             query(sql, 'write')
             return "success"
         return "bad location"
@@ -162,14 +162,14 @@ def commit_shuttle_request(location):
 
 def number_active_requests():
     try:
-        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = '{0}'".format('Y')
+        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
         results = query(sql, 'read')
         username = flask_session['USERNAME']
         location = ''
         for log in results:
             if results[log]['username'] == username:
                 location = results[log]['location']
-        requests = {0: len(results), 1: location}
+        requests = {"waitlist-num": len(results), "requested-location": location}
         return requests
     except:
         return "Error"
@@ -193,26 +193,26 @@ def commit_driver_check_in(location, direction, driver_break):
         username = flask_session['USERNAME']
         if location != "":
             if direction == 'departure':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES ('{0}','{1}','{2}'," \
-                      "TO_DATE('{3}','{4}'))".format(date, username, location, full_date, 'dd-mon-yyyy hh:mi PM')
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES ('{0}'," \
+                      "'{1}','{2}',TO_DATE('{3}','dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
                 query(sql, 'write')
                 return "success departure"
             elif direction == 'arrival':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, ARRIVAL_TIME) VALUES ('{0}','{1}','{2}'," \
-                      "TO_DATE('{3}','{4}'))".format(date, username, location, full_date, 'dd-mon-yyyy hh:mi PM')
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, ARRIVAL_TIME) VALUES ('{0}'," \
+                      "'{1}','{2}',TO_DATE('{3}','dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
                 query(sql, 'write')
                 return "success arrival"
             else:
                 return "Error"
         elif driver_break != "":
             if driver_break == 'N':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, ARRIVAL_TIME, ON_BREAK) VALUES ('{0}', '{1}'," \
-                      "TO_DATE('{2}','{3}'),'{4}')".format(date, username, full_date, 'dd-mon-yyyy hh:mi PM', driver_break)
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, ARRIVAL_TIME, ON_BREAK) VALUES ('{0}'," \
+                      "'{1}',TO_DATE('{2}','dd-mon-yyyy hh:mi PM'),'{3}')".format(date, username, full_date, driver_break)
                 query(sql, 'write')
                 return "Not on break"
             elif driver_break == 'Y':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, DEPARTURE_TIME, ON_BREAK) VALUES ('{0}','{1}'," \
-                      "TO_DATE('{2}','{3}'),'{4}')".format(date, username, full_date, 'dd-mon-yyyy hh:mi PM', driver_break)
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, DEPARTURE_TIME, ON_BREAK) VALUES ('{0}'," \
+                      "'{1}',TO_DATE('{2}','dd-mon-yyyy hh:mi PM'),'{3}')".format(date, username, full_date, driver_break)
                 query(sql, 'write')
                 return "On break"
             else:
