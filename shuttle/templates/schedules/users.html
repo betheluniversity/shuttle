@@ -2,7 +2,6 @@
     <title>Shuttle | {% block page_title %}Users{% endblock %}</title>
 
 {% block body_content %}
-<!-- TODO: Use for loop to fill table with values. Sort alphabetically. -->
     <h4>Users</h4>
     <input class="form-control user-search" type="text" placeholder="Search" aria-label="Search">
     <div class="card">
@@ -22,11 +21,38 @@
                     <td class="name">{{ parent_dict_item['name'] }}</td>
                     <td class="username">{{ parent_dict_item['username'] }}</td>
                     <td class="role">{{ parent_dict_item['role'] }}</td>
-                    <td class="edit"><input class="btn btn-primary" type="submit" value="Edit"></td>
-                    <td class="edit"><input class="btn btn-danger" type="submit" value="Delete"></td>
+                    <td>
+                        <button type="button" id="edit_button" class="btn btn-primary" data-toggle="modal" data-target="#edit-modal">
+                            Edit
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" id="delete_button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal">
+                            Delete
+                        </button>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        document.getElementById("delete_button").onclick = function eventClick(username) {
+        $.ajax({
+            type:"POST",
+            url: "{{ url_for('SchedulesView:load_user_data') }}",
+            data: JSON.stringify({
+                'username': username,
+            }),
+            content_type: 'application/json;charset=UTF-8',
+            success: function(username){
+                $('#delete-modal').modal('show');
+            },
+            error:function(error){
+            }
+        })
+       }
+    })
+</script>
 {% endblock %}

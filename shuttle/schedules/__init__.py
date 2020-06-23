@@ -1,6 +1,7 @@
 from flask import render_template
-from flask_classy import FlaskView, route
+from flask_classy import FlaskView, route, request
 from shuttle.db import db_functions as db
+import json
 
 from shuttle.shuttle_controller import ShuttleController
 
@@ -43,3 +44,9 @@ class SchedulesView(FlaskView):
                                         ' ' + db.username_search(shuttle_user[key]['username'])[0]['lastName']
 
         return render_template('/schedules/users.html', **locals())
+
+    @route('load_user_data', methods=['POST'])
+    def load_user_data(self):
+        self.sc.check_roles_and_route(['Administrator'])
+        username = json.loads(request.data).get('username')
+        return render_template('/schedules/user_modal.html', **locals())
