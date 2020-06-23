@@ -151,7 +151,6 @@ def commit_shuttle_request(location):
         if location != "":
             now = datetime.datetime.now()
             date = now.strftime('%d-%b-%Y %I:%M %p')
-            single_quote = "\'"
             sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION) VALUES (TO_DATE('{0}','{1}'),'{2}','{3}')"\
                 .format(date, 'dd-mon-yyyy hh:mi PM', username, location)
             query(sql, 'write')
@@ -179,14 +178,6 @@ def number_active_requests():
 def delete_current_request():
     try:
         username = flask_session['USERNAME']
-        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = '{0}'".format('Y')
-        all_requests = query(sql, 'read')
-        found = False
-        for request in all_requests:
-            if all_requests[request]['username'] == username:
-                found = True
-        if not found:
-            return "no requests"
         sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE USERNAME = '{0}'".format(username)
         query(sql, 'write')
         return "success"
@@ -200,7 +191,6 @@ def commit_driver_check_in(location, direction, driver_break):
         date = now.strftime('%d-%b-%Y')
         full_date = now.strftime('%d-%b-%Y %I:%M %p')
         username = flask_session['USERNAME']
-        single_quote = "\'"
         if location != "":
             if direction == 'departure':
                 sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES ('{0}','{1}','{2}'," \

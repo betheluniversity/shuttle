@@ -93,8 +93,6 @@ class SchedulesView(FlaskView):
         request_to_delete = db.delete_current_request()
         if request_to_delete == "success":
             self.sc.set_alert('success', 'Your request has been deleted')
-        elif request_to_delete == "no requests":
-            self.sc.set_alert('danger', 'You do not have any current requests')
         else:
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                         'call the ITS Help Desk at 651-638-6500')
