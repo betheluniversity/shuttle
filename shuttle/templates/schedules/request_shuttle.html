@@ -46,7 +46,9 @@
                 $(".waitlist").text(data[0]);
                 if(data[1] != '') {
                     $(".status").text(data[1]);
+                    document.getElementById("delete-request").style.display = "block"
                 }else{
+                    document.getElementById("delete-request").style.display = "none"
                     $(".status").text("No current Requests");
                 }
             })
