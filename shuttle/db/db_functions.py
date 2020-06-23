@@ -106,14 +106,14 @@ def username_search(username):
         # if mybethel can't get the data, then prevent anything from loading
         return abort(503)
 
-  
+
 def commit_schedule(table, all_locations):
     try:
         sql = "DELETE FROM SHUTTLE_SCHEDULE"
         query(sql, 'write')
         all_locations = [i.upper() for i in all_locations]
         for i in range(len(table)):
-            location = ""
+            location = ''
             for j in range(len(table[i])):
                 arrival_time = 0
                 if table[i][j].upper() in all_locations:
@@ -129,86 +129,102 @@ def commit_schedule(table, all_locations):
                         joined_time = '.'.join(split_time)
                         arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 AM'
                 else:
-                    return "no match"
+                    return 'no match'
                 if j is not 0:
-                    sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION,ARRIVAL_TIME) VALUES (" + "\'" + location + \
-                          "\',\'" + arrival_time + "\')"
+                    sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION, ARRIVAL_TIME) VALUES ('{0}', '{1}')".format\
+                        (location, arrival_time)
                     query(sql, 'write')
-        return "success"
+        return 'success'
     except:
-        return "Error"
+        return 'Error'
 
 
 def commit_shuttle_request(location):
     try:
-        if location != "":
+        username = flask_session['USERNAME']
+        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
+        results = query(sql, 'read')
+        for log in results:
+            if results[log]['username'] == username:
+                return 'user has active request'
+
+        if location != '':
             now = datetime.datetime.now()
             date = now.strftime('%d-%b-%Y %I:%M %p')
-            username = flask_session['USERNAME']
-            single_quote = "\'"
-            sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE,USERNAME,LOCATION) VALUES (TO_DATE(" + \
-                single_quote + date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + single_quote + username + \
-                single_quote + "," + single_quote + location + single_quote + ")"
+            sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE, USERNAME, LOCATION) VALUES (TO_DATE('{0}', " \
+                  "'dd-mon-yyyy hh:mi PM'), '{1}', '{2}')".format(date, username, location)
             query(sql, 'write')
-            return "success"
-        return "bad location"
+            return 'success'
+        return 'bad location'
     except:
-        return "Error"
+        return 'Error'
 
 
+# This method returns the number of active requests as well as what
+# location is currently being requested by the user (if any)
 def number_active_requests():
     try:
-        sql = "SELECT COUNT(*) FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
+        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
         results = query(sql, 'read')
-        return str(results[0]['COUNT(*)'])
+        username = flask_session['USERNAME']
+        location = ''
+        for log in results:
+            if results[log]['username'] == username:
+                location = results[log]['location']
+        requests = {'waitlist-num': len(results), 'requested-location': location}
+        return requests
     except:
-        return "Error"
-      
-      
+        return 'Error'
+
+
+# This method changes the user's active request to inactive
+def delete_current_request():
+    try:
+        username = flask_session['USERNAME']
+        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE USERNAME = '{0}'".format(username)
+        query(sql, 'write')
+        return 'success'
+    except:
+        return 'Error'
+
+
 def commit_driver_check_in(location, direction, driver_break):
     try:
         now = datetime.datetime.now()
         date = now.strftime('%d-%b-%Y')
         full_date = now.strftime('%d-%b-%Y %I:%M %p')
         username = flask_session['USERNAME']
-        single_quote = "\'"
-        if location != "":
+        if location != '':
             if direction == 'departure':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES (" + single_quote + \
-                      date + single_quote + "," + single_quote + username + single_quote + "," + single_quote + location + \
-                      single_quote + "," + "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\'))"
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES ('{0}', " \
+                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
                 query(sql, 'write')
-                return "success departure"
+                return 'success departure'
             elif direction == 'arrival':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, ARRIVAL_TIME) VALUES (" + single_quote + \
-                      date + single_quote + "," + single_quote + username + single_quote + "," + single_quote + location + \
-                      single_quote + "," + "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\'))"
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, ARRIVAL_TIME) VALUES ('{0}', " \
+                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
                 query(sql, 'write')
-                return "success arrival"
+                return 'success arrival'
             else:
-                return "Error"
-        elif driver_break != "":
+                return 'Error'
+        elif driver_break != '':
             if driver_break == 'N':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, ARRIVAL_TIME, ON_BREAK) VALUES (" + \
-                    single_quote + date + single_quote + "," + single_quote + username + single_quote + "," + \
-                    "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + \
-                    single_quote + driver_break + single_quote + ")"
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, ARRIVAL_TIME, ON_BREAK) VALUES ('{0}'," \
+                      "'{1}', TO_DATE('{2}', 'dd-mon-yyyy hh:mi PM'), '{3}')".format(date, username, full_date, driver_break)
                 query(sql, 'write')
-                return "Not on break"
+                return 'Not on break'
             elif driver_break == 'Y':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, DEPARTURE_TIME, ON_BREAK) VALUES (" + \
-                    single_quote + date + single_quote + "," + single_quote + username + single_quote + "," + \
-                    "TO_DATE(" + single_quote + full_date + single_quote + ", \'dd-mon-yyyy hh:mi PM\')," + \
-                    single_quote + driver_break + single_quote + ")"
+                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, DEPARTURE_TIME, ON_BREAK) VALUES ('{0}', " \
+                      "'{1}', TO_DATE('{2}', 'dd-mon-yyyy hh:mi PM'), '{3}')".format(date, username, full_date, driver_break)
                 query(sql, 'write')
-                return "On break"
+                return 'On break'
             else:
-                return "Error"
-        return "bad location"
+                return 'Error'
+        return 'bad location'
     except:
-        return "Error"
+        return 'Error'
 
-      
+
 def get_shuttle_logs():
     sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS ORDER BY LOG_DATE"
     results = query(sql, 'read')

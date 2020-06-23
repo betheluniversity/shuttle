@@ -58,13 +58,13 @@ class SchedulesView(FlaskView):
     def send_schedule_path(self):
         self.sc.check_roles_and_route(['Administrator'])
         sent = self.shc.send_schedule()
-        if sent == "success":
+        if sent == 'success':
             self.sc.set_alert('success', 'The schedule has been submitted')
-        elif sent == "no match":
+        elif sent == 'no match':
             self.sc.set_alert('danger', 'Data in calendar does not match specified format')
         else:
             self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
-                                         'Desk at 651-638-6500 for support')
+                                        'Desk at 651-638-6500 for support')
         return sent
 
     @route('/send-schedule', methods=['GET', 'POST'])
@@ -72,35 +72,47 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         json_data = request.get_json()
         response = db.commit_shuttle_request(json_data['location'])
-        if response == "success":
+        if response == 'success':
             self.sc.set_alert('success', 'Your request has been submitted')
-        elif response == "bad location":
+        elif response == 'bad location':
             self.sc.set_alert('danger', 'Please select a location')
+        elif response == 'user has active request':
+            self.sc.set_alert('danger', 'You already have an active request')
         else:
             self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
-                                         'Desk at 651-638-6500 for support')
+                                        'Desk at 651-638-6500 for support')
         return response
 
     def check_waitlist(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
-        num_waiting = db.number_active_requests()
-        return num_waiting
-      
+        active_requests = db.number_active_requests()
+        return active_requests
+
+    def delete_request(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
+        request_to_delete = db.delete_current_request()
+        if request_to_delete == 'success':
+            self.sc.set_alert('success', 'Your request has been deleted')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please try again or '
+                                        'call the ITS Help Desk at 651-638-6500')
+        return request_to_delete
+
     @route('/driver-check', methods=['Get', 'POST'])
     def send_driver_check_in_info(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
         if 'location' in json_data.keys():
-            response = db.commit_driver_check_in(json_data['location'], json_data['direction'], "")
-            if response == "success arrival":
+            response = db.commit_driver_check_in(json_data['location'], json_data['direction'], '')
+            if response == 'success arrival':
                 self.sc.set_alert('success', 'Your arrival has been recorded')
-            elif response == "success departure":
+            elif response == 'success departure':
                 self.sc.set_alert('success', 'Your departure has been recorded')
         else:
-            response = db.commit_driver_check_in("", "", json_data['break'])
-        if response == "bad location":
+            response = db.commit_driver_check_in('', '', json_data['break'])
+        if response == 'bad location':
             self.sc.set_alert('danger', 'Please select a location')
-        elif response == "Error":
+        elif response == 'Error':
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                         'call the ITS Help Desk at 651-638-6500')
         return response

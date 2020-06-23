@@ -10,7 +10,7 @@ class ScheduleController(object):
         date = 0
         date_list = []
         for i in range(len(all_shuttle_logs)):
-            all_shuttle_logs[i]['log_date'] = str(all_shuttle_logs[i]['log_date']).split(" ")[0]
+            all_shuttle_logs[i]['log_date'] = str(all_shuttle_logs[i]['log_date']).split(' ')[0]
             if date != all_shuttle_logs[i]['log_date']:
                 date = all_shuttle_logs[i]['log_date']
                 date_list.append(date)
@@ -24,8 +24,8 @@ class ScheduleController(object):
         break_iter = 0
         for i in range(len(all_shuttle_logs)):
             real_name = db.username_search(all_shuttle_logs[i]['username'])
-            all_shuttle_logs[i]['name'] = real_name[0]['firstName'] + " " + real_name[0]['lastName']
-            all_shuttle_logs[i]['log_date'] = str(all_shuttle_logs[i]['log_date']).split(" ")[0]
+            all_shuttle_logs[i]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
+            all_shuttle_logs[i]['log_date'] = str(all_shuttle_logs[i]['log_date']).split(' ')[0]
             if all_shuttle_logs[i]['log_date'] == date:
                 if all_shuttle_logs[i]['location']:
                     shuttle_logs[shuttle_iter] = all_shuttle_logs[i]
