@@ -22,12 +22,12 @@
                     <td class="username">{{ parent_dict_item['username'] }}</td>
                     <td class="role">{{ parent_dict_item['role'] }}</td>
                     <td>
-                        <button type="button" id="edit_button" class="btn btn-primary" data-toggle="modal" data-target="#edit-modal">
+                        <button type="button" id="edit-button" class="btn btn-primary" data-toggle="modal" data-target="#edit-modal" name="{{ parent_dict_item['username'] }}">
                             Edit
                         </button>
                     </td>
                     <td>
-                        <button type="button" id="delete_button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal">
+                        <button type="button" id="delete-button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal" name="{{ parent_dict_item['username'] }}">
                             Delete
                         </button>
                     </td>
@@ -38,21 +38,23 @@
     </div>
 <script type="text/javascript">
     $(document).ready(function(){
-        document.getElementById("delete_button").onclick = function eventClick(username) {
-        $.ajax({
-            type:"POST",
-            url: "{{ url_for('SchedulesView:load_user_data') }}",
-            data: JSON.stringify({
-                'username': username,
-            }),
-            content_type: 'application/json;charset=UTF-8',
-            success: function(username){
-                $('#delete-modal').modal('show');
-            },
-            error:function(error){
-            }
-        })
-       }
+        let button = document.getElementById("delete-button");
+        button.onclick = function(){
+            {#let username = button.attributes["name"].value#}
+            var data = {"username": button.attributes["name"].value}
+            console.log(data)
+            $.ajax({
+                type:"POST",
+                url: "{{ url_for('SchedulesView:load_user_data') }}",
+                data: JSON.stringify((data)),
+                content_type: 'application/json',
+                success: function(){
+                    $('#delete-modal').modal('show');
+                },
+                error:function(error){
+                }
+            })
+        }
     })
 </script>
 {% endblock %}
