@@ -2,15 +2,25 @@
 <!--TODO: add actual schedule and past and future route locations/times-->
 <title>Shuttle | {% block page_title %}Schedule{% endblock %}</title>
 {% block body_content %}
-    <div class="center-page">
-        <div class="align-side-by-side">
-            <div class="card" >
-                <div class="card-body">
-                    <h4 class="card-title">Shuttle Schedule</h4><hr>
-                    <h5>*Insert schedule here*</h5>
-                </div>
+    <h4 class="card-title">Shuttle Schedule</h4>
+        <div class="card">
+            <div class="card-body log-body">
+                <table class="table table-hover">
+                    <tbody>
+                        {% for i in range(schedule|length) %}
+                            <tr>
+                                {% for j in range(schedule[i]|length) %}
+                                    <td>
+                                        <h6 class="schedule-item">{{ schedule[i][j] }}</h6>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>
+
+
 
 {% endblock %}
