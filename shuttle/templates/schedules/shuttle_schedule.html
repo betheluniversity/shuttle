@@ -1,9 +1,32 @@
 {% extends 'shuttle_base.html' %}
-<!--TODO: add actual schedule and past and future route locations/times-->
+
 <title>Shuttle | {% block page_title %}Schedule{% endblock %}</title>
+
 {% block body_content %}
-    <h4 class="card-title">Shuttle Schedule</h4>
+    
+    <div class="center-page">
+        <h4 class="card-title">Shuttle Schedule</h4>
+    </div>
+
+    <div class="column">
         <div class="card">
+            <div class="card-body log-body">
+                <table class="table table-hover">
+                    <tbody>
+                        {% for i in range(schedule|length) %}
+                            <tr>
+                                <td>
+                                    <h6 class="schedule-item keep-fixed">{{ schedule[i][0] }}</h6>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card scrolling-wrapper">
             <div class="card-body log-body">
                 <table class="table table-hover">
                     <tbody>
@@ -11,7 +34,9 @@
                             <tr>
                                 {% for j in range(schedule[i]|length) %}
                                     <td>
+                                    {% if j != 0 %}
                                         <h6 class="schedule-item">{{ schedule[i][j] }}</h6>
+                                    {% endif %}
                                     </td>
                                 {% endfor %}
                             </tr>
@@ -20,7 +45,5 @@
                 </table>
             </div>
         </div>
-
-
 
 {% endblock %}

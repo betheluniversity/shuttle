@@ -1,3 +1,4 @@
+import datetime as dt
 from datetime import datetime
 from flask import render_template, request
 from flask_classy import FlaskView, route
@@ -45,10 +46,9 @@ class SchedulesView(FlaskView):
 
     @route('/shuttle-logs', methods=['GET', 'POST'])
     def shuttle_logs(self):
-        import datetime
         json_data = request.get_json()
         if json_data == "today's date":
-            now = datetime.datetime.now()
+            now = dt.datetime.now()
             date = now.strftime('%Y-%m-%d')
         else:
             date = json_data['date']
