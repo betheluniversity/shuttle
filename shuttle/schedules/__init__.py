@@ -126,8 +126,8 @@ class SchedulesView(FlaskView):
             next_stop = {'location': 'No more stops today', 'time': 'N/A'}
             for i in range(len(schedule)):
                 for j in range(len(schedule[i])):
+                    # All times are converted to the same format so they can be compared
                     if j != 0 and ':' in schedule[i][j]:
-                        # All times are converted to the same format so they can be compared
                         split_time = schedule[i][j].split(':')
                         if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
                             schedule_time = (schedule[i][j] + ' PM')

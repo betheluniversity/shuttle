@@ -3,7 +3,7 @@
 <title>Shuttle | {% block page_title %}Schedule{% endblock %}</title>
 
 {% block body_content %}
-    
+
     <div class="center-page">
         <h4 class="card-title">Shuttle Schedule</h4>
     </div>
@@ -16,7 +16,7 @@
                         {% for i in range(schedule|length) %}
                             <tr>
                                 <td>
-                                    <h6 class="schedule-item keep-fixed">{{ schedule[i][0] }}</h6>
+                                    <h6 class="schedule-location">{{ schedule[i][0] }}</h6>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -27,23 +27,23 @@
     </div>
 
     <div class="card scrolling-wrapper">
-            <div class="card-body log-body">
-                <table class="table table-hover">
-                    <tbody>
-                        {% for i in range(schedule|length) %}
-                            <tr>
-                                {% for j in range(schedule[i]|length) %}
-                                    <td>
-                                    {% if j != 0 %}
-                                        <h6 class="schedule-item">{{ schedule[i][j] }}</h6>
-                                    {% endif %}
-                                    </td>
-                                {% endfor %}
-                            </tr>
+        <div class="card-body log-body">
+            <table class="table table-hover">
+                <tbody>
+                {% for i in range(schedule|length) %}
+                    <tr>
+                        {% for j in range(schedule[i]|length) %}
+                            <td>
+                                {% if j != 0 %}
+                                    <h6 class="schedule-time">{{ schedule[i][j] }}</h6>
+                                {% endif %}
+                            </td>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
+    </div>
 
 {% endblock %}
