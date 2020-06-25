@@ -1,4 +1,3 @@
-import datetime as dt
 from datetime import datetime
 from flask import render_template, request
 from flask_classy import FlaskView, route
@@ -48,7 +47,7 @@ class SchedulesView(FlaskView):
     def shuttle_logs(self):
         json_data = request.get_json()
         if json_data == "today's date":
-            now = dt.datetime.now()
+            now = datetime.now()
             date = now.strftime('%Y-%m-%d')
         else:
             date = json_data['date']
@@ -90,7 +89,7 @@ class SchedulesView(FlaskView):
         num_waiting = db.number_active_requests()
         return num_waiting
 
-    @route('/driver-check', methods=['Get', 'POST'])
+    @route('/driver-check', methods=['GET', 'POST'])
     def send_driver_check_in_info(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
@@ -109,14 +108,13 @@ class SchedulesView(FlaskView):
                                         'call the ITS Help Desk at 651-638-6500')
         return response
 
-    @route('/recent-data', methods=['Get', 'POST'])
-    def grab_recent_driver_data(self):
+    @route('/recent-data', methods=['GET', 'POST'])
+    def grab_check_in_driver_data(self):
         data = db.get_last_location()
         return data
 
     # Method takes the last time checked in by the driver and uses that to find the next closest
     # time based on the spreadsheet. Method assumes the location is the first column in the spreadsheet
-    @route('/current-route', methods=['Get', 'POST'])
     def grab_current_route(self):
         try:
             time = db.get_last_location()['time']
