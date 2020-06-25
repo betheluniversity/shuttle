@@ -229,3 +229,18 @@ def get_shuttle_logs():
     sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS ORDER BY LOG_DATE"
     results = query(sql, 'read')
     return results
+
+
+def get_requests():
+    sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y' ORDER BY LOG_DATE"
+    results = query(sql, 'read')
+    return results
+
+
+def delete_request_driver(location):
+    try:
+        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE LOCATION = '{0}'".format(location)
+        query(sql, 'write')
+        return 'success'
+    except:
+        return 'Error'

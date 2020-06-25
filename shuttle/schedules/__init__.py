@@ -32,6 +32,9 @@ class SchedulesView(FlaskView):
     def check_in(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         locations = self.shc.grab_locations()
+        requests = db.get_requests()
+        active_requests = db.number_active_requests()
+        active_requests = active_requests['waitlist-num']
         return render_template('schedules/shuttle_driver_check_in.html', **locals())
 
     @route('/driver-logs')
@@ -116,3 +119,15 @@ class SchedulesView(FlaskView):
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                         'call the ITS Help Desk at 651-638-6500')
         return response
+
+    @route('delete-active-requests', methods=['Get', 'POST'])
+    def delete_active_requests_at_location(self):
+        json_data = request.get_json()
+        location = json_data['location']
+        request_to_delete = db.delete_request_driver(location)
+        if request_to_delete == 'success':
+            self.sc.set_alert('success', 'The request for ' + location + ' has been completed')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please try again or '
+                                        'call the ITS Help Desk at 651-638-6500')
+        return request_to_delete

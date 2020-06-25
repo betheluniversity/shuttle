@@ -1,5 +1,5 @@
 {% extends 'shuttle_base.html' %}
-<!-- TODO:  make submit buttons work/ select next location after submitting so it is easier for drivers -->
+<!-- TODO: select next location after submitting so it is easier for drivers -->
 {% block body_content %}
 <title>Shuttle | {% block page_title %}Driver Check In{% endblock %}</title>
 
@@ -23,6 +23,7 @@
             </div>
         </div>
     </div>
+
     <div class="center-page">
         <div class="align-side-by-side">
             <h4>Arriving at:</h4>
@@ -43,7 +44,9 @@
             </div>
         </div>
     </div>
+
     <hr>
+
     <div class="center-page">
         <div class="align-side-by-side">
             <div class="submit">
@@ -56,8 +59,32 @@
             </div>
         </div>
     </div>
+
     <div class="center-page">
-       <h4>Current status:<span class="badge badge-light">Not on break</span></h4>
+       <h4>Current status:<span class="badge badge-light break-badge">Not on break</span></h4>
+    </div>
+
+    <hr>
+
+    <div class="center-page">
+        <div class="center-page shuttle-margins">
+            <h3>Active requests: <span class="badge badge-pill badge-warning waitlist">{{ active_requests }}</span></h3>
+            <hr>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-primary btn-lg dropdown-toggle request-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Requests</button>
+            <div class="dropdown-menu request-drop scrollable-menu" aria-labelledby="dropdownMenuButton">
+                {% for request in requests %}
+                    <a class="dropdown-item" href="#">{{ requests[request]['log_date'] }} - {{ requests[request]['location'] }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="request-information">
+            {% for request in requests %}
+                <div class="request-{{requests[request]['location']}}" href="#"><p>{{ requests[request]['log_date'] }} - {{ requests[request]['location'] }}</p></div>
+            {% endfor %}
+            <input class="btn btn-warning btn-lg complete-request-btn" type="submit" value="Complete Requests">
+        </div>
     </div>
 
     <script>
@@ -107,7 +134,7 @@
                 url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                $(".badge").text(data);
+                $(".break-badge").text(data);
             })
         });
         $('.check-in-btn').click(function () {
@@ -119,7 +146,40 @@
                 url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
-                $(".badge").text(data);
+                $(".break-badge").text(data);
+            })
+        });
+
+        $(".request-drop a").click(function () {
+            // Dropdown shows arriving location selected
+            $(".request-menu:first-child").text($(this).text().split(" - ")[1]);
+            $(".request-menu:first-child").val($(this).text());
+            // shows request on screen
+            var data = {"request": $('.request-menu').val()}
+            request_on_screen(data);
+        });
+        function request_on_screen(request) {
+            var data = {{ requests | tojson }};
+            for (var key in data) {
+                $('#request-information').css('display','block');
+                if (data[key]['location'] == $(".request-menu").text()) {
+                    $('.request-' + data[key]['location']).css('display','block');
+               }else{
+                    $('.request-' + data[key]['location']).css('display','none');
+                }
+            }
+        }
+        $('.complete-request-btn').click(function () {
+            // sends check-in from break info to database
+            var data = {"location": $(".request-menu").text()}
+            console.log(data);
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: "{{ url_for('SchedulesView:delete_active_requests_at_location') }}",
+                data: JSON.stringify((data)),
+            }).done(function (data) {
+                location.reload();
             })
         });
     });
