@@ -31,11 +31,25 @@ class SchedulesView(FlaskView):
     @route('/driver-check-in')
     def check_in(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
-        locations = self.shc.grab_locations()
         requests = db.get_requests()
         active_requests = db.number_active_requests()['waitlist-num']
-        current_break_status = db.break_status()
         return render_template('schedules/shuttle_driver_check_in.html', **locals())
+
+    @route('/driver-view', methods=['GET', 'POST'])
+    def load_driver_view(self):
+        json_data = request.get_json()
+        load = ''
+        if json_data['view'] == 'Location check in':
+            load = 'locations'
+            locations = self.shc.grab_locations()
+        if json_data['view'] == 'Active requests':
+            load = 'requests'
+            requests = db.get_requests()
+            active_requests = db.number_active_requests()['waitlist-num']
+        if json_data['view'] == 'Break check in':
+            load = 'break'
+            current_break_status = db.break_status()
+        return render_template('schedules/load_driver_check_in.html', **locals())
 
     @route('/driver-logs')
     def logs(self):

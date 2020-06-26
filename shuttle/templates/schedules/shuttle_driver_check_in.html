@@ -1,190 +1,46 @@
 {% extends 'shuttle_base.html' %}
-<!-- TODO: select next location after submitting so it is easier for drivers. Fix break status -->
+<!-- TODO: select next location after submitting so it is easier for drivers -->
 {% block body_content %}
 <title>Shuttle | {% block page_title %}Driver Check In{% endblock %}</title>
 
     <div class="center-page">
-        <div class="card">
-            <div class="card-body">
-                <div class="align-side-by-side">
-                    <h4>Leaving from:</h4>
-                </div>
-                <div class="align-side-by-side">
-                    <div class="align-side-by-side">
-                        <div class="dropdown">
-                            <button class="btn btn-primary btn-lg dropdown-toggle leaving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
-                            <div class="dropdown-menu leaving-drop scrollable-menu" aria-labelledby="dropdownMenuButton">
-                                {% for location in locations %}
-                                    <a class="dropdown-item" href="#">{{ location }}</a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="align-side-by-side">
-                        <input class="btn btn-warning btn-lg submit-leaving" type="submit" value="Submit">
-                    </div>
-                </div>
-            </div>
-            <div class="center-page">
-                <div class="align-side-by-side">
-                    <h4>Arriving at:</h4>
-                </div>
-                <div class="align-side-by-side">
-                    <div class="align-side-by-side">
-                        <div class="dropdown">
-                            <button class="btn btn-primary btn-lg dropdown-toggle arriving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
-                            <div class="dropdown-menu arriving-drop scrollable-menu" aria-labelledby="dropdownMenuButton">
-                                {% for location in locations %}
-                                    <a class="dropdown-item" href="#">{{ location }}</a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="align-side-by-side">
-                        <input class="btn btn-warning btn-lg submit-arriving" type="submit" value="Submit">
-                    </div>
+        <h4>Select a View below</h4>
+        <div class="align-side-by-side">
+            <div class="dropdown">
+                <button class="btn btn-primary btn-lg dropdown-toggle driver-view-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Driver View</button>
+                <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Location check in</a>
+                    <a class="dropdown-item" href="#">Active requests</a>
+                    <a class="dropdown-item" href="#">Break check in</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="center-page">
-        <div class="card">
-            <div class="card-body">
-                <div class="center-page shuttle-margins">
-                    <h3>Active requests: <span class="badge badge-pill badge-warning waitlist">{{ active_requests }}</span></h3><hr>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-primary btn-lg dropdown-toggle request-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Requests</button>
-                    <div class="dropdown-menu request-drop scrollable-menu" aria-labelledby="dropdownMenuButton">
-                        {% for request in requests %}
-                            <a class="dropdown-item" href="#">{{ requests[request]['log_date'] }} - {{ requests[request]['location'] }}</a>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div id="request-information">
-                    {% for request in requests %}
-                        <div class="request-{{requests[request]['location']}}" href="#"><p>{{ requests[request]['log_date'] }} - {{ requests[request]['location'] }}</p></div>
-                    {% endfor %}
-                    <input class="btn btn-warning btn-lg complete-request-btn" type="submit" value="Complete Requests">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="center-page">
-        <div class="card">
-            <div class="card-body">
-                <div class="align-side-by-side">
-                    <div class="submit">
-                        <input class="btn btn-primary btn-sm check-out-btn" type="submit" value="Clock out for break">
-                    </div>
-                </div>
-                <div class="align-side-by-side">
-                    <div class="submit">
-                        <input class="btn btn-primary btn-sm check-in-btn" type="submit" value="Clock in from break">
-                    </div>
-                </div>
-                <h4>Current status:<span class="badge badge-light break-badge">{{ current_break_status }}</span></h4>
-            </div>
-        </div>
-    </div>
+    <div id="driver_check_in_display"></div>
 
     <script>
         $(document).ready(function() {
-            $(".leaving-drop a").click(function () {
-                // Dropdown shows leaving location selected
-                $(".leaving-menu:first-child").text($(this).text());
-                $(".leaving-menu:first-child").val($(this).text());
-            });
-            $(".arriving-drop a").click(function () {
-                // Dropdown shows arriving location selected
-                $(".arriving-menu:first-child").text($(this).text());
-                $(".arriving-menu:first-child").val($(this).text());
-            });
-
-            $('.submit-leaving').click(function () {
-                // Sends selected location and user info to database.
-                var data = {"location": $('.leaving-menu').val(), "direction": "departure"}
+            window.onload = load_data({'view':'Active requests'})
+            function load_data(data){
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
+                    url: "{{ url_for('SchedulesView:load_driver_view') }}",
                     data: JSON.stringify((data)),
                 }).done(function (data) {
-                    location.reload();
-                })
-            });
-            $('.submit-arriving').click(function () {
-                // Sends selected location and user info to database.
-                var data = {"location": $('.arriving-menu').val(), "direction": "arrival"}
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
-                    data: JSON.stringify((data)),
-                }).done(function (data) {
-                    location.reload();
-                })
-            });
-            $('.check-out-btn').click(function () {
-                // Sends break info to database
-                var data = {"break": "request-to-clock-out"}
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:send_driver_break_info') }}",
-                    data: JSON.stringify((data)),
-                }).done(function (data) {
-                    location.reload()
-                })
-            });
-            $('.check-in-btn').click(function () {
-                // sends check-in from break info to database
-                var data = {"break": "request-to-clock-in"}
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:send_driver_break_info') }}",
-                    data: JSON.stringify((data)),
-                }).done(function (data) {
-                    location.reload()
-                })
-            });
-
-            $(".request-drop a").click(function () {
-                // Dropdown shows arriving location selected
-                $(".request-menu:first-child").text($(this).text().split(" - ")[1]);
-                $(".request-menu:first-child").val($(this).text());
-                // shows request on screen
-                var data = {"request": $('.request-menu').val()}
-                request_on_screen(data);
-            });
-            function request_on_screen(request) {
-                var data = {{ requests | tojson }};
-                for (var key in data) {
-                    $('#request-information').css('display','block');
-                    if (data[key]['location'] == $(".request-menu").text()) {
-                        $('.request-' + data[key]['location']).css('display','block');
-                   }else{
-                        $('.request-' + data[key]['location']).css('display','none');
-                    }
-                }
+                    $("#driver_check_in_display").html(data);
+                });
             }
-            $('.complete-request-btn').click(function () {
-                // sends check-in from break info to database
-                var data = {"location": $(".request-menu").text()}
-                console.log(data);
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:delete_active_requests_at_location') }}",
-                    data: JSON.stringify((data)),
-                }).done(function (data) {
-                    location.reload();
-                })
+            $(".dropdown-menu a").click(function() {
+                // Dropdown shows location selected
+                $(".driver-view-menu:first-child").text($(this).text());
+                $(".driver-view-menu:first-child").val($(this).text());
+                // Sends data to be shown on screen
+                var data = {'view': $('.driver-view-menu').val()}
+                load_data(data);
             });
-        });
+         });
     </script>
 
 {% endblock %}
