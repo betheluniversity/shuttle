@@ -2,6 +2,7 @@
     <title>Shuttle | {% block page_title %}Users{% endblock %}</title>
 
 {% block body_content %}
+    <div id="results"></div>
     <h4>Users</h4>
     <input class="form-control user-search" type="text" placeholder="Search" aria-label="Search">
     <div class="card">
@@ -22,12 +23,12 @@
                     <td class="username">{{ parent_dict_item['username'] }}</td>
                     <td class="role">{{ parent_dict_item['role'] }}</td>
                     <td>
-                        <button type="button" id="edit-button" class="btn btn-primary" data-toggle="modal" data-target="#edit-modal" name="{{ parent_dict_item['username'] }}">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-modal" onclick="editButton('{{ parent_dict_item['username'] }}')">
                             Edit
                         </button>
                     </td>
                     <td>
-                        <button type="button" id="delete-button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal" name="{{ parent_dict_item['username'] }}">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal" onclick="deleteButton('{{ parent_dict_item['username'] }}')">
                             Delete
                         </button>
                     </td>
@@ -37,24 +38,39 @@
         </table>
     </div>
 <script type="text/javascript">
-    $(document).ready(function(){
-        let button = document.getElementById("delete-button");
-        button.onclick = function(){
-            {#let username = button.attributes["name"].value#}
-            var data = {"username": button.attributes["name"].value}
-            console.log(data)
-            $.ajax({
+    function deleteButton(username){
+        console.log("user.html " + username);
+        $.ajax({
                 type:"POST",
                 url: "{{ url_for('SchedulesView:load_user_data') }}",
-                data: JSON.stringify((data)),
-                content_type: 'application/json',
-                success: function(){
+                data: JSON.stringify({
+                    'username': username
+                }),
+                contentType: 'application/json;charset=UTF-8',
+                success: function(response){
+                    $('#results').html(response);
                     $('#delete-modal').modal('show');
                 },
                 error:function(error){
                 }
             })
-        }
-    })
+    }
+
+    function editButton(username){
+        $.ajax({
+            type:"POST",
+            url: "{{ url_for('SchedulesView:load_user_data') }}",
+            data: JSON.stringify({
+                'username': username
+            }),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(response){
+                $('#results').html(response);
+                $('#edit-modal').modal('show');
+            },
+            error:function(error){
+            }
+        })
+    }
 </script>
 {% endblock %}
