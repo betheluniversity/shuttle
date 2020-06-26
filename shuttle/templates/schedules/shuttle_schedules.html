@@ -17,16 +17,16 @@
     </div>
 
     <script>
-    $(document).ready(function() {
-        $("#submit-schedule-button").click(function () {
-            // Sends google sheets schedule to database (erases old schedule)
-            $.ajax({
-                url: "{{ url_for('SchedulesView:send_schedule_path') }}",
-            }).done(function(data) {
-                location.reload()
-            })
+        $(document).ready(function() {
+            $("#submit-schedule-button").click(function () {
+                // Sends google sheets schedule to database (erases old schedule)
+                $.ajax({
+                    url: "{{ url_for('SchedulesView:send_schedule_path') }}",
+                }).done(function(data) {
+                    location.reload()
+                })
+            });
         });
-    });
     </script>
 
 {% endblock %}

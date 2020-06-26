@@ -18,27 +18,27 @@
     <div id="driver_log_display"></div>
 
     <script>
-     $(document).ready(function() {
-         window.onload = load_data("today's date");
-         function load_data(data){
-             $.ajax({
-                type: 'POST',
-                contentType: 'application/json',
-                url: "{{ url_for('SchedulesView:shuttle_logs') }}",
-                data: JSON.stringify((data)),
-            }).done(function (data) {
-                $("#driver_log_display").html(data);
+        $(document).ready(function() {
+            window.onload = load_data("today's date");
+            function load_data(data){
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: "{{ url_for('SchedulesView:shuttle_logs') }}",
+                    data: JSON.stringify((data)),
+                }).done(function (data) {
+                    $("#driver_log_display").html(data);
+                });
+            }
+            $(".dropdown-menu a").click(function() {
+                // Dropdown shows location selected
+                $(".date-menu:first-child").text($(this).text());
+                $(".date-menu:first-child").val($(this).text());
+                // Sends data to be shown on screen
+                 var data = {"date": $('.date-menu').val()}
+                load_data(data);
             });
-         }
-        $(".dropdown-menu a").click(function() {
-            // Dropdown shows location selected
-            $(".date-menu:first-child").text($(this).text());
-            $(".date-menu:first-child").val($(this).text());
-            // Sends data to be shown on screen
-            var data = {"date": $('.date-menu').val()}
-            load_data(data);
-        });
-    });
+         });
     </script>
 
 {% endblock %}

@@ -37,50 +37,49 @@
     </div>
 
     <script>
-
-    $(document).ready(function() {
-        function waitlist() {
-            // Updates waitlist
-            $.ajax({
-                url: "{{ url_for('SchedulesView:check_waitlist') }}",
-            })
-                .done(function (data) {
-                    $(".waitlist").text(data["waitlist-num"]);
-                    if (data["requested-location"] != '') {
-                        $(".status").text(data["requested-location"]);
-                        document.getElementById("delete-request").style.display = "block"
-                    } else {
-                        $(".status").text("No current Requests");
-                    }
+        $(document).ready(function() {
+            function waitlist() {
+                // Updates waitlist
+                $.ajax({
+                    url: "{{ url_for('SchedulesView:check_waitlist') }}",
                 })
-        }
-        window.onload = waitlist();
-        $(".dropdown-menu a").click(function(){
-            // Dropdown shows location selected
-            $(".location-menu:first-child").text($(this).text());
-            $(".location-menu:first-child").val($(this).text());
+                    .done(function (data) {
+                        $(".waitlist").text(data["waitlist-num"]);
+                        if (data["requested-location"] != '') {
+                            $(".status").text(data["requested-location"]);
+                            document.getElementById("delete-request").style.display = "block"
+                        } else {
+                            $(".status").text("No current Requests");
+                        }
+                    })
+            }
+            window.onload = waitlist();
+            $(".dropdown-menu a").click(function(){
+                // Dropdown shows location selected
+                $(".location-menu:first-child").text($(this).text());
+                $(".location-menu:first-child").val($(this).text());
+            });
+            $('.submit-btn').click(function () {
+                // Sends selected location and user info to database. Updates waitlist
+                var data = {"location":$('.location-menu').val()}
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: "{{ url_for('SchedulesView:send_shuttle_request_path') }}",
+                    data: JSON.stringify((data)),
+                }).done(function () {
+                    location.reload();
+                })
+            });
+            $('.delete-btn').click(function () {
+                // Deletes user's current shuttle request
+                $.ajax({
+                    url: "{{ url_for('SchedulesView:delete_request') }}",
+                }).done(function () {
+                    location.reload();
+                })
+            });
         });
-        $('.submit-btn').click(function () {
-            // Sends selected location and user info to database. Updates waitlist
-            var data = {"location":$('.location-menu').val()}
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json',
-                url: "{{ url_for('SchedulesView:send_shuttle_request_path') }}",
-                data: JSON.stringify((data)),
-            }).done(function () {
-                location.reload();
-            })
-        });
-        $('.delete-btn').click(function () {
-            // Deletes user's current shuttle request
-            $.ajax({
-                url: "{{ url_for('SchedulesView:delete_request') }}",
-            }).done(function () {
-                location.reload();
-            })
-        });
-    });
     </script>
 
 {% endblock %}
