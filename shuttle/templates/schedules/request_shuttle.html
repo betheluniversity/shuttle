@@ -4,36 +4,60 @@
 {% block body_content %}
 
     <div class="center-page shuttle-margins">
+        <h3>Your Requests: <span class="badge badge-pill badge-warning status"></span></h3>
+        <div id="pick-up-badge"><h4>Pick Up: <span class="badge badge-pill badge-warning pick-up-status"></span></h4></div>
+        <div id="drop-off-badge"><h4>Drop Off: <span class="badge badge-pill badge-warning drop-off-status"></span></h4></div>
+        <div id="delete-request"><input class="btn btn-danger btn-sm delete-btn" type="submit" value="Delete Request"></div>
+        <hr>
+    </div>
+
+    <div class="center-page shuttle-margins">
        <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning waitlist"></span></h3>
         <hr>
     </div>
 
     <div class="center-page">
-        <h4>Select a location and time below to request the shuttle:</h4>
+        <h4>Select pick up and drop off location below to request a shuttle:</h4>
     </div>
 
     <div class="center-page">
         <div class="align-side-by-side">
+            <h4>Pick Up:</h4>
+        </div>
+        <div class="align-side-by-side">
             <div class="dropdown">
-                <button class="btn btn-primary btn-lg dropdown-toggle location-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
-                <div class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton">
+                <button class="btn btn-primary btn-lg dropdown-toggle pick-up-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
+                <div class="dropdown-menu scrollable-menu dropdown-pick-up" aria-labelledby="dropdownMenuButton">
                     {% for location in locations %}
                         <a class="dropdown-item" href="#">{{ location }}</a>
                     {% endfor %}
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="center-page">
+        <div class="align-side-by-side">
+            <h4>Drop Off:</h4>
+        </div>
+        <div class="align-side-by-side">
+            <div class="dropdown">
+                <button class="btn btn-primary btn-lg dropdown-toggle drop-off-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
+                <div class="dropdown-menu scrollable-menu dropdown-drop-off" aria-labelledby="dropdownMenuButton">
+                    {% for location in locations %}
+                        <a class="dropdown-item" href="#">{{ location }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="center-page">
         <div class="align-side-by-side">
             <div class="submit">
                 <input class="btn btn-warning btn-lg submit-btn" type="submit" value="Request Shuttle">
             </div>
         </div>
-    </div>
-
-    <div class="center-page shuttle-margins">
-        <hr>
-       <h4>Active Requests: <span class="badge badge-pill badge-warning status"></span></h4>
-        <div id="delete-request"><input class="btn btn-danger btn-sm delete-btn" type="submit" value="Delete Request"></div>
     </div>
 
     <script>
@@ -45,8 +69,11 @@
                 })
                     .done(function (data) {
                         $(".waitlist").text(data["waitlist-num"]);
-                        if (data["requested-location"] != '') {
-                            $(".status").text(data["requested-location"]);
+                        if (data["requested-pick-up"] != '') {
+                            $(".pick-up-status").text(data['requested-pick-up']);
+                            $(".drop-off-status").text(data['requested-drop-off']);
+                            document.getElementById("pick-up-badge").style.display = "block"
+                            document.getElementById("drop-off-badge").style.display = "block"
                             document.getElementById("delete-request").style.display = "block"
                         } else {
                             $(".status").text("No current Requests");
@@ -54,14 +81,22 @@
                     })
             }
             window.onload = waitlist();
-            $(".dropdown-menu a").click(function(){
+            $(".dropdown-pick-up a").click(function(){
                 // Dropdown shows location selected
-                $(".location-menu:first-child").text($(this).text());
-                $(".location-menu:first-child").val($(this).text());
+                $(".pick-up-menu:first-child").text($(this).text());
+                $(".pick-up-menu:first-child").val($(this).text());
+            });
+            $(".dropdown-drop-off a").click(function(){
+                // Dropdown shows location selected
+                $(".drop-off-menu:first-child").text($(this).text());
+                $(".drop-off-menu:first-child").val($(this).text());
             });
             $('.submit-btn').click(function () {
                 // Sends selected location and user info to database. Updates waitlist
-                var data = {"location":$('.location-menu').val()}
+                var data = {
+                    "pick-up-location":$('.pick-up-menu').val(),
+                    "drop-off-location":$('.drop-off-menu').val()
+                }
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',

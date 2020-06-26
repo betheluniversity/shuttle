@@ -33,8 +33,7 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         locations = self.shc.grab_locations()
         requests = db.get_requests()
-        active_requests = db.number_active_requests()
-        active_requests = active_requests['waitlist-num']
+        active_requests = db.number_active_requests()['waitlist-num']
         current_break_status = db.break_status()
         return render_template('schedules/shuttle_driver_check_in.html', **locals())
 
@@ -75,10 +74,12 @@ class SchedulesView(FlaskView):
     def send_shuttle_request_path(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         json_data = request.get_json()
-        response = db.commit_shuttle_request(json_data['location'])
+        response = db.commit_shuttle_request(json_data['pick-up-location'], json_data['drop-off-location'])
         if response == 'success':
             self.sc.set_alert('success', 'Your request has been submitted')
-        elif response == 'bad location':
+        elif response == 'same location':
+            self.sc.set_alert('danger', 'Please select two different locations')
+        elif response == 'no location':
             self.sc.set_alert('danger', 'Please select a location')
         elif response == 'user has active request':
             self.sc.set_alert('danger', 'You already have an active request')

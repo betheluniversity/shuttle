@@ -140,22 +140,28 @@ def commit_schedule(table, all_locations):
         return 'Error'
 
 
-def commit_shuttle_request(location):
+def commit_shuttle_request(pick_up_location, drop_off_location):
     try:
+        if pick_up_location == '' or drop_off_location == '':
+            return 'no location'
+        if pick_up_location == drop_off_location:
+            return 'same location'
+
         username = flask_session['USERNAME']
         sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
         results = query(sql, 'read')
+
         for log in results:
             if results[log]['username'] == username:
                 return 'user has active request'
-        if location != '':
-            now = datetime.datetime.now()
-            date = now.strftime('%d-%b-%Y %I:%M %p')
-            sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE, USERNAME, LOCATION) VALUES (TO_DATE('{0}', " \
-                  "'dd-mon-yyyy hh:mi PM'), '{1}', '{2}')".format(date, username, location)
-            query(sql, 'write')
-            return 'success'
-        return 'bad location'
+
+        now = datetime.datetime.now()
+        date = now.strftime('%d-%b-%Y %I:%M %p')
+        sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE, USERNAME, PICK_UP_LOCATION, DROP_OFF_LOCATION) " \
+              "VALUES (TO_DATE('{0}', 'dd-mon-yyyy hh:mi PM'), '{1}', '{2}', '{3}')".\
+               format(date, username, pick_up_location, drop_off_location)
+        query(sql, 'write')
+        return 'success'
     except:
         return 'Error'
 
@@ -167,11 +173,17 @@ def number_active_requests():
         sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
         results = query(sql, 'read')
         username = flask_session['USERNAME']
-        location = ''
+        pick_up_location = ''
+        drop_off_location = ''
         for log in results:
             if results[log]['username'] == username:
-                location = results[log]['location']
-        requests = {'waitlist-num': len(results), 'requested-location': location}
+                pick_up_location = results[log]['pick_up_location']
+                drop_off_location = results[log]['drop_off_location']
+        requests = {
+            'waitlist-num': len(results),
+            'requested-pick-up': pick_up_location,
+            'requested-drop-off': drop_off_location
+        }
         return requests
     except:
         return 'Error'
@@ -225,8 +237,8 @@ def commit_break(driver_break):
             sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, ARRIVAL_TIME, ON_BREAK) VALUES ('{0}'," \
                   "'{1}', TO_DATE('{2}', 'dd-mon-yyyy hh:mi PM'), 'N')".format(date, username, full_date)
             query(sql, 'write')
-            sql = "UPDATE SHUTTLE_DRIVER_LOGS SET ON_BREAK = 'N' WHERE ON_BREAK = '{0}' AND " \
-                  "USERNAME = '{1}'".format('Y', username)
+            sql = "UPDATE SHUTTLE_DRIVER_LOGS SET ON_BREAK = 'N' WHERE ON_BREAK = 'Y' AND " \
+                  "USERNAME = '{0}'".format(username)
             query(sql, 'write')
             return 'off break success'
         elif driver_break == 'request-to-clock-out':

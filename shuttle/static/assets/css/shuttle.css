@@ -49,7 +49,7 @@ div.footer {
     margin: 10px;
 }
 
-#delete-request{
+#delete-request, #pick-up-badge, #drop-off-badge {
     display: None;
 }
 
