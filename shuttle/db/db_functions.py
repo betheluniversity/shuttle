@@ -148,7 +148,6 @@ def commit_shuttle_request(location):
         for log in results:
             if results[log]['username'] == username:
                 return 'user has active request'
-
         if location != '':
             now = datetime.datetime.now()
             date = now.strftime('%d-%b-%Y %I:%M %p')
@@ -189,7 +188,7 @@ def delete_current_request():
         return 'Error'
 
 
-def commit_driver_check_in(location, direction, driver_break):
+def commit_driver_check_in(location, direction):
     try:
         now = datetime.datetime.now()
         date = now.strftime('%d-%b-%Y')
@@ -208,26 +207,52 @@ def commit_driver_check_in(location, direction, driver_break):
                 return 'success arrival'
             else:
                 return 'Error'
-        elif driver_break != '':
-            if driver_break == 'N':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, ARRIVAL_TIME, ON_BREAK) VALUES ('{0}'," \
-                      "'{1}', TO_DATE('{2}', 'dd-mon-yyyy hh:mi PM'), '{3}')".format(date, username, full_date, driver_break)
-                query(sql, 'write')
-                return 'Not on break'
-            elif driver_break == 'Y':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, DEPARTURE_TIME, ON_BREAK) VALUES ('{0}', " \
-                      "'{1}', TO_DATE('{2}', 'dd-mon-yyyy hh:mi PM'), '{3}')".format(date, username, full_date, driver_break)
-                query(sql, 'write')
-                return 'On break'
-            else:
-                return 'Error'
         return 'bad location'
+    except:
+        return 'Error'
+
+
+def commit_break(driver_break):
+    try:
+        now = datetime.datetime.now()
+        date = now.strftime('%d-%b-%Y')
+        full_date = now.strftime('%d-%b-%Y %I:%M %p')
+        username = flask_session['USERNAME']
+        status = break_status()
+        if driver_break == 'request-to-clock-in':
+            if status == 'Not on break':
+                return 'error: not on break'
+            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, ARRIVAL_TIME, ON_BREAK) VALUES ('{0}'," \
+                  "'{1}', TO_DATE('{2}', 'dd-mon-yyyy hh:mi PM'), 'N')".format(date, username, full_date)
+            query(sql, 'write')
+            sql = "UPDATE SHUTTLE_DRIVER_LOGS SET ON_BREAK = 'N' WHERE ON_BREAK = '{0}' AND " \
+                  "USERNAME = '{1}'".format('Y', username)
+            query(sql, 'write')
+            return 'off break success'
+        elif driver_break == 'request-to-clock-out':
+            if status == 'On break':
+                return 'error: already on break'
+            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, DEPARTURE_TIME, ON_BREAK) VALUES ('{0}', " \
+                  "'{1}', TO_DATE('{2}', 'dd-mon-yyyy hh:mi PM'), 'Y')".format(date, username, full_date)
+            query(sql, 'write')
+            return 'on break success'
+        else:
+            return 'Error'
     except:
         return 'Error'
 
 
 def get_shuttle_logs():
     sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS ORDER BY LOG_DATE"
+    results = query(sql, 'read')
+    return results
+
+
+def get_shuttle_logs_by_date(date):
+    date = datetime.datetime.strptime(date, '%Y-%m-%d').strftime('%d-%b-%Y')
+    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' ORDER BY CASE " \
+          "WHEN ARRIVAL_TIME < DEPARTURE_TIME THEN ARRIVAL_TIME " \
+          "ELSE coalesce(DEPARTURE_TIME, ARRIVAL_TIME) END".format(date)
     results = query(sql, 'read')
     return results
 
@@ -245,3 +270,13 @@ def delete_request_driver(location):
         return 'success'
     except:
         return 'Error'
+
+
+def break_status():
+    username = flask_session['USERNAME']
+    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE ON_BREAK = 'Y' AND USERNAME = '{0}'".format(username)
+    results = query(sql, 'read')
+    if results:
+        return 'On break'
+    else:
+        return 'Not on break'

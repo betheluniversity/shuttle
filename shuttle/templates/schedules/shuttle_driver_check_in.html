@@ -77,15 +77,15 @@
             <div class="card-body">
                 <div class="align-side-by-side">
                     <div class="submit">
-                        <input class="btn btn-primary btn-sm check-out-btn" type="submit" value="Check out for break">
+                        <input class="btn btn-primary btn-sm check-out-btn" type="submit" value="Clock out for break">
                     </div>
                 </div>
                 <div class="align-side-by-side">
                     <div class="submit">
-                        <input class="btn btn-primary btn-sm check-in-btn" type="submit" value="Check in from break">
+                        <input class="btn btn-primary btn-sm check-in-btn" type="submit" value="Clock in from break">
                     </div>
                 </div>
-                <h4>Current status:<span class="badge badge-light break-badge">Not on break</span></h4>
+                <h4>Current status:<span class="badge badge-light break-badge">{{ current_break_status }}</span></h4>
             </div>
         </div>
     </div>
@@ -129,26 +129,26 @@
             });
             $('.check-out-btn').click(function () {
                 // Sends break info to database
-                var data = {"break": "Y"}
+                var data = {"break": "request-to-clock-out"}
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
+                    url: "{{ url_for('SchedulesView:send_driver_break_info') }}",
                     data: JSON.stringify((data)),
                 }).done(function (data) {
-                    $(".break-badge").text(data);
+                    location.reload()
                 })
             });
             $('.check-in-btn').click(function () {
                 // sends check-in from break info to database
-                var data = {"break": "N"}
+                var data = {"break": "request-to-clock-in"}
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:send_driver_check_in_info') }}",
+                    url: "{{ url_for('SchedulesView:send_driver_break_info') }}",
                     data: JSON.stringify((data)),
                 }).done(function (data) {
-                    $(".break-badge").text(data);
+                    location.reload()
                 })
             });
 

@@ -35,6 +35,7 @@ class SchedulesView(FlaskView):
         requests = db.get_requests()
         active_requests = db.number_active_requests()
         active_requests = active_requests['waitlist-num']
+        current_break_status = db.break_status()
         return render_template('schedules/shuttle_driver_check_in.html', **locals())
 
     @route('/driver-logs')
@@ -105,20 +106,36 @@ class SchedulesView(FlaskView):
     def send_driver_check_in_info(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
-        if 'location' in json_data.keys():
-            response = db.commit_driver_check_in(json_data['location'], json_data['direction'], '')
-            if response == 'success arrival':
-                self.sc.set_alert('success', 'Your arrival has been recorded')
-            elif response == 'success departure':
-                self.sc.set_alert('success', 'Your departure has been recorded')
-        else:
-            response = db.commit_driver_check_in('', '', json_data['break'])
-        if response == 'bad location':
+        response = db.commit_driver_check_in(json_data['location'], json_data['direction'])
+        if response == 'success arrival':
+            self.sc.set_alert('success', 'Your arrival at ' + json_data['location'] + ' has been recorded')
+        elif response == 'success departure':
+            self.sc.set_alert('success', 'Your departure from ' + json_data['location'] + ' has been recorded')
+        elif response == 'bad location':
             self.sc.set_alert('danger', 'Please select a location')
-        elif response == 'Error':
+        else:
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                         'call the ITS Help Desk at 651-638-6500')
         return response
+
+    @route('/send-break-info', methods=['Get', 'POST'])
+    def send_driver_break_info(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver'])
+        json_data = request.get_json()
+        response = db.commit_break(json_data['break'])
+        if response == 'on break success':
+            self.sc.set_alert('success', 'Clock out recorded successfully')
+        elif response == 'off break success':
+            self.sc.set_alert('success', 'Clock in recorded successfully')
+        elif response == 'error: not on break':
+            self.sc.set_alert('danger', 'Can\'t clock in because you are not on break')
+        elif response == 'error: already on break':
+            self.sc.set_alert('danger', 'Can\'t clock out because you are already on break')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please try again or '
+                                        'call the ITS Help Desk at 651-638-6500')
+        return response
+
 
     @route('delete-active-requests', methods=['Get', 'POST'])
     def delete_active_requests_at_location(self):
