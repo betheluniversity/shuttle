@@ -1,13 +1,13 @@
 {% extends 'shuttle_base.html' %}
-<!-- TODO: Restrict roles to Bethel people. Reset waitlist every night -->
-<!-- TODO: Maybe make submenu to shorten dropdown-->
+<!-- TODO: Maybe reset waitlist every night. Maybe make submenu to shorten dropdown -->
 <title>Shuttle | {% block page_title %}Request{% endblock %}</title>
 {% block body_content %}
 
     <div class="center-page shuttle-margins">
-       <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning"></span></h3>
+       <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning waitlist"></span></h3>
+        <hr>
     </div>
-    <hr>
+
     <div class="center-page">
         <h4>Select a location and time below to request the shuttle:</h4>
     </div>
@@ -16,7 +16,7 @@
         <div class="align-side-by-side">
             <div class="dropdown">
                 <button class="btn btn-primary btn-lg dropdown-toggle location-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton">
                     {% for location in locations %}
                         <a class="dropdown-item" href="#">{{ location }}</a>
                     {% endfor %}
@@ -30,18 +30,31 @@
         </div>
     </div>
 
+    <div class="center-page shuttle-margins">
+        <hr>
+       <h4>Active Requests: <span class="badge badge-pill badge-warning status"></span></h4>
+        <div id="delete-request"><input class="btn btn-danger btn-sm delete-btn" type="submit" value="Delete Request"></div>
+    </div>
+
     <script>
-    function waitlist() {
-        // Updates waitlist
-        $.ajax({
-              url: "{{ url_for('SchedulesView:check_waitlist') }}",
-        })
-            .done(function(data) {
-                $(".badge").text(data);
-            })
-    }
-    window.onload = waitlist();
+
     $(document).ready(function() {
+        function waitlist() {
+            // Updates waitlist
+            $.ajax({
+                url: "{{ url_for('SchedulesView:check_waitlist') }}",
+            })
+                .done(function (data) {
+                    $(".waitlist").text(data["waitlist-num"]);
+                    if (data["requested-location"] != '') {
+                        $(".status").text(data["requested-location"]);
+                        document.getElementById("delete-request").style.display = "block"
+                    } else {
+                        $(".status").text("No current Requests");
+                    }
+                })
+        }
+        window.onload = waitlist();
         $(".dropdown-menu a").click(function(){
             // Dropdown shows location selected
             $(".location-menu:first-child").text($(this).text());
@@ -55,7 +68,15 @@
                 contentType: 'application/json',
                 url: "{{ url_for('SchedulesView:send_shuttle_request_path') }}",
                 data: JSON.stringify((data)),
-            }).done(function (data) {
+            }).done(function () {
+                location.reload();
+            })
+        });
+        $('.delete-btn').click(function () {
+            // Deletes user's current shuttle request
+            $.ajax({
+                url: "{{ url_for('SchedulesView:delete_request') }}",
+            }).done(function () {
                 location.reload();
             })
         });

@@ -50,6 +50,10 @@ div.footer {
     margin: 10px;
 }
 
+#delete-request{
+    display: None;
+}
+
 html, body {
     background-color: #fafafa;
 }
