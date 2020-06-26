@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from flask import render_template, request
 from flask_classy import FlaskView, route
 from shuttle.db import db_functions as db
@@ -13,9 +13,10 @@ class SchedulesView(FlaskView):
         self.ssc = ScheduleController()
         self.shc = SheetsController()
 
-    @route('/shuttle-stats')
-    def stats(self):
-        return render_template('/schedules/shuttle_stats.html')
+    @route('/shuttle-schedule')
+    def schedule(self):
+        schedule = self.shc.grab_schedule()
+        return render_template('/schedules/shuttle_schedule.html', **locals())
 
     @route('/request-shuttle')
     def request(self):
@@ -23,10 +24,10 @@ class SchedulesView(FlaskView):
         locations = self.shc.grab_locations()
         return render_template('/schedules/request_shuttle.html', **locals())
 
-    @route('/shuttle-schedules')
-    def schedule(self):
+    @route('/edit-schedule')
+    def edit_schedule(self):
         self.sc.check_roles_and_route(['Administrator'])
-        return render_template('schedules/shuttle_schedules.html')
+        return render_template('schedules/edit_shuttle_schedule.html')
 
     @route('/driver-check-in')
     def check_in(self):
@@ -46,7 +47,7 @@ class SchedulesView(FlaskView):
     def shuttle_logs(self):
         json_data = request.get_json()
         if json_data == "today's date":
-            now = datetime.datetime.now()
+            now = datetime.now()
             date = now.strftime('%Y-%m-%d')
         else:
             date = json_data['date']
@@ -57,8 +58,10 @@ class SchedulesView(FlaskView):
 
     def send_schedule_path(self):
         self.sc.check_roles_and_route(['Administrator'])
-        sent = self.shc.send_schedule()
-        if sent == 'success':
+        spreadsheet = self.shc.grab_schedule()
+        locations = self.shc.grab_locations()
+        sent = db.commit_schedule(spreadsheet, locations)
+        if sent == "success":
             self.sc.set_alert('success', 'The schedule has been submitted')
         elif sent == 'no match':
             self.sc.set_alert('danger', 'Data in calendar does not match specified format')
@@ -85,9 +88,10 @@ class SchedulesView(FlaskView):
 
     def check_waitlist(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
-        active_requests = db.number_active_requests()
-        return active_requests
+        num_waiting = db.number_active_requests()
+        return num_waiting
 
+    @route('/driver-check', methods=['GET', 'POST'])
     def delete_request(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         request_to_delete = db.delete_current_request()
@@ -116,3 +120,40 @@ class SchedulesView(FlaskView):
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                         'call the ITS Help Desk at 651-638-6500')
         return response
+
+    @route('/recent-data', methods=['GET', 'POST'])
+    def grab_check_in_driver_data(self):
+        data = db.get_last_location()
+        return data
+
+    # Method takes the last time checked in by the driver and uses that to find the next closest
+    # time based on the spreadsheet. Method assumes the location is the first column in the spreadsheet
+    def grab_current_route(self):
+        try:
+            time = db.get_last_location()['time']
+            latest_time = datetime.strptime(time, '%I:%M %p')
+            schedule = self.shc.grab_schedule()
+            closest_time_greater = -1
+            next_stop = {'location': 'No more stops today', 'time': 'N/A'}
+            for i in range(len(schedule)):
+                for j in range(len(schedule[i])):
+                    # All times are converted to the same format so they can be compared
+                    if j != 0 and ':' in schedule[i][j]:
+                        split_time = schedule[i][j].split(':')
+                        if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
+                            schedule_time = (schedule[i][j] + ' PM')
+                        else:
+                            schedule_time = (schedule[i][j] + ' AM')
+                        schedule_time = datetime.strptime(schedule_time, '%I:%M %p')
+                        # Checks for the next closest time that is greater than the driver's last check in
+                        if schedule_time > latest_time:
+                            if closest_time_greater == -1:
+                                closest_time_greater = schedule_time
+                            else:
+                                if schedule_time < closest_time_greater:
+                                    closest_time_greater = schedule_time
+                                    next_stop = {'location': schedule[i][0],
+                                                 'time': closest_time_greater.strftime('%I:%M %p')}
+            return next_stop
+        except:
+            return {'location': 'Error', 'time': 'Error'}

@@ -27,12 +27,13 @@ body {
     border-color: #0056B5;
 }
 
-.log-body{
-    padding: 0rem;
-}
-
 .center-page {
     text-align: center;
+}
+
+.column {
+  float: left;
+  width: auto;
 }
 
 div.footer {
@@ -57,6 +58,10 @@ html, body {
     background-color: #fafafa;
 }
 
+.log-body {
+    padding: 0rem;
+}
+
 nav.navbar {
     color: white;
     padding: 0 10px;
@@ -74,6 +79,12 @@ nav.navbar {
     height: auto;
     max-height: 200px;
     overflow-x: hidden;
+}
+
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
 }
 
 .shuttle-margins {
@@ -94,6 +105,6 @@ span.shuttle-title {
     text-decoration: underline;
 }
 
-.table td{
+.table td {
     padding: 0.5rem;
 }

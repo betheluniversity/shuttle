@@ -2,7 +2,6 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 from shuttle import app
-from shuttle.db import db_functions as db
 
 
 class SheetsController:
@@ -16,13 +15,11 @@ class SheetsController:
         client = gspread.authorize(creds)
         return client
 
-    def send_schedule(self):
+    def grab_schedule(self):
         client = self.credentials()
         sheet = client.open('Bethel Shuttle Scheduling Spreadsheet').worksheet('Shuttle Schedule')
         list_of_times = sheet.get_all_values()
-        locations = self.grab_locations()
-        sent = db.commit_schedule(list_of_times, locations)
-        return sent
+        return list_of_times
 
     def grab_locations(self):
         client = self.credentials()
