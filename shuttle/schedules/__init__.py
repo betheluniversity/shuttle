@@ -80,7 +80,7 @@ class SchedulesView(FlaskView):
         json_data = request.get_json()
         if json_data == "today's date":
             now = datetime.datetime.now()
-            date = now.strftime('%Y-%m-%d')
+            date = now.strftime('%b-%d-%Y')
         else:
             date = json_data['date']
         selected_logs = self.ssc.grab_selected_logs(date)
