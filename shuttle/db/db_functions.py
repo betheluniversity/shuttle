@@ -146,15 +146,9 @@ def commit_shuttle_request(pick_up_location, drop_off_location):
             return 'no location'
         if pick_up_location == drop_off_location:
             return 'same location'
-
         username = flask_session['USERNAME']
         sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
-        results = query(sql, 'read')
-
-        for log in results:
-            if results[log]['username'] == username:
-                return 'user has active request'
-
+        query(sql, 'read')
         now = datetime.datetime.now()
         date = now.strftime('%d-%b-%Y %I:%M %p')
         sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE, USERNAME, PICK_UP_LOCATION, DROP_OFF_LOCATION) " \
@@ -187,6 +181,14 @@ def number_active_requests():
         return requests
     except:
         return 'Error'
+
+def get_position_in_waitlist():
+    username = flask_session['USERNAME']
+    sql = "WITH NumberedRows AS(SELECT USERNAME, ROW_NUMBER() OVER (ORDER BY LOG_DATE) AS RowNumber from " \
+          "SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y') SELECT RowNumber FROM NumberedRows " \
+          "WHERE USERNAME = '{0}'".format(username)
+    results = query(sql, 'read')
+    return results
 
 
 # This method changes the user's active request to inactive

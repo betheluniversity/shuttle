@@ -15,13 +15,16 @@ class SchedulesView(FlaskView):
 
     @route('/shuttle-stats')
     def stats(self):
-        return render_template('/schedules/shuttle_stats.html')
+        return render_template('schedules/shuttle_stats.html')
 
     @route('/request-shuttle')
     def request(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         locations = self.shc.grab_locations()
-        return render_template('/schedules/request_shuttle.html', **locals())
+        active_requests = db.number_active_requests()
+        if active_requests['requested-pick-up']:
+            position_in_waitlist = db.get_position_in_waitlist()[0]['rownumber']
+        return render_template('schedules/request_shuttle.html', **locals())
 
     @route('/shuttle-schedules')
     def schedule(self):
@@ -66,7 +69,6 @@ class SchedulesView(FlaskView):
                                         'Desk at 651-638-6500 for support')
         return results
 
-
     @route('/driver-logs')
     def logs(self):
         self.sc.check_roles_and_route(['Administrator'])
@@ -86,7 +88,7 @@ class SchedulesView(FlaskView):
         selected_logs = self.ssc.grab_selected_logs(date)
         shuttle_logs = selected_logs[0]
         break_logs = selected_logs[1]
-        return render_template('/loaded_views/load_logs.html', **locals())
+        return render_template('loaded_views/load_logs.html', **locals())
 
     def send_schedule_path(self):
         self.sc.check_roles_and_route(['Administrator'])
@@ -111,17 +113,10 @@ class SchedulesView(FlaskView):
             self.sc.set_alert('danger', 'Please select two different locations')
         elif response == 'no location':
             self.sc.set_alert('danger', 'Please select a location')
-        elif response == 'user has active request':
-            self.sc.set_alert('danger', 'You already have an active request')
         else:
             self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
                                         'Desk at 651-638-6500 for support')
         return response
-
-    def check_waitlist(self):
-        self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
-        active_requests = db.number_active_requests()
-        return active_requests
 
     def delete_request(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
