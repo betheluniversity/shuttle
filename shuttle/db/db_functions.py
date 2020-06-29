@@ -261,7 +261,7 @@ def get_shuttle_logs():
 
 
 def get_shuttle_logs_by_date(date):
-    date = datetime.datetime.strptime(date, '%Y-%m-%d').strftime('%d-%b-%Y')
+    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' ORDER BY CASE " \
           "WHEN ARRIVAL_TIME < DEPARTURE_TIME THEN ARRIVAL_TIME " \
           "ELSE coalesce(DEPARTURE_TIME, ARRIVAL_TIME) END".format(date)
@@ -272,12 +272,16 @@ def get_shuttle_logs_by_date(date):
 def get_requests():
     sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y' ORDER BY LOG_DATE"
     results = query(sql, 'read')
+    for result in results:
+        real_name = username_search(results[result]['username'])
+        results[result]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
+        results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M %p %b-%d-%Y')
     return results
 
 
-def delete_request_driver(location):
+def complete_shuttle_request(username):
     try:
-        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE LOCATION = '{0}'".format(location)
+        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE USERNAME = '{0}'".format(username)
         query(sql, 'write')
         return 'success'
     except:

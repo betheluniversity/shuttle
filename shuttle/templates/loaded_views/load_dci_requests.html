@@ -1,0 +1,74 @@
+{% block body_content %}
+
+    <div class="center-page">
+        <div class="center-page shuttle-margins">
+            <h4>Active requests: <span class="badge badge-pill badge-warning waitlist">{{ active_requests }}</span></h4>
+        </div>
+
+        {% if active_requests != 0 %}
+            <div id="request-information">
+                <div class="card">
+                    <div class="card-body log-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Time Of Request</th>
+                                <th scope="col">Pick Up At</th>
+                                <th scope="col">Drop Off At</th>
+                                <th scope="col">Complete Request</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for request in requests %}
+                                <tr>
+                                    <td class="driver">
+                                        {% if requests[request]['name'] != None %}
+                                            {{ requests[request]['name'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="location">
+                                        {% if requests[request]['log_date'] != None %}
+                                            {{ requests[request]['log_date'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="check-out">
+                                        {% if requests[request]['pick_up_location'] != None %}
+                                            {{ requests[request]['pick_up_location'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="check-in">
+                                        {% if requests[request]['drop_off_location'] != None %}
+                                            {{ requests[request]['drop_off_location'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="complete-request">
+                                        <input class="btn btn-warning btn-sm complete-request-btn" type="submit" value="Complete" onclick="completeRequest('{{ requests[request]['username'] }}')">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function completeRequest(username){
+            console.log(username);
+            // sends check-in from break info to database
+            var data = {"username": username}
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: "{{ url_for('SchedulesView:complete_request') }}",
+                data: JSON.stringify((data)),
+            }).done(function (data) {
+                location.reload();
+            })
+        }
+    </script>
+
+{% endblock %}

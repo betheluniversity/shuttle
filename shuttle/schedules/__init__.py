@@ -35,6 +35,7 @@ class SchedulesView(FlaskView):
         active_requests = db.number_active_requests()['waitlist-num']
         return render_template('schedules/shuttle_driver_check_in.html', **locals())
 
+    # Loads in the selected driver view
     @route('/driver-view', methods=['GET', 'POST'])
     def load_driver_view(self):
         json_data = request.get_json()
@@ -42,14 +43,29 @@ class SchedulesView(FlaskView):
         if json_data['view'] == 'Location check in':
             load = 'locations'
             locations = self.shc.grab_locations()
+            return render_template('loaded_views/load_dci_locations.html', **locals())
         if json_data['view'] == 'Active requests':
             load = 'requests'
             requests = db.get_requests()
             active_requests = db.number_active_requests()['waitlist-num']
+            return render_template('loaded_views/load_dci_requests.html', **locals())
         if json_data['view'] == 'Break check in':
             load = 'break'
             current_break_status = db.break_status()
-        return render_template('schedules/load_driver_check_in.html', **locals())
+            return render_template('loaded_views/load_dci_break.html', **locals())
+
+    @route('/complete-request', methods=['GET', 'POST'])
+    def complete_request(self):
+        json_data = request.get_json()
+        username = json_data['username']
+        results = db.complete_shuttle_request(username)
+        if results == 'success':
+            self.sc.set_alert('success', 'The request has been completed')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                        'Desk at 651-638-6500 for support')
+        return results
+
 
     @route('/driver-logs')
     def logs(self):
@@ -70,7 +86,7 @@ class SchedulesView(FlaskView):
         selected_logs = self.ssc.grab_selected_logs(date)
         shuttle_logs = selected_logs[0]
         break_logs = selected_logs[1]
-        return render_template('schedules/load_logs.html', **locals())
+        return render_template('/loaded_views/load_logs.html', **locals())
 
     def send_schedule_path(self):
         self.sc.check_roles_and_route(['Administrator'])
@@ -150,16 +166,3 @@ class SchedulesView(FlaskView):
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                         'call the ITS Help Desk at 651-638-6500')
         return response
-
-
-    @route('delete-active-requests', methods=['Get', 'POST'])
-    def delete_active_requests_at_location(self):
-        json_data = request.get_json()
-        location = json_data['location']
-        request_to_delete = db.delete_request_driver(location)
-        if request_to_delete == 'success':
-            self.sc.set_alert('success', 'The request for ' + location + ' has been completed')
-        else:
-            self.sc.set_alert('danger', 'Something went wrong. Please try again or '
-                                        'call the ITS Help Desk at 651-638-6500')
-        return request_to_delete

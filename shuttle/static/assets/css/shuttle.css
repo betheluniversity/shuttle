@@ -65,9 +65,7 @@ nav.navbar {
 .navbar-brand {
     font-size: 0.9em;
 }
-#request-information {
-    display: none;
-}
+
 .row {
     display: block;
 }
