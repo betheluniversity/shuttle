@@ -49,7 +49,6 @@ class SchedulesView(FlaskView):
     def load_user_data(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
-        print(username)
         return render_template('/schedules/user_modal.html', **locals())
 
     @route('delete_user', methods=['POST'])
@@ -57,7 +56,8 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
         print('deleting ' + username)
-        # delete stuff here
+        result = db.delete_user(username)
+        return result
 
 
     @route('edit_user', methods=['POST'])
@@ -65,5 +65,6 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
         role = json.loads(request.data).get('role')
-        print('Changing ' + username + ' to ' + role)
-        # edit stuff here
+        result = db.change_user_role(username, role)
+        return result
+

@@ -23,16 +23,15 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit {{ username }}</h5>
+                    <h5 class="modal-title">Change role of {{ username }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="">
-                        Change role to:
-                        <button type="button" class="btn btn-primary col" onclick="editUser('{{ username }}', 'Administrator')">Administrator</button>
-                        <button type="button" class="btn btn-primary col" onclick="editUser('{{ username }}', 'Driver')">Driver</button>
+                    <div class="center-page">
+                        <button type="button" class="btn btn-primary" onclick="editUser('{{ username }}', 'Administrator')">Administrator</button>
+                        <button type="button" class="btn btn-primary" onclick="editUser('{{ username }}', 'Driver')">Driver</button>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -43,16 +42,23 @@
     </div>
 
     <script>
+        $('#edit-modal').on('hidden.bs.modal', function() {
+            $('#results').html('');
+        });
+        $('#delete-modal').on('hidden.bs.modal', function() {
+            $('#results').html('');
+        });
         function deleteUser(username){
         $.ajax({
-            type:POST,
+            type:"POST",
             url: "{{ url_for('SchedulesView:delete_user') }}",
             data:JSON.stringify({
                 'username' : username
             }),
             contentType:'application/json;charset=UTF-8',
-            success: function(response){
-                $('#delete-modal').modal('hide');
+            success: function(){
+                {#$('#delete-modal').modal('hide');#}
+                window.location.reload();
             },
             error: function(error){
             }
@@ -62,15 +68,18 @@
         function editUser(username, role){
 
             $.ajax({
-                type:POST,
+                type:"POST",
                 url: "{{ url_for('SchedulesView:edit_user') }}",
                 data:JSON.stringify({
                     'username' : username,
                     'role': role
                 }),
-            contentType:'application/json;charset=UTF-8',
-                success: function(response){
-                    $('#edit-modal').modal('hide');
+                contentType:'application/json;charset=UTF-8',
+                success: function(){
+                    {#$('#edit-modal').modal('hide');#}
+                    window.location.reload();
+                },
+                error: function(){
                 }
             })
         }

@@ -5,7 +5,7 @@
     <div id="results"></div>
     <h4>Users</h4>
     <input class="form-control user-search" type="text" placeholder="Search" aria-label="Search">
-    <div class="card">
+    <div class="card scrolling-wrapper">
         <table class="table table-hover">
             <thead>
             <tr>
@@ -39,7 +39,6 @@
     </div>
 <script type="text/javascript">
     function deleteButton(username){
-        console.log("user.html " + username);
         $.ajax({
                 type:"POST",
                 url: "{{ url_for('SchedulesView:load_user_data') }}",

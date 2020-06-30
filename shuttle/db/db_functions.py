@@ -103,7 +103,28 @@ def username_search(username):
         # if mybethel can't get the data, then prevent anything from loading
         return abort(503)
 
+
 def get_users():
     sql = "SELECT * FROM SHUTTLE_USERS"
     results = query(sql, 'read')
     return results
+
+
+def delete_user(username):
+    try:
+        sql = "DELETE FROM SHUTTLE_USERS WHERE USERNAME = '{0}'".format(username)
+        results = query(sql, 'write')
+        return 'success'
+    except Exception as error:
+        return 'error'
+
+
+def change_user_role(username, role):
+    try:
+        sql = "UPDATE SHUTTLE_USERS SET ROLE = '{0}' WHERE USERNAME = '{1}'".format(role, username)
+        results = query(sql, 'write')
+        return 'success'
+    except Exception as error:
+        return 'error'
+
+
