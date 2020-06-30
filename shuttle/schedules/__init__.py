@@ -46,16 +46,14 @@ class SchedulesView(FlaskView):
         if json_data['view'] == 'Location check in':
             load = 'locations'
             locations = self.shc.grab_locations()
+            current_break_status = db.break_status()
             return render_template('loaded_views/load_dci_locations.html', **locals())
         if json_data['view'] == 'Active requests':
             load = 'requests'
             requests = db.get_requests()
             active_requests = db.number_active_requests()['waitlist-num']
-            return render_template('loaded_views/load_dci_requests.html', **locals())
-        if json_data['view'] == 'Break check in':
-            load = 'break'
             current_break_status = db.break_status()
-            return render_template('loaded_views/load_dci_break.html', **locals())
+            return render_template('loaded_views/load_dci_requests.html', **locals())
 
     @route('/complete-request', methods=['GET', 'POST'])
     def complete_request(self):

@@ -3,16 +3,12 @@
 {% block body_content %}
 <title>Shuttle | {% block page_title %}Driver Check In{% endblock %}</title>
 
-    <div class="center-page">
-        <h4>Please select a view below</h4>
-        <div class="align-side-by-side">
-            <div class="dropdown">
-                <button class="btn btn-primary btn-lg dropdown-toggle driver-view-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Driver View</button>
-                <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">Location check in</a>
-                    <a class="dropdown-item" href="#">Active requests</a>
-                    <a class="dropdown-item" href="#">Break check in</a>
-                </div>
+    <div class="driver-selector">
+        <div class="dropdown">
+            <button class="btn btn-primary btn-lg dropdown-toggle driver-view-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Driver View</button>
+            <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Location check in</a>
+                <a class="dropdown-item" href="#">Active requests</a>
             </div>
         </div>
     </div>
