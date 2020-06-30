@@ -1,5 +1,5 @@
-from datetime import datetime
-from flask import render_template, request
+import datetime
+from flask import render_template, request, session
 from flask_classy import FlaskView, route
 from shuttle.db import db_functions as db
 from shuttle.schedules.google_sheets_controller import SheetsController
@@ -22,7 +22,10 @@ class SchedulesView(FlaskView):
     def request(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         locations = self.shc.grab_locations()
-        return render_template('/schedules/request_shuttle.html', **locals())
+        active_requests = db.number_active_requests()
+        if active_requests['requested-pick-up']:
+            position_in_waitlist = db.get_position_in_waitlist()[0]['rownumber']
+        return render_template('schedules/request_shuttle.html', **locals())
 
     @route('/edit-schedule')
     def edit_schedule(self):
@@ -32,8 +35,40 @@ class SchedulesView(FlaskView):
     @route('/driver-check-in')
     def check_in(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
-        locations = self.shc.grab_locations()
+        requests = db.get_requests()
+        active_requests = db.number_active_requests()['waitlist-num']
+        driver_select = session['DRIVER-SELECT']
         return render_template('schedules/shuttle_driver_check_in.html', **locals())
+
+    # Loads in the selected driver view
+    @route('/driver-view', methods=['GET', 'POST'])
+    def load_driver_view(self):
+        json_data = request.get_json()
+        load = ''
+        session['DRIVER-SELECT'] = json_data['view']
+        if json_data['view'] == 'Location Check In':
+            load = 'locations'
+            locations = self.shc.grab_locations()
+            current_break_status = db.break_status()
+            return render_template('loaded_views/load_dci_locations.html', **locals())
+        if json_data['view'] == 'Active Requests':
+            load = 'requests'
+            requests = db.get_requests()
+            active_requests = db.number_active_requests()['waitlist-num']
+            current_break_status = db.break_status()
+            return render_template('loaded_views/load_dci_requests.html', **locals())
+
+    @route('/complete-request', methods=['GET', 'POST'])
+    def complete_request(self):
+        json_data = request.get_json()
+        username = json_data['username']
+        results = db.complete_shuttle_request(username)
+        if results == 'success':
+            self.sc.set_alert('success', 'The request has been completed')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                        'Desk at 651-638-6500 for support')
+        return results
 
     @route('/driver-logs')
     def logs(self):
@@ -47,14 +82,14 @@ class SchedulesView(FlaskView):
     def shuttle_logs(self):
         json_data = request.get_json()
         if json_data == "today's date":
-            now = datetime.now()
-            date = now.strftime('%Y-%m-%d')
+            now = datetime.datetime.now()
+            date = now.strftime('%b-%d-%Y')
         else:
             date = json_data['date']
         selected_logs = self.ssc.grab_selected_logs(date)
         shuttle_logs = selected_logs[0]
         break_logs = selected_logs[1]
-        return render_template('schedules/load_logs.html', **locals())
+        return render_template('loaded_views/load_logs.html', **locals())
 
     def send_schedule_path(self):
         self.sc.check_roles_and_route(['Administrator'])
@@ -74,24 +109,18 @@ class SchedulesView(FlaskView):
     def send_shuttle_request_path(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         json_data = request.get_json()
-        response = db.commit_shuttle_request(json_data['location'])
+        response = db.commit_shuttle_request(json_data['pick-up-location'], json_data['drop-off-location'])
         if response == 'success':
             self.sc.set_alert('success', 'Your request has been submitted')
-        elif response == 'bad location':
+        elif response == 'same location':
+            self.sc.set_alert('danger', 'Please select two different locations')
+        elif response == 'no location':
             self.sc.set_alert('danger', 'Please select a location')
-        elif response == 'user has active request':
-            self.sc.set_alert('danger', 'You already have an active request')
         else:
             self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
                                         'Desk at 651-638-6500 for support')
         return response
 
-    def check_waitlist(self):
-        self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
-        num_waiting = db.number_active_requests()
-        return num_waiting
-
-    @route('/driver-check', methods=['GET', 'POST'])
     def delete_request(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         request_to_delete = db.delete_current_request()
@@ -106,17 +135,32 @@ class SchedulesView(FlaskView):
     def send_driver_check_in_info(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
-        if 'location' in json_data.keys():
-            response = db.commit_driver_check_in(json_data['location'], json_data['direction'], '')
-            if response == 'success arrival':
-                self.sc.set_alert('success', 'Your arrival has been recorded')
-            elif response == 'success departure':
-                self.sc.set_alert('success', 'Your departure has been recorded')
-        else:
-            response = db.commit_driver_check_in('', '', json_data['break'])
-        if response == 'bad location':
+        response = db.commit_driver_check_in(json_data['location'], json_data['direction'])
+        if response == 'success arrival':
+            self.sc.set_alert('success', 'Your arrival at ' + json_data['location'] + ' has been recorded')
+        elif response == 'success departure':
+            self.sc.set_alert('success', 'Your departure from ' + json_data['location'] + ' has been recorded')
+        elif response == 'bad location':
             self.sc.set_alert('danger', 'Please select a location')
-        elif response == 'Error':
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please try again or '
+                                        'call the ITS Help Desk at 651-638-6500')
+        return response
+
+    @route('/send-break-info', methods=['Get', 'POST'])
+    def send_driver_break_info(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver'])
+        json_data = request.get_json()
+        response = db.commit_break(json_data['break'])
+        if response == 'on break success':
+            self.sc.set_alert('success', 'Clock out recorded successfully')
+        elif response == 'off break success':
+            self.sc.set_alert('success', 'Clock in recorded successfully')
+        elif response == 'error: not on break':
+            self.sc.set_alert('danger', 'Can\'t clock in because you are not on break')
+        elif response == 'error: already on break':
+            self.sc.set_alert('danger', 'Can\'t clock out because you are already on break')
+        else:
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                         'call the ITS Help Desk at 651-638-6500')
         return response

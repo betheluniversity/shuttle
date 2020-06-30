@@ -1,0 +1,119 @@
+{% block body_content %}
+
+    <div class="center-page">
+        <div class="center-page shuttle-margins">
+            <h4>Active Requests: <span class="badge badge-pill badge-warning waitlist">{{ active_requests }}</span></h4>
+        </div>
+
+        {% if active_requests != 0 %}
+            <div id="request-information">
+                <div class="card scrolling-wrapper">
+                    <div class="card-body log-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Time Of Request</th>
+                                <th scope="col">Pick Up At</th>
+                                <th scope="col">Drop Off At</th>
+                                <th scope="col">Complete Request</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for request in requests %}
+                                <tr>
+                                    <td class="driver">
+                                        {% if requests[request]['name'] != None %}
+                                            {{ requests[request]['name'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="location">
+                                        {% if requests[request]['log_date'] != None %}
+                                            {{ requests[request]['log_date'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="check-out">
+                                        {% if requests[request]['pick_up_location'] != None %}
+                                            {{ requests[request]['pick_up_location'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="check-in">
+                                        {% if requests[request]['drop_off_location'] != None %}
+                                            {{ requests[request]['drop_off_location'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="complete-request">
+                                        <input class="btn btn-warning btn-sm complete-request-btn" type="submit" value="Complete" onclick="completeRequest('{{ requests[request]['username'] }}')">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="break-section">
+        <div class="center-page">
+            <div class="align-side-by-side">
+                <div class="submit">
+                    <input class="btn btn-warning btn-sm check-out-btn" type="submit" value="Clock out for break">
+                </div>
+            </div>
+            <div class="align-side-by-side">
+                <div class="submit">
+                    <input class="btn btn-warning btn-sm check-in-btn" type="submit" value="Clock in from break">
+                </div>
+            </div>
+            <div class="break-section">
+                <h4>Current status:<span class="badge badge-light break-badge">{{ current_break_status }}</span></h4>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        function completeRequest(username){
+            // sends check-in from break info to database
+            var data = {"username": username}
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: "{{ url_for('SchedulesView:complete_request') }}",
+                data: JSON.stringify((data)),
+            }).done(function (data) {
+                location.reload();
+            })
+        }
+        $(document).ready(function() {
+            $('.check-out-btn').click(function () {
+                // Sends break info to database
+                var data = {"break": "request-to-clock-out"}
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: "{{ url_for('SchedulesView:send_driver_break_info') }}",
+                    data: JSON.stringify((data)),
+                }).done(function (data) {
+                    location.reload()
+                })
+            });
+            $('.check-in-btn').click(function () {
+                // sends check-in from break info to database
+                var data = {"break": "request-to-clock-in"}
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: "{{ url_for('SchedulesView:send_driver_break_info') }}",
+                    data: JSON.stringify((data)),
+                }).done(function (data) {
+                    location.reload()
+                })
+            });
+        });
+    </script>
+
+{% endblock %}

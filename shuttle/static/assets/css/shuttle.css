@@ -27,6 +27,14 @@ body {
     border-color: #0056B5;
 }
 
+.break-section {
+    padding-top: 1em;
+}
+
+.log-body{
+    padding: 0rem;
+}
+
 .center-page {
     text-align: center;
 }
@@ -50,8 +58,8 @@ div.footer {
     margin: 10px;
 }
 
-#delete-request{
-    display: None;
+.driver-selector {
+    margin-bottom: 1em;
 }
 
 html, body {
@@ -99,6 +107,17 @@ span.shuttle-title {
 
 .submit {
     margin: 0.3em;
+}
+
+.small-card {
+    position: relative;
+    display: inline-grid;
+    flex-direction: column;
+    min-width: 0;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
 }
 
 .txt-underline:hover {
