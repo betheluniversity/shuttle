@@ -36,7 +36,7 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         requests = db.get_requests()
         active_requests = db.number_active_requests()['waitlist-num']
-        driver_select = session['driver_select']
+        driver_select = session['DRIVER-SELECT']
         return render_template('schedules/shuttle_driver_check_in.html', **locals())
 
     # Loads in the selected driver view
@@ -44,7 +44,7 @@ class SchedulesView(FlaskView):
     def load_driver_view(self):
         json_data = request.get_json()
         load = ''
-        session['driver_select'] = json_data['view']
+        session['DRIVER-SELECT'] = json_data['view']
         if json_data['view'] == 'Location Check In':
             load = 'locations'
             locations = self.shc.grab_locations()

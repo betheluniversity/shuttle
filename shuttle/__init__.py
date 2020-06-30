@@ -39,6 +39,8 @@ def utility_processor():
 
 @app.before_request
 def before_request():
+    if 'DRIVER-SELECT' not in flask_session.keys():
+        flask_session['DRIVER-SELECT'] = 'Active Requests'
     if '/static/' in request.path \
             or '/assets/' in request.path \
             or '/cron/' in request.path \
