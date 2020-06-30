@@ -6,6 +6,7 @@
     <div class="driver-selector">
         <div class="dropdown">
             <button class="btn btn-primary btn-lg dropdown-toggle driver-view-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Driver View</button>
+            <img id="img-spinner" class="spinner-img" src="https://cdn1.bethel.edu/images/load.gif" alt="Loading"/>
             <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item" href="#">Location Check In</a>
                 <a class="dropdown-item" href="#">Active Requests</a>
@@ -26,10 +27,12 @@
                     url: "{{ url_for('SchedulesView:load_driver_view') }}",
                     data: JSON.stringify((data)),
                 }).done(function (data) {
+                    $('.spinner-img').hide()
                     $("#driver_check_in_display").html(data);
                 });
             }
             $(".dropdown-menu a").click(function() {
+                $('.spinner-img').show()
                 // Dropdown shows location selected
                 $(".driver-view-menu:first-child").text($(this).text());
                 $(".driver-view-menu:first-child").val($(this).text());

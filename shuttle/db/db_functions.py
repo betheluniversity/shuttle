@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from flask import abort
 from flask import session as flask_session
@@ -121,7 +122,7 @@ def commit_schedule(table, all_locations):
                     location = table[i][j].upper()
                 elif table[i][j] == '-' or table[i][j] == 'DROP':
                     continue
-                elif ':' in table[i][j]:
+                elif re.search("^[\d]:[\d][\d]$", table[i][j]) or re.search("^[\d][\d]:[\d][\d]$", table[i][j]):
                     split_time = table[i][j].split(':')
                     if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
                         joined_time = '.'.join(split_time)
