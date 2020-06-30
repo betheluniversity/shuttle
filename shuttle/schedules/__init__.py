@@ -1,5 +1,5 @@
 import datetime
-from flask import render_template, request
+from flask import render_template, request, session
 from flask_classy import FlaskView, route
 from shuttle.db import db_functions as db
 from shuttle.schedules.google_sheets_controller import SheetsController
@@ -36,6 +36,7 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         requests = db.get_requests()
         active_requests = db.number_active_requests()['waitlist-num']
+        driver_select = session['driver_select']
         return render_template('schedules/shuttle_driver_check_in.html', **locals())
 
     # Loads in the selected driver view
@@ -43,12 +44,13 @@ class SchedulesView(FlaskView):
     def load_driver_view(self):
         json_data = request.get_json()
         load = ''
-        if json_data['view'] == 'Location check in':
+        session['driver_select'] = json_data['view']
+        if json_data['view'] == 'Location Check In':
             load = 'locations'
             locations = self.shc.grab_locations()
             current_break_status = db.break_status()
             return render_template('loaded_views/load_dci_locations.html', **locals())
-        if json_data['view'] == 'Active requests':
+        if json_data['view'] == 'Active Requests':
             load = 'requests'
             requests = db.get_requests()
             active_requests = db.number_active_requests()['waitlist-num']

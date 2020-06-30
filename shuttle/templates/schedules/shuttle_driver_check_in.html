@@ -7,8 +7,8 @@
         <div class="dropdown">
             <button class="btn btn-primary btn-lg dropdown-toggle driver-view-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Driver View</button>
             <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Location check in</a>
-                <a class="dropdown-item" href="#">Active requests</a>
+                <a class="dropdown-item" href="#">Location Check In</a>
+                <a class="dropdown-item" href="#">Active Requests</a>
             </div>
         </div>
     </div>
@@ -17,7 +17,8 @@
 
     <script>
         $(document).ready(function() {
-            window.onload = load_data({'view':'Active requests'})
+            window.onload = load_data({'view': {{ driver_select|tojson}}});
+            window.onload = $(".driver-view-menu:first-child").text({{ driver_select|tojson }});
             function load_data(data){
                 $.ajax({
                     type: 'POST',

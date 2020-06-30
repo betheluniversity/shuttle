@@ -2,7 +2,7 @@
 
     <div class="center-page">
         <div class="center-page shuttle-margins">
-            <h4>Active requests: <span class="badge badge-pill badge-warning waitlist">{{ active_requests }}</span></h4>
+            <h4>Active Requests: <span class="badge badge-pill badge-warning waitlist">{{ active_requests }}</span></h4>
         </div>
 
         {% if active_requests != 0 %}
@@ -67,7 +67,9 @@
                     <input class="btn btn-warning btn-sm check-in-btn" type="submit" value="Clock in from break">
                 </div>
             </div>
-            <h4>Current status:<span class="badge badge-light break-badge">{{ current_break_status }}</span></h4>
+            <div class="break-section">
+                <h4>Current status:<span class="badge badge-light break-badge">{{ current_break_status }}</span></h4>
+            </div>
         </div>
     </div>
 
