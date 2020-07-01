@@ -107,7 +107,6 @@ def username_search(username):
         return abort(503)
 
 
-# TODO use regex to check schedule
 def commit_schedule(table, all_locations):
     try:
         sql = "DELETE FROM SHUTTLE_SCHEDULE"
