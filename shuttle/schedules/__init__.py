@@ -1,4 +1,5 @@
-import datetime
+import re
+from datetime import datetime
 from flask import render_template, request, session
 from flask_classy import FlaskView, route
 from shuttle.db import db_functions as db
@@ -82,7 +83,7 @@ class SchedulesView(FlaskView):
     def shuttle_logs(self):
         json_data = request.get_json()
         if json_data == "today's date":
-            now = datetime.datetime.now()
+            now = datetime.now()
             date = now.strftime('%b-%d-%Y')
         else:
             date = json_data['date']
@@ -182,7 +183,8 @@ class SchedulesView(FlaskView):
             for i in range(len(schedule)):
                 for j in range(len(schedule[i])):
                     # All times are converted to the same format so they can be compared
-                    if j != 0 and ':' in schedule[i][j]:
+                    if j != 0 and re.search("^[\d]:[\d][\d]$", schedule[i][j]) or re.search("^[\d][\d]:[\d][\d]$",
+                                                                                            schedule[i][j]):
                         split_time = schedule[i][j].split(':')
                         if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
                             schedule_time = (schedule[i][j] + ' PM')

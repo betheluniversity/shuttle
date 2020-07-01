@@ -6,6 +6,7 @@
         <div class="align-side-by-side">
             <div class="dropdown">
                 <button class="btn btn-primary btn-lg dropdown-toggle date-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select a date</button>
+                <img id="img-spinner" class="spinner-img" src="https://cdn1.bethel.edu/images/load.gif" alt="Loading" style="display:none"/>
                 <div class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton">
                     {% for i in range(date_list|length) %}
                         <a class="dropdown-item" href="#">{{ date_list[i] }}</a>
@@ -21,12 +22,14 @@
         $(document).ready(function() {
             window.onload = load_data("today's date");
             function load_data(data){
+                $('#img-spinner').show();
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
                     url: "{{ url_for('SchedulesView:shuttle_logs') }}",
                     data: JSON.stringify((data)),
                 }).done(function (data) {
+                    $('#img-spinner').hide();
                     $("#driver_log_display").html(data);
                 });
             }
@@ -35,7 +38,7 @@
                 $(".date-menu:first-child").text($(this).text());
                 $(".date-menu:first-child").val($(this).text());
                 // Sends data to be shown on screen
-                 var data = {"date": $('.date-menu').val()}
+                var data = {"date": $('.date-menu').val()}
                 load_data(data);
             });
          });

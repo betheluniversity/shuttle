@@ -11,8 +11,8 @@ class View(FlaskView):
         self.sv = SchedulesView()
 
     def index(self):
-        route_data = self.sv.grab_current_route()
         check_in_data = self.sv.grab_check_in_driver_data()
+        route_data = self.sv.grab_current_route()
         return render_template('index.html', **locals())
 
     @route('/clear')
