@@ -1,4 +1,5 @@
 from flask import render_template
+from flask import session as flask_session
 from flask_classy import FlaskView, route, request
 from shuttle.db import db_functions as db
 import json
@@ -55,9 +56,12 @@ class SchedulesView(FlaskView):
     def delete_user(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
-        print('deleting ' + username)
-        result = db.delete_user(username)
-        return result
+        if username != flask_session['USERNAME']:
+            result = db.delete_user(username)
+            return result
+        else:
+            self.sc.set_alert('danger', 'You cannot delete your own account.')
+            return 'error'
 
 
     @route('edit_user', methods=['POST'])
@@ -65,6 +69,10 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
         role = json.loads(request.data).get('role')
-        result = db.change_user_role(username, role)
-        return result
+        if username != flask_session['USERNAME']:
+            result = db.change_user_role(username, role)
+            return result
+        else:
+            self.sc.set_alert('danger', 'You cannot edit your own account.')
+            return 'error'
 
