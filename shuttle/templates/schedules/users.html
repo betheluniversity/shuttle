@@ -21,16 +21,20 @@
                         <td class="name">{{ parent_dict_item['name'] }}</td>
                         <td class="username">{{ parent_dict_item['username'] }}</td>
                         <td class="role">{{ parent_dict_item['role'] }}</td>
-                        <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-modal" onclick="editButton('{{ parent_dict_item['username'] }}')">
-                                Edit
-                            </button>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal" onclick="deleteButton('{{ parent_dict_item['username'] }}')">
-                                Delete
-                            </button>
-                        </td>
+                            <td>
+                                {% if parent_dict_item['username'] != current_user %}
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-modal" onclick="editButton('{{ parent_dict_item['username'] }}')">
+                                    Edit
+                                </button>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if parent_dict_item['username'] != current_user %}
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal" onclick="deleteButton('{{ parent_dict_item['username'] }}')">
+                                    Delete
+                                </button>
+                                {% endif %}
+                            </td>
                     </tr>
                 {% endfor %}
             </tbody>

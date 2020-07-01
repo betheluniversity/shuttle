@@ -40,6 +40,8 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator'])
         shuttle_user = db.get_users()
 
+        current_user = flask_session['USERNAME']
+
         for key in shuttle_user:
             shuttle_user[key]['name'] = db.username_search(shuttle_user[key]['username'])[0]['firstName'] + \
                                         ' ' + db.username_search(shuttle_user[key]['username'])[0]['lastName']
