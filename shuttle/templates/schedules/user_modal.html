@@ -49,24 +49,22 @@
             $('#results').html('');
         });
         function deleteUser(username){
-        $.ajax({
-            type:"POST",
-            url: "{{ url_for('SchedulesView:delete_user') }}",
-            data:JSON.stringify({
-                'username' : username
-            }),
-            contentType:'application/json;charset=UTF-8',
-            success: function(){
-                {#$('#delete-modal').modal('hide');#}
-                window.location.reload();
-            },
-            error: function(error){
-            }
-        })
+            $.ajax({
+                type:"POST",
+                url: "{{ url_for('SchedulesView:delete_user') }}",
+                data:JSON.stringify({
+                    'username' : username
+                }),
+                contentType:'application/json;charset=UTF-8',
+                success: function(){
+                    window.location.reload();
+                },
+                error: function(error){
+                }
+            })
         }
 
         function editUser(username, role){
-
             $.ajax({
                 type:"POST",
                 url: "{{ url_for('SchedulesView:edit_user') }}",
@@ -76,7 +74,6 @@
                 }),
                 contentType:'application/json;charset=UTF-8',
                 success: function(){
-                    {#$('#edit-modal').modal('hide');#}
                     window.location.reload();
                 },
                 error: function(){
