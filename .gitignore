@@ -7,3 +7,4 @@ config/*.py
 *.log
 *venv
 gs_client_secret.json
+myscript.py
