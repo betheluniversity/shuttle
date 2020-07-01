@@ -108,9 +108,8 @@ span.shuttle-title {
 .spinner-img {
     height: auto;
     width: 2em;
-    position: fixed;
+    position: absolute;
     padding-top: 0.5em;
-    animation: ease-in-out;
 }
 
 .submit {

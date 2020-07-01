@@ -17,7 +17,7 @@ class SchedulesView(FlaskView):
     @route('/shuttle-schedule')
     def schedule(self):
         schedule = self.shc.grab_schedule()
-        return render_template('/schedules/shuttle_schedule.html', **locals())
+        return render_template('schedules/shuttle_schedule.html', **locals())
 
     @route('/request-shuttle')
     def request(self):
@@ -75,6 +75,8 @@ class SchedulesView(FlaskView):
     def logs(self):
         self.sc.check_roles_and_route(['Administrator'])
         grabbed_logs = self.ssc.grab_logs()
+        now = datetime.now()
+        date = now.strftime('%b-%d-%Y')
         logs = grabbed_logs[0]
         date_list = grabbed_logs[1]
         return render_template('schedules/driver_logs.html', **locals())
@@ -82,12 +84,12 @@ class SchedulesView(FlaskView):
     @route('/shuttle-logs', methods=['GET', 'POST'])
     def shuttle_logs(self):
         json_data = request.get_json()
-        if json_data == "today's date":
-            now = datetime.now()
-            date = now.strftime('%b-%d-%Y')
+        date = json_data['date']
+        if json_data['sort'] == 'Sort By Name':
+            sort = json_data['sort']
         else:
-            date = json_data['date']
-        selected_logs = self.ssc.grab_selected_logs(date)
+            sort = ''
+        selected_logs = self.ssc.grab_selected_logs(date, sort)
         shuttle_logs = selected_logs[0]
         break_logs = selected_logs[1]
         return render_template('loaded_views/load_logs.html', **locals())

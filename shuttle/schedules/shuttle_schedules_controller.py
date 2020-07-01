@@ -17,8 +17,11 @@ class ScheduleController(object):
                 date_list.append(date)
         return all_shuttle_logs, date_list
 
-    def grab_selected_logs(self, date):
-        all_shuttle_logs = db.get_shuttle_logs_by_date(date)
+    def grab_selected_logs(self, date, sort):
+        if sort:
+            all_shuttle_logs = db.get_shuttle_logs_by_username(date)
+        else:
+            all_shuttle_logs = db.get_shuttle_logs_by_date(date)
         shuttle_logs = {}
         break_logs = {}
         shuttle_iter = 0
