@@ -1,17 +1,24 @@
 {% extends 'shuttle_base.html' %}
 <title>Shuttle | {% block page_title %}Driver Logs{% endblock %}</title>
 {% block body_content %}
-    <div class="center-page">
-        <h4>Please select a date below to view its corresponding logs</h4>
-        <div class="align-side-by-side">
-            <div class="dropdown">
-                <button class="btn btn-primary btn-lg dropdown-toggle date-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select a date</button>
-                <img id="img-spinner" class="spinner-img" src="https://cdn1.bethel.edu/images/load.gif" alt="Loading" style="display:none"/>
-                <div class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton">
-                    {% for i in range(date_list|length) %}
-                        <a class="dropdown-item" href="#">{{ date_list[i] }}</a>
-                    {% endfor %}
-                </div>
+    <h4>Please select a date below to view its corresponding logs</h4>
+    <div class="align-side-by-side">
+        <div class="dropdown">
+            <button class="btn btn-primary btn-lg dropdown-toggle date-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{date}}</button>
+            <img id="img-spinner" class="spinner-img" src="https://cdn1.bethel.edu/images/load.gif" alt="Loading" style=""/>
+            <div class="dropdown-menu scrollable-menu date-dropdown" aria-labelledby="dropdownMenuButton">
+                {% for i in range(date_list|length) %}
+                    <a class="dropdown-item" href="#">{{ date_list[i] }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="align-side-by-side">
+        <div class="dropdown" style="padding-left: 0.5em">
+            <button class="btn btn-primary btn-lg dropdown-toggle sort-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By Time</button>
+            <div class="dropdown-menu scrollable-menu sort-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Sort By Time</a>
+                <a class="dropdown-item" href="#">Sort By Name</a>
             </div>
         </div>
     </div>
@@ -20,7 +27,7 @@
 
     <script>
         $(document).ready(function() {
-            window.onload = load_data("today's date");
+            window.onload = load_data({"date":{{ date|tojson }}, "sort":''});
             function load_data(data){
                 $('#img-spinner').show();
                 $.ajax({
@@ -33,16 +40,21 @@
                     $("#driver_log_display").html(data);
                 });
             }
-            $(".dropdown-menu a").click(function() {
+            $(".date-dropdown a").click(function() {
                 // Dropdown shows location selected
                 $(".date-menu:first-child").text($(this).text());
-                $(".date-menu:first-child").val($(this).text());
                 // Sends data to be shown on screen
-                var data = {"date": $('.date-menu').val()}
+                var data = {"date": $('.date-menu').text(), "sort":$('.sort-menu').text()}
+                load_data(data);
+            });
+            $(".sort-dropdown a").click(function() {
+                // Dropdown shows location selected
+                $(".sort-menu:first-child").text($(this).text());
+                // Sends data to be shown on screen
+                var data = {"date": $('.date-menu').text(), "sort": $('.sort-menu').text()}
                 load_data(data);
             });
          });
     </script>
 
 {% endblock %}
-
