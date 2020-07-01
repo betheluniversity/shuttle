@@ -25,6 +25,9 @@
                 {% if 'Administrator' in session['USER-ROLES'] %}
                     <a class="navbar-brand" href="{{ url_for('SchedulesView:logs') }}"><span class="txt-underline">Driver logs</span></a>
                 {% endif %}
+                {% if 'Administrator' in session['USER-ROLES'] %}
+                    <a class="navbar-brand" href="{{ url_for('SchedulesView:users') }}"><span class="txt-underline">Users</span></a>
+                {% endif %}
             </ul>
         </div>
 

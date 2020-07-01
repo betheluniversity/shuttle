@@ -1,0 +1,83 @@
+<!-- Delete Modal -->
+    <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete {{ username }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You are going to delete {{ username }}. Are you sure you want to do that?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="deleteUser('{{ username }}')">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Edit Modal -->
+    <div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Change role of {{ username }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="center-page">
+                        <button type="button" class="btn btn-primary" onclick="editUser('{{ username }}', 'Administrator')">Administrator</button>
+                        <button type="button" class="btn btn-primary" onclick="editUser('{{ username }}', 'Driver')">Driver</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#edit-modal').on('hidden.bs.modal', function() {
+            $('#results').html('');
+        });
+        $('#delete-modal').on('hidden.bs.modal', function() {
+            $('#results').html('');
+        });
+        function deleteUser(username){
+            $.ajax({
+                type:"POST",
+                url: "{{ url_for('SchedulesView:delete_user') }}",
+                data:JSON.stringify({
+                    'username' : username
+                }),
+                contentType:'application/json;charset=UTF-8',
+                success: function(){
+                    window.location.reload();
+                },
+                error: function(error){
+                }
+            })
+        }
+
+        function editUser(username, role){
+            $.ajax({
+                type:"POST",
+                url: "{{ url_for('SchedulesView:edit_user') }}",
+                data:JSON.stringify({
+                    'username' : username,
+                    'role': role
+                }),
+                contentType:'application/json;charset=UTF-8',
+                success: function(){
+                    window.location.reload();
+                },
+                error: function(){
+                }
+            })
+        }
+    </script>

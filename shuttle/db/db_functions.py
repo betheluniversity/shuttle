@@ -107,7 +107,8 @@ def username_search(username):
         # if mybethel can't get the data, then prevent anything from loading
         return abort(503)
 
-
+      
+# TODO use regex to check schedule
 def commit_schedule(table, all_locations):
     try:
         sql = "DELETE FROM SHUTTLE_SCHEDULE"
@@ -182,15 +183,38 @@ def number_active_requests():
     except:
         return 'Error'
 
+      
 def get_position_in_waitlist():
     username = flask_session['USERNAME']
     sql = "WITH NumberedRows AS(SELECT USERNAME, ROW_NUMBER() OVER (ORDER BY LOG_DATE) AS RowNumber from " \
           "SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y') SELECT RowNumber FROM NumberedRows " \
-          "WHERE USERNAME = '{0}'".format(username)
+          "WHERE USERNAME = '{0}'".format(username) 
+    
+    
+def get_users():
+    sql = "SELECT * FROM SHUTTLE_USERS"
     results = query(sql, 'read')
     return results
+  
+
+def delete_user(username):
+    try:
+        sql = "DELETE FROM SHUTTLE_USERS WHERE USERNAME = '{0}'".format(username)
+        results = query(sql, 'write')
+        return 'success'
+    except Exception as error:
+        return 'error'
 
 
+def change_user_role(username, role):
+    try:
+        sql = "UPDATE SHUTTLE_USERS SET ROLE = '{0}' WHERE USERNAME = '{1}'".format(role, username)
+        results = query(sql, 'write')
+        return 'success'
+    except Exception as error:
+        return 'error'
+
+      
 # This method changes the user's active request to inactive
 def delete_current_request():
     try:

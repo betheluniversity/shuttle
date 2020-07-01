@@ -1,0 +1,85 @@
+{% extends 'shuttle_base.html' %}
+    <title>Shuttle | {% block page_title %}Users{% endblock %}</title>
+
+{% block body_content %}
+    <div id="results"></div>
+    <h4>Users</h4>
+    <div class="card scrolling-wrapper">
+        <table id="user-table" class="table table-hover display">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key,parent_dict_item in shuttle_user.items()%}
+                    <tr>
+                        <td class="name">{{ parent_dict_item['name'] }}</td>
+                        <td class="username">{{ parent_dict_item['username'] }}</td>
+                        <td class="role">{{ parent_dict_item['role'] }}</td>
+                            <td>
+                                {% if parent_dict_item['username'] != current_user %}
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-modal" onclick="editButton('{{ parent_dict_item['username'] }}')">
+                                    Edit
+                                </button>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if parent_dict_item['username'] != current_user %}
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal" onclick="deleteButton('{{ parent_dict_item['username'] }}')">
+                                    Delete
+                                </button>
+                                {% endif %}
+                            </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+<script type="text/javascript">
+
+    let userTable = $('#user-table').DataTable();
+
+    $('#user-search').on('keyup', function(){
+            userTable.search(this.value).draw();
+    });
+
+    function deleteButton(username){
+        $.ajax({
+                type:"POST",
+                url: "{{ url_for('SchedulesView:load_user_data') }}",
+                data: JSON.stringify({
+                    'username': username
+                }),
+                contentType: 'application/json;charset=UTF-8',
+                success: function(response){
+                    $('#results').html(response);
+                    $('#delete-modal').modal('show');
+                },
+                error:function(error){
+                }
+            })
+    }
+
+    function editButton(username){
+        $.ajax({
+            type:"POST",
+            url: "{{ url_for('SchedulesView:load_user_data') }}",
+            data: JSON.stringify({
+                'username': username
+            }),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(response){
+                $('#results').html(response);
+                $('#edit-modal').modal('show');
+            },
+            error:function(error){
+            }
+        })
+    }
+</script>
+{% endblock %}
