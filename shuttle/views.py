@@ -1,14 +1,19 @@
 from flask import render_template, make_response, redirect
 from flask import session as flask_session
 from flask_classy import FlaskView, route
+from shuttle.schedules import SchedulesView
 
 from shuttle import app
-from shuttle.db import db_functions as db
 
 
 class View(FlaskView):
+    def __init__(self):
+        self.sv = SchedulesView()
+
     def index(self):
-        return render_template('index.html')
+        check_in_data = self.sv.grab_check_in_driver_data()
+        route_data = self.sv.grab_current_route()
+        return render_template('index.html', **locals())
 
     @route('/clear')
     def clear_session(self):

@@ -1,0 +1,35 @@
+{% extends 'shuttle_base.html' %}
+<!-- TODO: Use actual google sheets to update. Make only viewable by Admins -->
+    <title>Shuttle | {% block page_title %}Edit Schedule{% endblock %}</title>
+{% block body_content %}
+
+    <div class="center-page">
+        <h4>Bethel Shuttle Schedule From Google Sheets</h4>
+    </div>
+    <div class="center-page">
+        <h6>Use <a href="https://docs.google.com/spreadsheets/d/1VGuZm58MfKW7TBFG09oGT8eIEAH1A4iFUg1utj1AA4s/edit?usp=sharing">this link </a>to change the schedule</h6>
+    </div>
+    <div class="center-page">
+        <iframe width="100%" height=265 src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTy3uE_5hm1xmXyHdlAUwh3UF31yNw_lE1fACWoj1f3ND-UsMsveEe_FDHLLc8pHxgd4YwmdGBqMWRU/pubhtml?widget=true&amp;headers=false"></iframe>
+    </div>
+    <div class="center-page">
+        <input id="submit-schedule-button" class="btn btn-warning btn-sm" type="submit" value="Submit to Database">
+        <img id="img-spinner" class="spinner-img" src="https://cdn1.bethel.edu/images/load.gif" alt="Loading" style="display:none; padding-top:0em"/>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#submit-schedule-button").click(function () {
+                $('.spinner-img').show();
+                // Sends google sheets schedule to database (erases old schedule)
+                $.ajax({
+                    url: "{{ url_for('SchedulesView:send_schedule_path') }}",
+                }).done(function(data) {
+                    $('img-spinner').hide();
+                    location.reload()
+                })
+            });
+        });
+    </script>
+
+{% endblock %}

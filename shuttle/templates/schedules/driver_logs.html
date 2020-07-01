@@ -1,72 +1,48 @@
 {% extends 'shuttle_base.html' %}
-<!-- TODO: Make only viewable by admins/drivers. Make logs real data -->
-<!-- TODO: Maybe reset data after every day and send report to driver supervisors -->
 <title>Shuttle | {% block page_title %}Driver Logs{% endblock %}</title>
 {% block body_content %}
-<!-- TODO: Use for loop to fill table with values. Set it up to send info as txt file? Maybe sort tables by driver -->
-    <h4>Driver Shuttle Logs</h4>
-    <div class="card">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">Driver</th>
-                <th scope="col">Location</th>
-                <th scope="col">Check In</th>
-                <th scope="col">Check Out</th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="driver">*Insert Driver here*</td>
-                    <td class="location">*Insert location here*</td>
-                    <td class="check-in">*Insert time in here*</td>
-                    <td class="check-out">*Insert time out here*</td>
-                </tr>
-                <tr>
-                    <td class="driver">*Insert Driver here*</td>
-                    <td class="location">*Insert location here*</td>
-                    <td class="check-in">*Insert time in here*</td>
-                    <td class="check-out">*Insert time out here*</td>
-                </tr>
-                <tr>
-                    <td scope="driver">*Insert Driver here*</td>
-                    <td scope="location">*Insert location here*</td>
-                    <td class="check-in">*Insert time in here*</td>
-                    <td class="check-out">*Insert time out here*</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <hr>
-    <h4>Driver Break Logs</h4>
-    <div class="card">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">Driver</th>
-                <th scope="col">Break Time In</th>
-                <th scope="col">Break Time Out</th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="driver">*Insert Driver here*</td>
-                    <td class="check-in-break">*Insert time in here*</td>
-                    <td class="check-out-break">*Insert time out here*</td>
-                </tr>
-                <tr>
-                    <td scope="driver">*Insert Driver here*</td>
-                    <td class="check-in-break">*Insert time out here*</td>
-                    <td class="check-out-break">*Insert time out here*</td>
-                </tr>
-                <tr>
-                    <td scope="driver">*Insert Driver here*</td>
-                    <td class="check-in-break">*Insert time in here*</td>
-                    <td class="check-out-break">*Insert time out here*</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="center-page">
+        <h4>Please select a date below to view its corresponding logs</h4>
+        <div class="align-side-by-side">
+            <div class="dropdown">
+                <button class="btn btn-primary btn-lg dropdown-toggle date-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select a date</button>
+                <img id="img-spinner" class="spinner-img" src="https://cdn1.bethel.edu/images/load.gif" alt="Loading" style="display:none"/>
+                <div class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton">
+                    {% for i in range(date_list|length) %}
+                        <a class="dropdown-item" href="#">{{ date_list[i] }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 
+    <div id="driver_log_display"></div>
+
+    <script>
+        $(document).ready(function() {
+            window.onload = load_data("today's date");
+            function load_data(data){
+                $('#img-spinner').show();
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: "{{ url_for('SchedulesView:shuttle_logs') }}",
+                    data: JSON.stringify((data)),
+                }).done(function (data) {
+                    $('#img-spinner').hide();
+                    $("#driver_log_display").html(data);
+                });
+            }
+            $(".dropdown-menu a").click(function() {
+                // Dropdown shows location selected
+                $(".date-menu:first-child").text($(this).text());
+                $(".date-menu:first-child").val($(this).text());
+                // Sends data to be shown on screen
+                var data = {"date": $('.date-menu').val()}
+                load_data(data);
+            });
+         });
+    </script>
 
 {% endblock %}
+

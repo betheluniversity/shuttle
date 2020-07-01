@@ -1,0 +1,14 @@
+{% extends 'writing_center_base.html' %}
+
+{% block page_title %}404 Error{% endblock %}
+
+{% block body_content %}
+
+    <h1>Page Not Found</h1>
+    <h5>We can't find the page you are looking for.</h5>
+
+    <p>Sorry about that! It’s possible that this page doesn’t exist or has been deleted. Try returning to the
+        <a href="{{ url_for('View:index') }}">Shuttle homepage</a>, or contact the Help Desk at
+        <a href="mailto:helpdesk@bethel.edu">helpdesk@bethel.edu</a> if you need assistance. </p>
+
+{% endblock %}

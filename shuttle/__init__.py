@@ -3,7 +3,6 @@ import logging
 from flask import Flask, request
 from flask import session as flask_session
 from datetime import datetime
-
 import sentry_sdk
 
 app = Flask(__name__)
@@ -40,6 +39,8 @@ def utility_processor():
 
 @app.before_request
 def before_request():
+    if '/driver-check-in' in request.path and 'DRIVER-SELECT' not in flask_session.keys():
+        flask_session['DRIVER-SELECT'] = 'Active Requests'
     if '/static/' in request.path \
             or '/assets/' in request.path \
             or '/cron/' in request.path \
@@ -50,7 +51,7 @@ def before_request():
         pass
     else:
         if 'USERNAME' not in flask_session.keys():
-            if app.config['ENVIRON'] == 'prod':
+            if app.config['ENVIRON'] == 'prod' or app.config['ENVIRON'] == 'xp':
                 flask_session['USERNAME'] = request.environ.get('REMOTE_USER')
             else:
                 flask_session['USERNAME'] = app.config['TEST_USERNAME']

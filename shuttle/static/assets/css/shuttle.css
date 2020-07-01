@@ -27,8 +27,21 @@ body {
     border-color: #0056B5;
 }
 
+.break-section {
+    padding-top: 1em;
+}
+
+.log-body{
+    padding: 0rem;
+}
+
 .center-page {
     text-align: center;
+}
+
+.column {
+  float: left;
+  width: auto;
 }
 
 div.footer {
@@ -45,8 +58,16 @@ div.footer {
     margin: 10px;
 }
 
+.driver-selector {
+    margin-bottom: 1em;
+}
+
 html, body {
     background-color: #fafafa;
+}
+
+.log-body {
+    padding: 0rem;
 }
 
 nav.navbar {
@@ -62,6 +83,18 @@ nav.navbar {
     display: block;
 }
 
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
 .shuttle-margins {
     width: 100%;
     margin: 20px auto;
@@ -72,8 +105,27 @@ span.shuttle-title {
     color: #ffc600;
 }
 
+.spinner-img {
+    height: auto;
+    width: 2em;
+    position: fixed;
+    padding-top: 0.5em;
+    animation: ease-in-out;
+}
+
 .submit {
     margin: 0.3em;
+}
+
+.small-card {
+    position: relative;
+    display: inline-grid;
+    flex-direction: column;
+    min-width: 0;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
 }
 
 .txt-underline:hover {
@@ -84,8 +136,6 @@ span.shuttle-title {
     margin-bottom: 10px;
 }
 
-.scrolling-wrapper {
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
+.table td {
+    padding: 0.5rem;
 }
