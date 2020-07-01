@@ -265,8 +265,8 @@ def get_shuttle_logs():
 
 def get_shuttle_logs_by_date(date):
     date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
-    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' ORDER BY CASE " \
-          "WHEN ARRIVAL_TIME < DEPARTURE_TIME THEN ARRIVAL_TIME " \
+    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' ORDER BY USERNAME," \
+          "CASE WHEN ARRIVAL_TIME < DEPARTURE_TIME THEN ARRIVAL_TIME " \
           "ELSE coalesce(DEPARTURE_TIME, ARRIVAL_TIME) END".format(date)
     results = query(sql, 'read')
     return results
