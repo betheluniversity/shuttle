@@ -1,5 +1,4 @@
-from flask import render_template, request
-from flask import session as flask_session
+from flask import render_template, session
 from flask_classy import FlaskView, route, request
 from shuttle.db import db_functions as db
 import json
@@ -77,14 +76,19 @@ class SchedulesView(FlaskView):
     @route('/driver-logs')
     def logs(self):
         self.sc.check_roles_and_route(['Administrator'])
-        return render_template('schedules/driver_logs.html')
+        grabbed_logs = self.ssc.grab_logs()
+        now = datetime.now()
+        date = now.strftime('%b-%d-%Y')
+        logs = grabbed_logs[0]
+        date_list = grabbed_logs[1]
+        return render_template('schedules/driver_logs.html', **locals())
 
     @route('/users')
     def users(self):
         self.sc.check_roles_and_route(['Administrator'])
         shuttle_user = db.get_users()
 
-        current_user = flask_session['USERNAME']
+        current_user = session['USERNAME']
 
         for key in shuttle_user:
             shuttle_user[key]['name'] = db.username_search(shuttle_user[key]['username'])[0]['firstName'] + \
@@ -102,7 +106,7 @@ class SchedulesView(FlaskView):
     def delete_user(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
-        if username != flask_session['USERNAME']:
+        if username != session['USERNAME']:
             result = db.delete_user(username)
             return result
         else:
@@ -115,20 +119,12 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
         role = json.loads(request.data).get('role')
-        if username != flask_session['USERNAME']:
+        if username != session['USERNAME']:
             result = db.change_user_role(username, role)
             return result
         else:
             self.sc.set_alert('danger', 'You cannot edit your own account.')
             return 'error'
-
-
-        grabbed_logs = self.ssc.grab_logs()
-        now = datetime.now()
-        date = now.strftime('%b-%d-%Y')
-        logs = grabbed_logs[0]
-        date_list = grabbed_logs[1]
-        return render_template('schedules/driver_logs.html', **locals())
 
     @route('/shuttle-logs', methods=['GET', 'POST'])
     def shuttle_logs(self):

@@ -188,7 +188,9 @@ def get_position_in_waitlist():
     username = flask_session['USERNAME']
     sql = "WITH NumberedRows AS(SELECT USERNAME, ROW_NUMBER() OVER (ORDER BY LOG_DATE) AS RowNumber from " \
           "SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y') SELECT RowNumber FROM NumberedRows " \
-          "WHERE USERNAME = '{0}'".format(username) 
+          "WHERE USERNAME = '{0}'".format(username)
+    results = query(sql, 'read')
+    return results
     
     
 def get_users():
