@@ -356,7 +356,7 @@ def get_last_location():
     return recent_data
 
 
-def grab_db_schedule():
+def get_db_schedule():
     sql = "SELECT LOCATION, ARRIVAL_TIME FROM SHUTTLE_SCHEDULE ORDER BY ID"
     results = query(sql, 'read')
     return results

@@ -45,7 +45,7 @@ class ScheduleController(object):
         return shuttle_logs, break_logs
 
     def grab_db_schedule(self):
-        schedule = db.grab_db_schedule()
+        schedule = db.get_db_schedule()
         location = ''
         schedule_list = []
         location_list = []
