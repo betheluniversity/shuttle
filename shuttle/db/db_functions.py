@@ -110,8 +110,6 @@ def username_search(username):
       
 def commit_schedule(table, all_locations):
     try:
-        sql = "DELETE FROM SHUTTLE_SCHEDULE"
-        query(sql, 'write')
         all_locations = [i.upper() for i in all_locations]
         queries = []
         for i in range(len(table)):
@@ -137,6 +135,8 @@ def commit_schedule(table, all_locations):
                         (location, arrival_time)
                     queries.append(sql)
         # Don't commit until finished in case it fails (memory inefficient but needed)
+        sql = "DELETE FROM SHUTTLE_SCHEDULE"
+        query(sql, 'write')
         for sql in queries:
             query(sql, 'write')
         return 'success'
