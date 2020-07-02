@@ -43,3 +43,22 @@ class ScheduleController(object):
                 break_logs[break_iter] = all_shuttle_logs[i]
                 break_iter += 1
         return shuttle_logs, break_logs
+
+    def grab_db_schedule(self):
+        schedule = db.grab_db_schedule()
+        location = ''
+        schedule_list = []
+        location_list = []
+        for i in range(len(schedule)):
+            if schedule[i]['location'] != location:
+                location_list = []
+                schedule_list.append(location_list)
+                location = schedule[i]['location']
+                location_list.append(location)
+            if schedule[i]['arrival_time'].strftime('%d-%b-%Y %I:%M %p') == '01-Aug-2000 01:00 PM':
+                location_list.append('-')
+            else:
+                time = schedule[i]['arrival_time'].strftime('%I:%M')
+                location_list.append(time)
+
+        return schedule_list

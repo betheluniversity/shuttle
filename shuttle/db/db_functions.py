@@ -108,20 +108,20 @@ def username_search(username):
         return abort(503)
 
       
-# TODO use regex to check schedule
 def commit_schedule(table, all_locations):
     try:
         sql = "DELETE FROM SHUTTLE_SCHEDULE"
         query(sql, 'write')
         all_locations = [i.upper() for i in all_locations]
+        queries = []
         for i in range(len(table)):
             location = ''
             for j in range(len(table[i])):
                 arrival_time = 0
                 if table[i][j].upper() in all_locations:
-                    location = table[i][j].upper()
+                    location = table[i][j]
                 elif table[i][j] == '-' or table[i][j] == 'DROP':
-                    continue
+                    arrival_time = '01-AUG-00 01.00.00.000000000PM'
                 elif re.search("^[\d]:[\d][\d]$", table[i][j]) or re.search("^[\d][\d]:[\d][\d]$", table[i][j]):
                     split_time = table[i][j].split(':')
                     if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
@@ -135,7 +135,10 @@ def commit_schedule(table, all_locations):
                 if j is not 0:
                     sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION, ARRIVAL_TIME) VALUES ('{0}', '{1}')".format\
                         (location, arrival_time)
-                    query(sql, 'write')
+                    queries.append(sql)
+        # Don't commit until finished in case it fails (memory inefficient but needed)
+        for sql in queries:
+            query(sql, 'write')
         return 'success'
     except:
         return 'Error'
@@ -351,3 +354,9 @@ def get_last_location():
     else:
         return "Error"
     return recent_data
+
+
+def grab_db_schedule():
+    sql = "SELECT LOCATION, ARRIVAL_TIME FROM SHUTTLE_SCHEDULE ORDER BY ID"
+    results = query(sql, 'read')
+    return results
