@@ -89,6 +89,13 @@ def check_if_table_exists(table):
         return True
     return False
 
+def add_user(username, role):
+    try:
+        sql = "INSERT INTO SHUTTLE_USERS (USERNAME, ROLE) VALUES ('{0}', '{1}')".format(username, role)
+        results = query(sql, 'write')
+        return 'success'
+    except Exception as error:
+        return 'Error'
 
 def username_search(username):
     conn = None

@@ -100,7 +100,7 @@ class SchedulesView(FlaskView):
     def load_user_data(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
-        return render_template('/schedules/user_modal.html', **locals())
+        return render_template('/loaded_views/user_modal.html', **locals())
 
     @route('delete_user', methods=['POST'])
     def delete_user(self):
@@ -113,7 +113,6 @@ class SchedulesView(FlaskView):
             self.sc.set_alert('danger', 'You cannot delete your own account.')
             return 'error'
 
-
     @route('edit_user', methods=['POST'])
     def edit_user(self):
         self.sc.check_roles_and_route(['Administrator'])
@@ -125,6 +124,19 @@ class SchedulesView(FlaskView):
         else:
             self.sc.set_alert('danger', 'You cannot edit your own account.')
             return 'error'
+
+    @route('add_user', methods=['POST'])
+    def add_user(self):
+        self.sc.check_roles_and_route(['Administrator'])
+        username = json.loads(request.data).get('username')
+        role = json.loads(request.data).get('role')
+        result = db.add_user(username, role)
+        return result
+
+    @route('render_modal', methods=['POST'])
+    def render_modal(self):
+        self.sc.check_roles_and_route(['Administrator'])
+        return render_template('/loaded_views/user_modal.html', **locals())
 
     @route('/shuttle-logs', methods=['GET', 'POST'])
     def shuttle_logs(self):

@@ -4,6 +4,9 @@
 {% block body_content %}
     <div id="results"></div>
     <h4>Users</h4>
+    <div>
+        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="addButton()">Add New User</button>
+    </div>
     <div class="card scrolling-wrapper">
         <table id="user-table" class="table table-hover display">
             <thead>
@@ -47,6 +50,19 @@
     $('#user-search').on('keyup', function(){
             userTable.search(this.value).draw();
     });
+
+    function addButton(){
+        $.ajax({
+            type:"POST",
+            url: "{{ url_for('SchedulesView:render_modal') }}",
+            success: function(response){
+                $('#results').html(response);
+                $('#add-user-modal').modal('show');
+            },
+            error:function(error){
+            }
+        })
+    }
 
     function deleteButton(username){
         $.ajax({
