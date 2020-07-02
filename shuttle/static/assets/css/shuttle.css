@@ -62,6 +62,10 @@ div.footer {
     margin-bottom: 1em;
 }
 
+.even-row {
+    background: hsla(240, 100%, 85%, 0.25);
+}
+
 html, body {
     background-color: #fafafa;
 }

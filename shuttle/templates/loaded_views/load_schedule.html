@@ -3,14 +3,22 @@
     <div class="column">
         <div class="card">
             <div class="card-body log-body">
-                <table class="table table-hover">
+                <table class="table">
                     <tbody>
                         {% for i in range(schedule|length) %}
-                            <tr>
-                                <td>
-                                    <h6 class="schedule-location">{{ schedule[i][0] }}</h6>
-                                </td>
-                            </tr>
+                            {% if i % 2 == 0 %}
+                                <tr class="even-row">
+                                    <td>
+                                        <h6 class="schedule-location">{{ schedule[i][0] }}</h6>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr class="even-odd">
+                                    <td>
+                                        <h6 class="schedule-location">{{ schedule[i][0] }}</h6>
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -23,15 +31,27 @@
             <table class="table table-hover">
                 <tbody>
                 {% for i in range(schedule|length) %}
-                    <tr>
-                        {% for j in range(schedule[i]|length) %}
-                            <td>
-                                {% if j != 0 %}
-                                    <h6 class="schedule-time">{{ schedule[i][j] }}</h6>
-                                {% endif %}
-                            </td>
-                        {% endfor %}
-                    </tr>
+                    {% if i % 2 == 0 %}
+                        <tr class="even-row">
+                            {% for j in range(schedule[i]|length) %}
+                                <td>
+                                    {% if j != 0 %}
+                                        <h6 class="schedule-time">{{ schedule[i][j] }}</h6>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% else %}
+                        <tr class="odd-row">
+                            {% for j in range(schedule[i]|length) %}
+                                <td>
+                                    {% if j != 0 %}
+                                        <h6 class="schedule-time">{{ schedule[i][j] }}</h6>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
