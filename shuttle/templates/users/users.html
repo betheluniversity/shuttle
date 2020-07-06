@@ -1,4 +1,4 @@
-{% extends 'shuttle_base.html' %}
+{% extends 'shuttle_bases/shuttle_base.html' %}
     <title>Shuttle | {% block page_title %}Users{% endblock %}</title>
 
 {% block body_content %}
@@ -21,65 +21,67 @@
                         <td class="name">{{ parent_dict_item['name'] }}</td>
                         <td class="username">{{ parent_dict_item['username'] }}</td>
                         <td class="role">{{ parent_dict_item['role'] }}</td>
-                            <td>
-                                {% if parent_dict_item['username'] != current_user %}
+                        <td>
+                            {% if parent_dict_item['username'] != current_user %}
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-modal" onclick="editButton('{{ parent_dict_item['username'] }}')">
                                     Edit
                                 </button>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if parent_dict_item['username'] != current_user %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if parent_dict_item['username'] != current_user %}
                                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal" onclick="deleteButton('{{ parent_dict_item['username'] }}')">
                                     Delete
                                 </button>
-                                {% endif %}
-                            </td>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-<script type="text/javascript">
 
-    let userTable = $('#user-table').DataTable();
+    <script type="text/javascript">
 
-    $('#user-search').on('keyup', function(){
-            userTable.search(this.value).draw();
-    });
+        let userTable = $('#user-table').DataTable();
 
-    function deleteButton(username){
-        $.ajax({
+        $('#user-search').on('keyup', function(){
+                userTable.search(this.value).draw();
+        });
+
+        function deleteButton(username){
+            $.ajax({
+                    type:"POST",
+                    url: "{{ url_for('UsersView:load_user_data') }}",
+                    data: JSON.stringify({
+                        'username': username
+                    }),
+                    contentType: 'application/json;charset=UTF-8',
+                    success: function(response){
+                        $('#results').html(response);
+                        $('#delete-modal').modal('show');
+                    },
+                    error:function(error){
+                    }
+                })
+        }
+
+        function editButton(username){
+            $.ajax({
                 type:"POST",
-                url: "{{ url_for('SchedulesView:load_user_data') }}",
+                url: "{{ url_for('UsersView:load_user_data') }}",
                 data: JSON.stringify({
                     'username': username
                 }),
                 contentType: 'application/json;charset=UTF-8',
                 success: function(response){
                     $('#results').html(response);
-                    $('#delete-modal').modal('show');
+                    $('#edit-modal').modal('show');
                 },
                 error:function(error){
                 }
             })
-    }
+        }
+    </script>
 
-    function editButton(username){
-        $.ajax({
-            type:"POST",
-            url: "{{ url_for('SchedulesView:load_user_data') }}",
-            data: JSON.stringify({
-                'username': username
-            }),
-            contentType: 'application/json;charset=UTF-8',
-            success: function(response){
-                $('#results').html(response);
-                $('#edit-modal').modal('show');
-            },
-            error:function(error){
-            }
-        })
-    }
-</script>
 {% endblock %}

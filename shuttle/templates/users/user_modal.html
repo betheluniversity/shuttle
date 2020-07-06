@@ -51,7 +51,7 @@
         function deleteUser(username){
             $.ajax({
                 type:"POST",
-                url: "{{ url_for('SchedulesView:delete_user') }}",
+                url: "{{ url_for('UsersView:delete_user') }}",
                 data:JSON.stringify({
                     'username' : username
                 }),
@@ -67,7 +67,7 @@
         function editUser(username, role){
             $.ajax({
                 type:"POST",
-                url: "{{ url_for('SchedulesView:edit_user') }}",
+                url: "{{ url_for('UsersView:edit_user') }}",
                 data:JSON.stringify({
                     'username' : username,
                     'role': role

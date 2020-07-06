@@ -14,19 +14,19 @@
             <ul class="nav navbar-nav">
                 <a class="navbar-brand" href="{{ url_for('SchedulesView:schedule') }}"><span class="txt-underline">Shuttle Schedule</span></a>
                 {% if 'Administrator' in session['USER-ROLES'] or 'Driver' in session['USER-ROLES'] or 'User' in session['USER-ROLES'] %}
-                <a class="navbar-brand" href="{{ url_for('SchedulesView:request') }}"><span class="txt-underline">Request Shuttle</span></a>
+                <a class="navbar-brand" href="{{ url_for('RequestShuttleView:request') }}"><span class="txt-underline">Request Shuttle</span></a>
                 {% endif %}
                 {% if 'Administrator' in session['USER-ROLES'] %}
                     <a class="navbar-brand" href="{{ url_for('SchedulesView:edit_schedule') }}"><span class="txt-underline">Edit Schedule</span></a>
                 {% endif %}
                 {% if 'Administrator' in session['USER-ROLES'] or 'Driver' in session['USER-ROLES'] %}
-                    <a class="navbar-brand" href="{{ url_for('SchedulesView:check_in') }}"><span class="txt-underline">Driver Check In</span></a>
+                    <a class="navbar-brand" href="{{ url_for('DriverCheckInView:check_in') }}"><span class="txt-underline">Driver Check In</span></a>
                 {% endif %}
                 {% if 'Administrator' in session['USER-ROLES'] %}
-                    <a class="navbar-brand" href="{{ url_for('SchedulesView:logs') }}"><span class="txt-underline">Driver logs</span></a>
+                    <a class="navbar-brand" href="{{ url_for('DriverLogsView:shuttle_logs') }}"><span class="txt-underline">Driver logs</span></a>
                 {% endif %}
                 {% if 'Administrator' in session['USER-ROLES'] %}
-                    <a class="navbar-brand" href="{{ url_for('SchedulesView:users') }}"><span class="txt-underline">Users</span></a>
+                    <a class="navbar-brand" href="{{ url_for('UsersView:users') }}"><span class="txt-underline">Users</span></a>
                 {% endif %}
             </ul>
         </div>

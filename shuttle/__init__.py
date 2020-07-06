@@ -1,5 +1,3 @@
-import logging
-
 from flask import Flask, request
 from flask import session as flask_session
 from datetime import datetime
@@ -18,10 +16,18 @@ if app.config['ENVIRON'] == 'prod' and app.config['SENTRY_URL']:
 # Declaring and registering the views
 from shuttle.views import View
 from shuttle.schedules import SchedulesView
+from shuttle.request_shuttle import RequestShuttleView
+from shuttle.driver_check_in import DriverCheckInView
+from shuttle.driver_logs import DriverLogsView
+from shuttle.users import UsersView
 from shuttle.db import db_functions as db
 from shuttle.shuttle_controller import ShuttleController as sc
 
 SchedulesView.register(app)
+RequestShuttleView.register(app)
+DriverCheckInView.register(app)
+DriverLogsView.register(app)
+UsersView.register(app)
 View.register(app)
 
 

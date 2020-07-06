@@ -1,4 +1,4 @@
-{% extends 'shuttle_base.html' %}
+{% extends 'shuttle_bases/shuttle_base.html' %}
 <!-- TODO: Maybe reset waitlist every night. Maybe make submenu to shorten dropdown -->
 <title>Shuttle | {% block page_title %}Request{% endblock %}</title>
 {% block body_content %}
@@ -83,7 +83,7 @@
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:send_shuttle_request_path') }}",
+                    url: "{{ url_for('RequestShuttleView:send_shuttle_request_path') }}",
                     data: JSON.stringify((data)),
                 }).done(function () {
                     location.reload();
@@ -92,7 +92,7 @@
             $('.delete-btn').click(function () {
                 // Deletes user's current shuttle request
                 $.ajax({
-                    url: "{{ url_for('SchedulesView:delete_request') }}",
+                    url: "{{ url_for('RequestShuttleView:delete_request') }}",
                 }).done(function () {
                     location.reload();
                 })

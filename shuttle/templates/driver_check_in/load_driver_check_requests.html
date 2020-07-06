@@ -82,7 +82,7 @@
             $.ajax({
                 type: 'POST',
                 contentType: 'application/json',
-                url: "{{ url_for('SchedulesView:complete_request') }}",
+                url: "{{ url_for('DriverCheckInView:complete_request') }}",
                 data: JSON.stringify((data)),
             }).done(function (data) {
                 location.reload();
@@ -95,7 +95,7 @@
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:send_driver_break_info') }}",
+                    url: "{{ url_for('DriverCheckInView:send_driver_break_info') }}",
                     data: JSON.stringify((data)),
                 }).done(function (data) {
                     location.reload()
@@ -107,7 +107,7 @@
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:send_driver_break_info') }}",
+                    url: "{{ url_for('DriverCheckInView:send_driver_break_info') }}",
                     data: JSON.stringify((data)),
                 }).done(function (data) {
                     location.reload()
