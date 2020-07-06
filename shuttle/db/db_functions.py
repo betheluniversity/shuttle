@@ -316,7 +316,7 @@ def get_requests():
     for result in results:
         real_name = username_search(results[result]['username'])
         results[result]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
-        results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M %p %b-%d-%Y')
+        results[result]['log_date'] = results[result]['log_date'].strftime('%#I:%M %p %b-%d-%Y')
     return results
 
 
