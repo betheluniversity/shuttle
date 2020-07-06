@@ -346,10 +346,10 @@ def get_last_location():
           "(SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOCATION IS NOT NULL ORDER BY ID DESC) Where ROWNUM = 1"
     results = query(sql, 'read')
     if results[0]['arrival_time']:
-        time = results[0]['arrival_time'].strftime('%I:%M %p')
+        time = results[0]['arrival_time'].strftime('%#I:%M %p')
         recent_data = {"location": results[0]['location'], "time": time}
     elif results[0]['departure_time']:
-        time = results[0]['departure_time'].strftime('%I:%M %p')
+        time = results[0]['departure_time'].strftime('%#I:%M %p')
         recent_data = {"location": results[0]['location'], "time": time}
     else:
         return "Error"
