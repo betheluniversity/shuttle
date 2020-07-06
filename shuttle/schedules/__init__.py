@@ -18,7 +18,8 @@ class SchedulesView(FlaskView):
 
     @route('/shuttle-schedule')
     def schedule(self):
-        schedule = self.shc.grab_schedule()
+        # Shows schedule from database
+        schedule = self.ssc.grab_db_schedule()
         return render_template('schedules/shuttle_schedule.html', **locals())
 
     @route('/request-shuttle')
@@ -33,7 +34,9 @@ class SchedulesView(FlaskView):
     @route('/edit-schedule')
     def edit_schedule(self):
         self.sc.check_roles_and_route(['Administrator'])
-        return render_template('schedules/edit_shuttle_schedule.html')
+        # Show schedule directly from sheets
+        schedule = self.shc.grab_schedule()
+        return render_template('schedules/edit_shuttle_schedule.html', **locals())
 
     @route('/driver-check-in')
     def check_in(self):
@@ -83,49 +86,6 @@ class SchedulesView(FlaskView):
         date_list = grabbed_logs[1]
         return render_template('schedules/driver_logs.html', **locals())
 
-    @route('/users')
-    def users(self):
-        self.sc.check_roles_and_route(['Administrator'])
-        shuttle_user = db.get_users()
-
-        current_user = session['USERNAME']
-
-        for key in shuttle_user:
-            shuttle_user[key]['name'] = db.username_search(shuttle_user[key]['username'])[0]['firstName'] + \
-                                        ' ' + db.username_search(shuttle_user[key]['username'])[0]['lastName']
-
-        return render_template('/schedules/users.html', **locals())
-
-    @route('load_user_data', methods=['POST', 'GET'])
-    def load_user_data(self):
-        self.sc.check_roles_and_route(['Administrator'])
-        username = json.loads(request.data).get('username')
-        return render_template('/schedules/user_modal.html', **locals())
-
-    @route('delete_user', methods=['POST'])
-    def delete_user(self):
-        self.sc.check_roles_and_route(['Administrator'])
-        username = json.loads(request.data).get('username')
-        if username != session['USERNAME']:
-            result = db.delete_user(username)
-            return result
-        else:
-            self.sc.set_alert('danger', 'You cannot delete your own account.')
-            return 'error'
-
-
-    @route('edit_user', methods=['POST'])
-    def edit_user(self):
-        self.sc.check_roles_and_route(['Administrator'])
-        username = json.loads(request.data).get('username')
-        role = json.loads(request.data).get('role')
-        if username != session['USERNAME']:
-            result = db.change_user_role(username, role)
-            return result
-        else:
-            self.sc.set_alert('danger', 'You cannot edit your own account.')
-            return 'error'
-
     @route('/shuttle-logs', methods=['GET', 'POST'])
     def shuttle_logs(self):
         json_data = request.get_json()
@@ -138,6 +98,48 @@ class SchedulesView(FlaskView):
         shuttle_logs = selected_logs[0]
         break_logs = selected_logs[1]
         return render_template('loaded_views/load_logs.html', **locals())
+
+    @route('/users')
+    def users(self):
+        self.sc.check_roles_and_route(['Administrator'])
+        shuttle_user = db.get_users()
+
+        current_user = session['USERNAME']
+
+        for key in shuttle_user:
+            shuttle_user[key]['name'] = db.username_search(shuttle_user[key]['username'])[0]['firstName'] + \
+                                        ' ' + db.username_search(shuttle_user[key]['username'])[0]['lastName']
+
+        return render_template('schedules/users.html', **locals())
+
+    @route('load_user_data', methods=['POST', 'GET'])
+    def load_user_data(self):
+        self.sc.check_roles_and_route(['Administrator'])
+        username = json.loads(request.data).get('username')
+        return render_template('schedules/user_modal.html', **locals())
+
+    @route('delete_user', methods=['POST'])
+    def delete_user(self):
+        self.sc.check_roles_and_route(['Administrator'])
+        username = json.loads(request.data).get('username')
+        if username != session['USERNAME']:
+            result = db.delete_user(username)
+            return result
+        else:
+            self.sc.set_alert('danger', 'You cannot delete your own account.')
+            return 'error'
+
+    @route('edit_user', methods=['POST'])
+    def edit_user(self):
+        self.sc.check_roles_and_route(['Administrator'])
+        username = json.loads(request.data).get('username')
+        role = json.loads(request.data).get('role')
+        if username != session['USERNAME']:
+            result = db.change_user_role(username, role)
+            return result
+        else:
+            self.sc.set_alert('danger', 'You cannot edit your own account.')
+            return 'error'
 
     def send_schedule_path(self):
         self.sc.check_roles_and_route(['Administrator'])
@@ -245,8 +247,10 @@ class SchedulesView(FlaskView):
                             else:
                                 if schedule_time < closest_time_greater:
                                     closest_time_greater = schedule_time
-                                    next_stop = {'location': schedule[i][0],
-                                                 'time': closest_time_greater.strftime('%I:%M %p')}
+                                    next_stop = {
+                                        'location': schedule[i][0],
+                                        'time': closest_time_greater.strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+                                    }
             return next_stop
         except:
             return {'location': 'Error', 'time': 'Error'}

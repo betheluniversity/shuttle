@@ -33,9 +33,11 @@ class ScheduleController(object):
             all_shuttle_logs[i]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
             all_shuttle_logs[i]['log_date'] = all_shuttle_logs[i]['log_date'].strftime('%b-%d-%Y')
             if all_shuttle_logs[i]['arrival_time']:
-                all_shuttle_logs[i]['arrival_time'] = all_shuttle_logs[i]['arrival_time'].strftime('%I:%M %p %b-%d-%Y')
+                all_shuttle_logs[i]['arrival_time'] = all_shuttle_logs[i]['arrival_time'].strftime('%I:%M %p %b-%d-%Y')\
+                    .lstrip("0").replace(" 0", " ")
             elif all_shuttle_logs[i]['departure_time']:
-                all_shuttle_logs[i]['departure_time'] = all_shuttle_logs[i]['departure_time'].strftime('%I:%M %p %b-%d-%Y')
+                all_shuttle_logs[i]['departure_time'] = all_shuttle_logs[i]['departure_time'].strftime('%I:%M %p %b-%d-%Y')\
+                    .lstrip("0").replace(" 0", " ")
             if all_shuttle_logs[i]['location']:
                 shuttle_logs[shuttle_iter] = all_shuttle_logs[i]
                 shuttle_iter += 1
@@ -43,3 +45,22 @@ class ScheduleController(object):
                 break_logs[break_iter] = all_shuttle_logs[i]
                 break_iter += 1
         return shuttle_logs, break_logs
+
+    def grab_db_schedule(self):
+        schedule = db.get_db_schedule()
+        location = ''
+        schedule_list = []
+        location_list = []
+        for i in range(len(schedule)):
+            if schedule[i]['location'] != location:
+                location_list = []
+                schedule_list.append(location_list)
+                location = schedule[i]['location']
+                location_list.append(location)
+            if schedule[i]['arrival_time'].strftime('%d-%b-%Y %I:%M %p') == '01-Aug-2000 01:00 PM':
+                location_list.append('-')
+            else:
+                time = schedule[i]['arrival_time'].strftime('%I:%M').lstrip("0").replace(" 0", " ")
+                location_list.append(time)
+
+        return schedule_list
