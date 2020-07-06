@@ -33,9 +33,11 @@ class ScheduleController(object):
             all_shuttle_logs[i]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
             all_shuttle_logs[i]['log_date'] = all_shuttle_logs[i]['log_date'].strftime('%b-%d-%Y')
             if all_shuttle_logs[i]['arrival_time']:
-                all_shuttle_logs[i]['arrival_time'] = all_shuttle_logs[i]['arrival_time'].strftime('%#I:%M %p %b-%d-%Y')
+                all_shuttle_logs[i]['arrival_time'] = all_shuttle_logs[i]['arrival_time'].strftime('%I:%M %p %b-%d-%Y')\
+                    .lstrip("0").replace(" 0", " ")
             elif all_shuttle_logs[i]['departure_time']:
-                all_shuttle_logs[i]['departure_time'] = all_shuttle_logs[i]['departure_time'].strftime('%#I:%M %p %b-%d-%Y')
+                all_shuttle_logs[i]['departure_time'] = all_shuttle_logs[i]['departure_time'].strftime('%I:%M %p %b-%d-%Y')\
+                    .lstrip("0").replace(" 0", " ")
             if all_shuttle_logs[i]['location']:
                 shuttle_logs[shuttle_iter] = all_shuttle_logs[i]
                 shuttle_iter += 1
@@ -58,7 +60,7 @@ class ScheduleController(object):
             if schedule[i]['arrival_time'].strftime('%d-%b-%Y %I:%M %p') == '01-Aug-2000 01:00 PM':
                 location_list.append('-')
             else:
-                time = schedule[i]['arrival_time'].strftime('%-I:%M')
+                time = schedule[i]['arrival_time'].strftime('%I:%M').lstrip("0").replace(" 0", " ")
                 location_list.append(time)
 
         return schedule_list

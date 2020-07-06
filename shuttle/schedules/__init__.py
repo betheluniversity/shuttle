@@ -247,8 +247,10 @@ class SchedulesView(FlaskView):
                             else:
                                 if schedule_time < closest_time_greater:
                                     closest_time_greater = schedule_time
-                                    next_stop = {'location': schedule[i][0],
-                                                 'time': closest_time_greater.strftime('%#I:%M %p')}
+                                    next_stop = {
+                                        'location': schedule[i][0],
+                                        'time': closest_time_greater.strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+                                    }
             return next_stop
         except:
             return {'location': 'Error', 'time': 'Error'}
