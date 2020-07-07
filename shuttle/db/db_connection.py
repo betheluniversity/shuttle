@@ -4,7 +4,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from shuttle import app
 
-engine = create_engine(app.config['DB_CONSTR'], convert_unicode=True)
+engine = create_engine(app.config['DB_CONSTR'], max_identifier_length=128, convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
