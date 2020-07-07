@@ -62,5 +62,4 @@ class ScheduleController(object):
             else:
                 time = schedule[i]['arrival_time'].strftime('%I:%M').lstrip("0").replace(" 0", " ")
                 location_list.append(time)
-
         return schedule_list

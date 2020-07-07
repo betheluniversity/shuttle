@@ -2,12 +2,13 @@ import re
 from datetime import datetime
 
 from shuttle.db import db_functions as db
-from shuttle.schedules import SheetsController
+from shuttle.schedules import SheetsController, ScheduleController
 
 
 class HomePageController:
     def __init__(self):
         self.shc = SheetsController()
+        self.ssc = ScheduleController()
 
     def grab_check_in_driver_data(self):
         data = db.get_last_location()
@@ -23,7 +24,7 @@ class HomePageController:
                 return {'location': 'No stops on the weekend', 'time': 'N/A'}
             time = datetime.today().strftime('%I:%M %p')
             latest_time = datetime.strptime(time, '%I:%M %p')
-            schedule = self.shc.grab_schedule()
+            schedule = self.ssc.grab_db_schedule()
             closest_time_greater = -1
             next_stop = {'location': 'No more stops today', 'time': 'N/A'}
             for i in range(len(schedule)):
@@ -32,6 +33,7 @@ class HomePageController:
                     if j != 0 and re.search("^[\d]:[\d][\d]$", schedule[i][j]) or re.search("^[\d][\d]:[\d][\d]$",
                                                                                             schedule[i][j]):
                         split_time = schedule[i][j].split(':')
+                        # Assumes there is no shuttle before 6 AM or after 6 PM
                         if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
                             schedule_time = (schedule[i][j] + ' PM')
                         else:
