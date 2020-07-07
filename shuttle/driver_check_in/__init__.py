@@ -2,6 +2,7 @@ from flask import render_template, session
 from flask_classy import FlaskView, route, request
 
 from shuttle.db import db_functions as db
+from shuttle.homepage.homepage_controller import HomePageController
 from shuttle.schedules.google_sheets_controller import SheetsController
 from shuttle.shuttle_controller import ShuttleController
 
@@ -12,6 +13,7 @@ class DriverCheckInView(FlaskView):
     def __init__(self):
         self.sc = ShuttleController()
         self.shc = SheetsController()
+        self.hc = HomePageController()
 
     @route('/driver-check-in')
     def check_in(self):
@@ -30,6 +32,10 @@ class DriverCheckInView(FlaskView):
         if json_data['view'] == 'Location Check In':
             load = 'locations'
             locations = self.shc.grab_locations()
+            last_location = db.get_last_location()['location']
+            next_location = self.hc.grab_current_route()['location']
+            if next_location == 'No more stops today' or next_location == 'No stops on the weekend':
+                next_location = 'North'
             current_break_status = db.break_status()
             return render_template('driver_check_in/load_driver_check_locations.html', **locals())
         if json_data['view'] == 'Active Requests':

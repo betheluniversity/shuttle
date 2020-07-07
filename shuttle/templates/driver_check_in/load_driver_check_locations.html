@@ -8,7 +8,7 @@
             <div class="align-side-by-side">
                 <div class="align-side-by-side">
                     <div class="dropdown">
-                        <button class="btn btn-primary btn-lg dropdown-toggle leaving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
+                        <button class="btn btn-primary btn-lg dropdown-toggle leaving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ last_location }}</button>
                         <div class="dropdown-menu leaving-drop scrollable-menu" aria-labelledby="dropdownMenuButton">
                             {% for location in locations %}
                                 <a class="dropdown-item" href="#">{{ location }}</a>
@@ -28,7 +28,7 @@
             <div class="align-side-by-side">
                 <div class="align-side-by-side">
                     <div class="dropdown">
-                        <button class="btn btn-primary btn-lg dropdown-toggle arriving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
+                        <button class="btn btn-primary btn-lg dropdown-toggle arriving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ next_location }}</button>
                         <div class="dropdown-menu arriving-drop scrollable-menu" aria-labelledby="dropdownMenuButton">
                             {% for location in locations %}
                                 <a class="dropdown-item" href="#">{{ location }}</a>
@@ -75,7 +75,7 @@
             });
             $('.submit-leaving').click(function () {
                 // Sends selected location and user info to database.
-                var data = {"location": $('.leaving-menu').val(), "direction": "departure"}
+                var data = {"location": $('.leaving-menu').text(), "direction": "departure"}
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
@@ -87,7 +87,7 @@
             });
             $('.submit-arriving').click(function () {
                 // Sends selected location and user info to database.
-                var data = {"location": $('.arriving-menu').val(), "direction": "arrival"}
+                var data = {"location": $('.arriving-menu').text(), "direction": "arrival"}
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
