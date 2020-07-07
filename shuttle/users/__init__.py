@@ -25,13 +25,13 @@ class UsersView(FlaskView):
                                         ' ' + db.username_search(shuttle_user[key]['username'])[0]['lastName']
         return render_template('users/users.html', **locals())
 
-    @route('load_user_data', methods=['POST', 'GET'])
+    @route('/load_user_data', methods=['POST', 'GET'])
     def load_user_data(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
         return render_template('users/user_modal.html', **locals())
 
-    @route('delete_user', methods=['POST'])
+    @route('/delete_user', methods=['POST'])
     def delete_user(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
@@ -42,7 +42,7 @@ class UsersView(FlaskView):
             self.sc.set_alert('danger', 'You cannot delete your own account.')
             return 'error'
 
-    @route('edit_user', methods=['POST'])
+    @route('/edit_user', methods=['POST'])
     def edit_user(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')

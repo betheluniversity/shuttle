@@ -22,7 +22,7 @@ class RequestShuttleView(FlaskView):
             position_in_waitlist = db.get_position_in_waitlist()[0]['rownumber']
         return render_template('request_shuttle/request_shuttle.html', **locals())
 
-    @route('send-request', methods=['GET', 'POST'])
+    @route('/send-request', methods=['GET', 'POST'])
     def send_shuttle_request_path(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         json_data = request.get_json()
@@ -38,7 +38,7 @@ class RequestShuttleView(FlaskView):
                                         'Desk at 651-638-6500 for support')
         return response
 
-    @route('delete-request')
+    @route('/delete-request')
     def delete_request(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         request_to_delete = db.delete_current_request()

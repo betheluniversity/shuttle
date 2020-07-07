@@ -37,7 +37,7 @@ class DriverCheckInView(FlaskView):
             current_break_status = db.break_status()
             return render_template('driver_check_in/load_driver_check_requests.html', **locals())
 
-    @route('complete-request', methods=['GET', 'POST'])
+    @route('/complete-request', methods=['GET', 'POST'])
     def complete_request(self):
         json_data = request.get_json()
         username = json_data['username']
@@ -49,7 +49,7 @@ class DriverCheckInView(FlaskView):
                                         'Desk at 651-638-6500 for support')
         return results
 
-    @route('driver-check', methods=['Get', 'POST'])
+    @route('/driver-check', methods=['Get', 'POST'])
     def send_driver_check_in_info(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
@@ -65,7 +65,7 @@ class DriverCheckInView(FlaskView):
                                         'call the ITS Help Desk at 651-638-6500')
         return response
 
-    @route('send-break-info', methods=['Get', 'POST'])
+    @route('/send-break-info', methods=['Get', 'POST'])
     def send_driver_break_info(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
