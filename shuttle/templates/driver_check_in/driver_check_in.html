@@ -24,7 +24,7 @@
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:load_driver_view') }}",
+                    url: "{{ url_for('DriverCheckInView:load_driver_view') }}",
                     data: JSON.stringify((data)),
                 }).done(function (data) {
                     $('.spinner-img').hide()

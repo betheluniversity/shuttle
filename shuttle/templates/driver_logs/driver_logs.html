@@ -33,7 +33,7 @@
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: "{{ url_for('SchedulesView:shuttle_logs') }}",
+                    url: "{{ url_for('DriverLogsView:selected_shuttle_logs') }}",
                     data: JSON.stringify((data)),
                 }).done(function (data) {
                     $('#img-spinner').hide();
