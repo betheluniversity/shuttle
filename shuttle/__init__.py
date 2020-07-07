@@ -1,7 +1,10 @@
+from datetime import datetime
+
+import sentry_sdk
+
 from flask import Flask, request
 from flask import session as flask_session
-from datetime import datetime
-import sentry_sdk
+
 
 app = Flask(__name__)
 app.config.from_object('config')

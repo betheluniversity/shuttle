@@ -1,7 +1,9 @@
+import json
+
 from flask import render_template, session
 from flask_classy import FlaskView, route, request
+
 from shuttle.db import db_functions as db
-import json
 from shuttle.schedules.google_sheets_controller import SheetsController
 from shuttle.schedules.shuttle_schedules_controller import ScheduleController
 from shuttle.shuttle_controller import ShuttleController

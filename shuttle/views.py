@@ -1,18 +1,19 @@
 from flask import render_template, make_response, redirect
 from flask import session as flask_session
 from flask_classy import FlaskView, route
+
 from shuttle import app
-from shuttle.shuttle_controller import ShuttleController
+from shuttle.homepage.homepage_controller import HomePageController
 
 
 class View(FlaskView):
     def __init__(self):
-        self.sc = ShuttleController()
+        self.hc = HomePageController()
 
     @route('/')
     def index(self):
-        check_in_data = self.sc.grab_check_in_driver_data()
-        route_data = self.sc.grab_current_route()
+        check_in_data = self.hc.grab_check_in_driver_data()
+        route_data = self.hc.grab_current_route()
         return render_template('homepage/index.html', **locals())
 
     @route('/clear')
