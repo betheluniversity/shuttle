@@ -8,6 +8,8 @@ from shuttle.shuttle_controller import ShuttleController
 
 
 class DriverLogsView(FlaskView):
+    route_base = '/logs'
+
     def __init__(self):
         self.sc = ShuttleController()
         self.ssc = ScheduleController()

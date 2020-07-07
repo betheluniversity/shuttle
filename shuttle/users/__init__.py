@@ -10,6 +10,8 @@ from shuttle.shuttle_controller import ShuttleController
 
 
 class UsersView(FlaskView):
+    route_base = '/'
+
     def __init__(self):
         self.sc = ShuttleController()
         self.ssc = ScheduleController()

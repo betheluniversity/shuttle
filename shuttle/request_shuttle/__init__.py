@@ -8,6 +8,8 @@ from shuttle.shuttle_controller import ShuttleController
 
 
 class RequestShuttleView(FlaskView):
+    route_base = '/requests'
+
     def __init__(self):
         self.sc = ShuttleController()
         self.ssc = ScheduleController()

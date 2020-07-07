@@ -7,6 +7,8 @@ from shuttle.shuttle_controller import ShuttleController
 
 
 class DriverCheckInView(FlaskView):
+    route_base = '/driver'
+
     def __init__(self):
         self.sc = ShuttleController()
         self.shc = SheetsController()
