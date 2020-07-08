@@ -2,7 +2,7 @@
     <!-- TODO: grabbing locations from sheets takes some time to load. Is there a way to load this info faster? -->
     <div class="center-page">
         <h4>
-            You are scheduled for <span class="badge badge-pill badge-warning location-status">{{ next_location }}</span>
+            Your next stop is scheduled to depart from <span class="badge badge-pill badge-warning location-status">{{ next_location }}</span>
             at <span class="badge badge-pill badge-warning time-status">{{ next_time }}</span>
         </h4>
     </div>
@@ -68,13 +68,13 @@
 
     <script>
         setInterval(check_time, 30000);
-            function check_time() {
-                var today = new Date();
-                var time = today.getHours() + ":" + today.getMinutes();
-                if (time >= {{ next_time.split(' ')[0]|tojson }}) {
-                    location.reload();
-                }
+        function check_time() {
+            var today = new Date();
+            var time = today.getHours() + ":" + today.getMinutes();
+            if (time >= {{ next_time.split(' ')[0]|tojson }}) {
+                location.reload();
             }
+        }
         $(document).ready(function() {
             $(".leaving-drop a").click(function () {
                 // Dropdown shows leaving location selected
