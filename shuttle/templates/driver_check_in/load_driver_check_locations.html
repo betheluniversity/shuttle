@@ -1,11 +1,14 @@
 {% block body_content %}
-    <!-- TODO: grabbing locations from sheets takes some time to load. Is there a way to load this info faster? -->
-    <div class="center-page">
-        <h4>
-            Your next stop is scheduled to depart from <span class="badge badge-pill badge-warning location-status">{{ next_location }}</span>
-            at <span class="badge badge-pill badge-warning time-status">{{ next_time }}</span>
-        </h4>
-    </div>
+    {% if next_time != 'N/A' %}
+        <div class="center-page">
+            <h4>Your next stop is scheduled to depart from <span class="badge badge-pill badge-warning location-status">{{ next_location }}</span>
+                at <span class="badge badge-pill badge-warning time-status">{{ next_time }}</span></h4>
+        </div>
+    {% else %}
+        <div class="center-page">
+            <h4>No more stops today</h4>
+        </div>
+    {% endif %}
     <div class="card">
         <div class="center-page">
             <div class="align-side-by-side">
