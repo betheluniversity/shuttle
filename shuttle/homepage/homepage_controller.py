@@ -51,8 +51,7 @@ class HomePageController:
                                 closest_time_greater = schedule_time
                                 next_stop = {
                                     'location': schedule[i][0],
-                                    'time': closest_time_greater.strftime('%I:%M %p').lstrip("0").replace(" 0", " "),
-                                    '24_hour_time': closest_time_greater.strftime('%H:%M')
+                                    'time': closest_time_greater.strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
                                 }
             return next_stop
         except:

@@ -38,7 +38,6 @@ class DriverCheckInView(FlaskView):
             next_check_in = self.hc.grab_current_route()
             next_location = next_check_in['location']
             next_time = next_check_in['time']
-            next_time_converted = next_check_in['24_hour_time']
             if next_location == 'No more stops today' or next_location == 'No stops on the weekend':
                 next_location = 'North'
             current_break_status = db.break_status()
