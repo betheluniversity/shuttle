@@ -68,11 +68,12 @@
 
     <script>
         setInterval(check_time, 30000);
-            function check_time(){
+            function check_time() {
                 var today = new Date();
                 var time = today.getHours() + ":" + today.getMinutes();
-                if(time >= {{ next_time.split(' ')[0]|tojson }}){
+                if (time >= {{ next_time.split(' ')[0]|tojson }}) {
                     location.reload();
+                }
             }
         $(document).ready(function() {
             $(".leaving-drop a").click(function () {

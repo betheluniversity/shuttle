@@ -11,10 +11,12 @@ class ScheduleController(object):
         date_list = []
         # finds every different date and changes that date to be more readable
         for i in range(len(all_shuttle_logs)):
-            all_shuttle_logs[i]['log_date'] = all_shuttle_logs[i]['log_date'].strftime('%b-%d-%Y')
             if date != all_shuttle_logs[i]['log_date']:
                 date = all_shuttle_logs[i]['log_date']
                 date_list.append(date)
+        date_list.sort(reverse=True)
+        for i in range(len(date_list)):
+            date_list[i] = date_list[i].strftime('%b-%d-%Y')
         return all_shuttle_logs, date_list
 
     def grab_selected_logs(self, date, sort):
