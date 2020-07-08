@@ -31,9 +31,11 @@ class DriverCheckInView(FlaskView):
         session['DRIVER-SELECT'] = json_data['view']
         if json_data['view'] == 'Location Check In':
             load = 'locations'
-            locations = self.shc.grab_locations()
+            locations = db.get_db_locations()
             last_location = db.get_last_location()['location']
-            next_location = self.hc.grab_current_route()['location']
+            next_check_in = self.hc.grab_current_route()
+            next_location = next_check_in['location']
+            next_time = next_check_in['time']
             if next_location == 'No more stops today' or next_location == 'No stops on the weekend':
                 next_location = 'North'
             current_break_status = db.break_status()
