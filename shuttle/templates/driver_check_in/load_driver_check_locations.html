@@ -15,7 +15,7 @@
                 <div class="align-side-by-side">
                     <div class="dropdown">
                         <button class="btn btn-primary btn-lg dropdown-toggle arriving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ next_location }}</button>
-                        <div class="dropdown-menu arriving-drop scrollable-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu arriving-drop" aria-labelledby="dropdownMenuButton">
                             {% for key in locations %}
                                 <a class="dropdown-item" href="#">{{ locations[key]['location'] }}</a>
                             {% endfor %}
@@ -35,7 +35,7 @@
                 <div class="align-side-by-side">
                     <div class="dropdown">
                         <button class="btn btn-primary btn-lg dropdown-toggle leaving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ last_location }}</button>
-                        <div class="dropdown-menu leaving-drop scrollable-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu leaving-drop" aria-labelledby="dropdownMenuButton">
                             {% for key in locations %}
                                 <a class="dropdown-item" href="#">{{ locations[key]['location'] }}</a>
                             {% endfor %}
