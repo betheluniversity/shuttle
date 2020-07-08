@@ -71,7 +71,7 @@
         function check_time() {
             var today = new Date();
             var time = today.getHours() + ":" + today.getMinutes();
-            if (time >= {{ next_time.split(' ')[0]|tojson }}) {
+            if (time >= {{ next_time_converted|tojson }}) {
                 location.reload();
             }
         }
