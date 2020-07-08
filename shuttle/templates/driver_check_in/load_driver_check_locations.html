@@ -3,26 +3,6 @@
     <div class="card">
         <div class="center-page">
             <div class="align-side-by-side">
-                <h4>Leaving from:</h4>
-            </div>
-            <div class="align-side-by-side">
-                <div class="align-side-by-side">
-                    <div class="dropdown">
-                        <button class="btn btn-primary btn-lg dropdown-toggle leaving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ last_location }}</button>
-                        <div class="dropdown-menu leaving-drop scrollable-menu" aria-labelledby="dropdownMenuButton">
-                            {% for location in locations %}
-                                <a class="dropdown-item" href="#">{{ location }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div class="align-side-by-side">
-                    <input class="btn btn-warning btn-lg submit-leaving" type="submit" value="Submit">
-                </div>
-            </div>
-        </div>
-        <div class="center-page">
-            <div class="align-side-by-side">
                 <h4>Arriving at:</h4>
             </div>
             <div class="align-side-by-side">
@@ -41,7 +21,26 @@
                 </div>
             </div>
         </div>
-
+        <div class="center-page">
+            <div class="align-side-by-side">
+                <h4>Leaving from:</h4>
+            </div>
+            <div class="align-side-by-side">
+                <div class="align-side-by-side">
+                    <div class="dropdown">
+                        <button class="btn btn-primary btn-lg dropdown-toggle leaving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ last_location }}</button>
+                        <div class="dropdown-menu leaving-drop scrollable-menu" aria-labelledby="dropdownMenuButton">
+                            {% for location in locations %}
+                                <a class="dropdown-item" href="#">{{ location }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="align-side-by-side">
+                    <input class="btn btn-warning btn-lg submit-leaving" type="submit" value="Submit">
+                </div>
+            </div>
+        </div>
         <div class="break-section">
             <div class="center-page">
                 <div class="align-side-by-side">
