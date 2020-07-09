@@ -2,12 +2,13 @@ import re
 from datetime import datetime
 
 from shuttle.db import db_functions as db
-from shuttle.schedules import SheetsController
+from shuttle.schedules import SheetsController, ScheduleController
 
 
 class HomePageController:
     def __init__(self):
         self.shc = SheetsController()
+        self.ssc = ScheduleController()
 
     def grab_check_in_driver_data(self):
         data = db.get_last_location()
@@ -17,9 +18,13 @@ class HomePageController:
     # time based on the spreadsheet. Method assumes the location is the first column in the spreadsheet
     def grab_current_route(self):
         try:
-            time = db.get_last_location()['time']
+            day = datetime.now().strftime('%a')
+            # If it is the weekend, show there are no stops
+            if day == 'Sun' or day == 'Sat':
+                return {'location': 'No stops on the weekend', 'time': 'N/A'}
+            time = datetime.today().strftime('%I:%M %p')
             latest_time = datetime.strptime(time, '%I:%M %p')
-            schedule = self.shc.grab_schedule()
+            schedule = self.ssc.grab_db_schedule()
             closest_time_greater = -1
             next_stop = {'location': 'No more stops today', 'time': 'N/A'}
             for i in range(len(schedule)):
@@ -28,6 +33,7 @@ class HomePageController:
                     if j != 0 and re.search("^[\d]:[\d][\d]$", schedule[i][j]) or re.search("^[\d][\d]:[\d][\d]$",
                                                                                             schedule[i][j]):
                         split_time = schedule[i][j].split(':')
+                        # Assumes there is no shuttle before 6 AM or after 6 PM
                         if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
                             schedule_time = (schedule[i][j] + ' PM')
                         else:
@@ -37,14 +43,16 @@ class HomePageController:
                         if schedule_time > latest_time:
                             if closest_time_greater == -1:
                                 closest_time_greater = schedule_time
-                            else:
-                                if schedule_time < closest_time_greater:
-                                    closest_time_greater = schedule_time
-                                    next_stop = {
-                                        'location': schedule[i][0],
-                                        'time': closest_time_greater.strftime('%I:%M %p').lstrip("0").replace(" 0",
-                                                                                                              " ")
-                                    }
+                                next_stop = {
+                                    'location': schedule[i][0],
+                                    'time': closest_time_greater.strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+                                }
+                            elif schedule_time < closest_time_greater:
+                                closest_time_greater = schedule_time
+                                next_stop = {
+                                    'location': schedule[i][0],
+                                    'time': closest_time_greater.strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+                                }
             return next_stop
         except:
             return {'location': 'Error', 'time': 'Error'}

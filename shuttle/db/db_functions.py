@@ -361,3 +361,9 @@ def get_db_schedule():
     sql = "SELECT LOCATION, ARRIVAL_TIME FROM SHUTTLE_SCHEDULE ORDER BY ID"
     results = query(sql, 'read')
     return results
+
+
+def get_db_locations():
+    sql = "Select DISTINCT LOCATION from SHUTTLE_SCHEDULE"
+    results = query(sql, 'read')
+    return results

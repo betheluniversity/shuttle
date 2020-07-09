@@ -23,7 +23,7 @@
                     <a class="navbar-brand" href="{{ url_for('DriverCheckInView:check_in') }}"><span class="txt-underline">Driver Check In</span></a>
                 {% endif %}
                 {% if 'Administrator' in session['USER-ROLES'] %}
-                    <a class="navbar-brand" href="{{ url_for('DriverLogsView:shuttle_logs') }}"><span class="txt-underline">Driver logs</span></a>
+                    <a class="navbar-brand" href="{{ url_for('DriverLogsView:shuttle_logs') }}"><span class="txt-underline">Driver Logs</span></a>
                 {% endif %}
                 {% if 'Administrator' in session['USER-ROLES'] %}
                     <a class="navbar-brand" href="{{ url_for('UsersView:users') }}"><span class="txt-underline">Users</span></a>

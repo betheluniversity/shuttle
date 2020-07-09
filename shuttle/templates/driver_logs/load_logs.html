@@ -9,8 +9,8 @@
                     <tr>
                         <th scope="col">Driver</th>
                         <th scope="col">Location</th>
-                        <th scope="col">Departure</th>
                         <th scope="col">Arrival</th>
+                        <th scope="col">Departure</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -26,14 +26,14 @@
                                     {{ shuttle_logs[i]['location'] }}
                                 {% endif %}
                             </td>
-                            <td class="check-out">
-                                {% if shuttle_logs[i]['departure_time'] != None %}
-                                    {{ shuttle_logs[i]['departure_time'] }}
-                                {% endif %}
-                            </td>
                             <td class="check-in">
                                 {% if shuttle_logs[i]['arrival_time'] != None %}
                                     {{ shuttle_logs[i]['arrival_time'] }}
+                                {% endif %}
+                            </td>
+                            <td class="check-out">
+                                {% if shuttle_logs[i]['departure_time'] != None %}
+                                    {{ shuttle_logs[i]['departure_time'] }}
                                 {% endif %}
                             </td>
                             </tr>
