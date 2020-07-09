@@ -75,7 +75,7 @@
         setInterval(check_time, 30000);
         function check_time() {
             var today = new Date();
-            var time = (today.getHours() % 12) + ":" + today.getMinutes();
+            var time = (today.getHours() % 12) + ":" + ('0' + today.getMinutes()).slice(-2);
             if (time >= {{ next_time.split(' ')[0]|tojson }}) {
                 location.reload();
             }
