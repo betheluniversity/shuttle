@@ -5,6 +5,7 @@ import sentry_sdk
 from flask import Flask, request
 from flask import session as flask_session
 
+from shuttle.db.db_tables.shuttle_users_functions import get_roles_by_username
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -70,7 +71,7 @@ def before_request():
             flask_session['NAME'] = name
         if 'USER-ROLES' not in flask_session.keys():
             try:
-                flask_session['USER-ROLES'] = db.get_user_by_username(flask_session['USERNAME'])[0]
+                flask_session['USER-ROLES'] = get_roles_by_username(flask_session['USERNAME'])[0]
             except:
                 flask_session['USER-ROLES'] = ['User']
         if 'ALERT' not in flask_session.keys():
