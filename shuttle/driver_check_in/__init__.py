@@ -21,7 +21,7 @@ class DriverCheckInView(FlaskView):
     def check_in(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         requests = request_db.get_requests()
-        active_requests = request_db.number_active_requests()['waitlist-num']
+        active_requests = request_db.number_active_requests()
         driver_select = session['DRIVER-SELECT']
         return render_template('driver_check_in/driver_check_in.html', **locals())
 
@@ -45,7 +45,7 @@ class DriverCheckInView(FlaskView):
         if json_data['view'] == 'Active Requests':
             load = 'requests'
             requests = request_db.get_requests()
-            active_requests = request_db.number_active_requests()['waitlist-num']
+            active_requests = request_db.number_active_requests()
             current_break_status = logs_db.break_status()
             return render_template('driver_check_in/load_driver_check_requests.html', **locals())
 
@@ -70,8 +70,6 @@ class DriverCheckInView(FlaskView):
             self.sc.set_alert('success', 'Your arrival at ' + json_data['location'] + ' has been recorded')
         elif response == 'success departure':
             self.sc.set_alert('success', 'Your departure from ' + json_data['location'] + ' has been recorded')
-        elif response == 'bad location':
-            self.sc.set_alert('danger', 'Please select a location')
         else:
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                         'call the ITS Help Desk at 651-638-6500')

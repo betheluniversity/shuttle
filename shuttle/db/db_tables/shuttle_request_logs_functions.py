@@ -24,27 +24,35 @@ def commit_shuttle_request(pick_up_location, drop_off_location):
         return 'Error'
 
 
-# This method returns the number of active requests as well as what
-# location is currently being requested by the user (if any)
+# This method returns the number of active requests
 def number_active_requests():
     try:
         sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
         results = query(sql, 'read')
-        username = flask_session['USERNAME']
-        pick_up_location = ''
-        drop_off_location = ''
-        for log in results:
-            if results[log]['username'] == username:
-                pick_up_location = results[log]['pick_up_location']
-                drop_off_location = results[log]['drop_off_location']
-        requests = {
-            'waitlist-num': len(results),
-            'requested-pick-up': pick_up_location,
-            'requested-drop-off': drop_off_location
-        }
-        return requests
+        return len(results)
     except:
         return 'Error'
+
+
+# Returns the active requests for the user
+def active_requests():
+    try:
+        username = flask_session['USERNAME']
+        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y' AND USERNAME = '{0}'".format(username)
+        results = query(sql, 'read')
+        if results:
+            pick_up_location = results[0]['pick_up_location']
+            drop_off_location = results[0]['drop_off_location']
+            requests = {
+                'requested-pick-up': pick_up_location,
+                'requested-drop-off': drop_off_location
+            }
+            return requests
+        else:
+            return results
+    except:
+        return 'Error'
+
 
 
 # Returns the user's position in the waitlist

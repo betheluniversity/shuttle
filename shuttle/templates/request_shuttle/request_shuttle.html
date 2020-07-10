@@ -3,7 +3,7 @@
 <title>Shuttle | {% block page_title %}Request{% endblock %}</title>
 {% block body_content %}
 
-    {% if active_requests['requested-pick-up'] %}
+    {% if active_requests %}
         <div class="center-page shuttle-margins">
             <h3>Your Position In The Waitlist: <span class="badge badge-pill badge-warning waitlist">{{ position_in_waitlist }}</span></h3>
             <div class="small-card">
@@ -16,7 +16,7 @@
         </div>
     {% else %}
         <div class="center-page shuttle-margins">
-            <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning waitlist">{{ active_requests['waitlist-num'] }}</span></h3>
+            <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning waitlist">{{ number_requests }}</span></h3>
             <hr>
         </div>
 

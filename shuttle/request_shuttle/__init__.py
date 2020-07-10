@@ -19,8 +19,9 @@ class RequestShuttleView(FlaskView):
     def request(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         locations = self.shc.grab_locations()
-        active_requests = request_db.number_active_requests()
-        if active_requests['requested-pick-up']:
+        number_requests = request_db.number_active_requests()
+        active_requests = request_db.active_requests()
+        if active_requests:
             position_in_waitlist = request_db.get_position_in_waitlist()[0]['rownumber']
         return render_template('request_shuttle/request_shuttle.html', **locals())
 

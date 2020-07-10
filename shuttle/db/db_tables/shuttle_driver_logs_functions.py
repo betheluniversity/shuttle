@@ -12,20 +12,18 @@ def commit_driver_check_in(location, direction):
         date = now.strftime('%d-%b-%Y')
         full_date = now.strftime('%d-%b-%Y %I:%M %p')
         username = flask_session['USERNAME']
-        if location != '':
-            if direction == 'departure':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES ('{0}', " \
-                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
-                query(sql, 'write')
-                return 'success departure'
-            elif direction == 'arrival':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, ARRIVAL_TIME) VALUES ('{0}', " \
-                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
-                query(sql, 'write')
-                return 'success arrival'
-            else:
-                return 'Error'
-        return 'bad location'
+        if direction == 'departure':
+            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES ('{0}', " \
+                  "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
+            query(sql, 'write')
+            return 'success departure'
+        elif direction == 'arrival':
+            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, ARRIVAL_TIME) VALUES ('{0}', " \
+                    "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
+            query(sql, 'write')
+            return 'success arrival'
+        else:
+            return 'Error'
     except:
         return 'Error'
 
