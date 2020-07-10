@@ -4,6 +4,7 @@ from flask import render_template, session
 from flask_classy import FlaskView, route, request
 
 from shuttle.db import db_functions as db
+from shuttle.db.db_tables import shuttle_users_functions as users_db
 from shuttle.schedules.google_sheets_controller import SheetsController
 from shuttle.schedules.shuttle_schedules_controller import ScheduleController
 from shuttle.shuttle_controller import ShuttleController
@@ -20,7 +21,7 @@ class UsersView(FlaskView):
     @route('/users')
     def users(self):
         self.sc.check_roles_and_route(['Administrator'])
-        shuttle_user = db.get_users()
+        shuttle_user = users_db.get_users()
         current_user = session['USERNAME']
         for key in shuttle_user:
             shuttle_user[key]['name'] = db.username_search(shuttle_user[key]['username'])[0]['firstName'] + \
@@ -38,7 +39,7 @@ class UsersView(FlaskView):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
         if username != session['USERNAME']:
-            result = db.delete_user(username)
+            result = users_db.delete_user(username)
             return result
         else:
             self.sc.set_alert('danger', 'You cannot delete your own account.')
@@ -50,7 +51,7 @@ class UsersView(FlaskView):
         username = json.loads(request.data).get('username')
         role = json.loads(request.data).get('role')
         if username != session['USERNAME']:
-            result = db.change_user_role(username, role)
+            result = users_db.change_user_role(username, role)
             return result
         else:
             self.sc.set_alert('danger', 'You cannot edit your own account.')

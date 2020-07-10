@@ -5,12 +5,11 @@ import sentry_sdk
 from flask import Flask, request
 from flask import session as flask_session
 
-from shuttle.db.db_tables.shuttle_users_functions import get_roles_by_username
-
 app = Flask(__name__)
 app.config.from_object('config')
 
 from shuttle.db import db_functions as db
+from shuttle.db.db_tables.shuttle_users_functions import get_roles_by_username
 
 if app.config['ENVIRON'] == 'prod' and app.config['SENTRY_URL']:
     from sentry_sdk.integrations.flask import FlaskIntegration

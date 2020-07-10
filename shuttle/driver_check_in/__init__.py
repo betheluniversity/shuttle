@@ -1,9 +1,9 @@
-from datetime import datetime
-
 from flask import render_template, session
 from flask_classy import FlaskView, route, request
 
-from shuttle.db import db_functions as db
+from shuttle.db.db_tables import shuttle_schedule_functions as schedule_db
+from shuttle.db.db_tables import shuttle_request_logs_functions as request_db
+from shuttle.db.db_tables import shuttle_driver_logs_functions as logs_db
 from shuttle.homepage.homepage_controller import HomePageController
 from shuttle.schedules.google_sheets_controller import SheetsController
 from shuttle.shuttle_controller import ShuttleController
@@ -20,8 +20,8 @@ class DriverCheckInView(FlaskView):
     @route('/driver-check-in')
     def check_in(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
-        requests = db.get_requests()
-        active_requests = db.number_active_requests()['waitlist-num']
+        requests = request_db.get_requests()
+        active_requests = request_db.number_active_requests()['waitlist-num']
         driver_select = session['DRIVER-SELECT']
         return render_template('driver_check_in/driver_check_in.html', **locals())
 
@@ -33,27 +33,27 @@ class DriverCheckInView(FlaskView):
         session['DRIVER-SELECT'] = json_data['view']
         if json_data['view'] == 'Location Check In':
             load = 'locations'
-            locations = db.get_db_locations()
-            last_location = db.get_last_location()['location']
+            locations = schedule_db.get_db_locations()
+            last_location = logs_db.get_last_location()['location']
             next_check_in = self.hc.grab_current_route()
             next_location = next_check_in['location']
             next_time = next_check_in['time']
             if next_location == 'No more stops today' or next_location == 'No stops on the weekend':
                 next_location = 'North'
-            current_break_status = db.break_status()
+            current_break_status = logs_db.break_status()
             return render_template('driver_check_in/load_driver_check_locations.html', **locals())
         if json_data['view'] == 'Active Requests':
             load = 'requests'
-            requests = db.get_requests()
-            active_requests = db.number_active_requests()['waitlist-num']
-            current_break_status = db.break_status()
+            requests = request_db.get_requests()
+            active_requests = request_db.number_active_requests()['waitlist-num']
+            current_break_status = logs_db.break_status()
             return render_template('driver_check_in/load_driver_check_requests.html', **locals())
 
     @route('/complete-request', methods=['GET', 'POST'])
     def complete_request(self):
         json_data = request.get_json()
         username = json_data['username']
-        results = db.complete_shuttle_request(username)
+        results = request_db.complete_shuttle_request(username)
         if results == 'success':
             self.sc.set_alert('success', 'The request has been completed')
         else:
@@ -65,7 +65,7 @@ class DriverCheckInView(FlaskView):
     def send_driver_check_in_info(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
-        response = db.commit_driver_check_in(json_data['location'], json_data['direction'])
+        response = logs_db.commit_driver_check_in(json_data['location'], json_data['direction'])
         if response == 'success arrival':
             self.sc.set_alert('success', 'Your arrival at ' + json_data['location'] + ' has been recorded')
         elif response == 'success departure':
@@ -81,7 +81,7 @@ class DriverCheckInView(FlaskView):
     def send_driver_break_info(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
-        response = db.commit_break(json_data['break'])
+        response = logs_db.commit_break(json_data['break'])
         if response == 'on break success':
             self.sc.set_alert('success', 'Clock out recorded successfully')
         elif response == 'off break success':

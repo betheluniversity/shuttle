@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 
-from shuttle.db import db_functions as db
+from shuttle.db.db_tables import shuttle_driver_logs_functions as logs_db
 from shuttle.schedules import SheetsController, ScheduleController
 
 
@@ -11,7 +11,7 @@ class HomePageController:
         self.ssc = ScheduleController()
 
     def grab_check_in_driver_data(self):
-        data = db.get_last_location()
+        data = logs_db.get_last_location()
         return data
 
     # Method takes the last time checked in by the driver and uses that to find the next closest
