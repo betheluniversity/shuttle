@@ -1,0 +1,50 @@
+
+<div class="row">
+    {% if results %}
+        <table id="user-table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Add</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, result in results.items() %}
+                    <tr>
+                    {% if result['prefFirstName'] %}
+                        {% set firstName = result['prefFirstName'] %}
+                    {% else %}
+                        {% set firstName = result['firstName'] %}
+                    {% endif %}
+
+                    <div class="col-md-6 user-search-result">
+                        <td>
+                            {{ firstName }} {{ result['lastName'] }}
+                        </td>
+                        <td>
+                            {{ result['username'] }}
+                        </td>
+                        <td>
+                        <a href="{{ url_for('SchedulesView:select_user_roles', username=result['username'], first_name=result['firstName'], last_name=result['lastName']) }}"
+                            id="add-user" class="edit btn btn-primary search-btn darkblue">Add User</a>
+                        </td>
+                    </div>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif results is iterable %}
+        <div class="col-md-12 user-search-results text-center">
+            <h4>User does not exist in Banner. Try again.</h4>
+        </div>
+    {% endif %}
+</div>
+
+<script type="text/javascript">
+    let userTable = $('#user-table').DataTable();
+
+    $('#user-search').on('keyup', function(){
+            userTable.search(this.value).draw();
+     });
+</script>

@@ -8,6 +8,7 @@ from datetime import datetime
 from shuttle.schedules.google_sheets_controller import SheetsController
 from shuttle.shuttle_controller import ShuttleController
 from shuttle.schedules.shuttle_schedules_controller import ScheduleController
+from shuttle.wsapi.wsapi_controller import WSAPIController
 
 
 class SchedulesView(FlaskView):
@@ -15,6 +16,7 @@ class SchedulesView(FlaskView):
         self.sc = ShuttleController()
         self.ssc = ScheduleController()
         self.shc = SheetsController()
+        self.wsapi = WSAPIController()
 
     @route('/shuttle-schedule')
     def schedule(self):
@@ -61,6 +63,19 @@ class SchedulesView(FlaskView):
             current_break_status = db.break_status()
             return render_template('loaded_views/load_dci_requests.html', **locals())
 
+    def select_user_roles(self, username, first_name, last_name):
+        # roles = self.uc.get_all_roles()
+        # existing_user = self.uc.get_user_by_username(username)
+        if existing_user:  # User exists in system
+            if existing_user.deletedAt:  # Has been deactivated in the past
+                success = self.uc.activate_existing_user(existing_user.id)
+                if success:
+                    message = 'This user has been deactivated in the past, but now they are reactivated with their ' \
+                              'same roles.'
+                else:
+                    message = 'Failed to reactivate the user.'
+        return render_template('users/select_user_roles.html', **locals())
+
     @route('/complete-request', methods=['GET', 'POST'])
     def complete_request(self):
         json_data = request.get_json()
@@ -93,16 +108,26 @@ class SchedulesView(FlaskView):
         for key in shuttle_user:
             shuttle_user[key]['name'] = db.username_search(shuttle_user[key]['username'])[0]['firstName'] + \
                                         ' ' + db.username_search(shuttle_user[key]['username'])[0]['lastName']
-
         return render_template('/schedules/users.html', **locals())
 
-    @route('load_user_data', methods=['POST', 'GET'])
+    @route("/search-users", methods=['POST'])
+    def search_users(self):
+        first_name = json.loads(request.data).get('firstName')
+        last_name = json.loads(request.data).get('lastName')
+        results = self.wsapi.get_username_from_name(first_name, last_name)
+        return render_template('loaded_views/user_search_results.html', **locals())
+
+    @route('load-user-data', methods=['POST', 'GET'])
     def load_user_data(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
         return render_template('/loaded_views/user_modal.html', **locals())
 
-    @route('delete_user', methods=['POST'])
+    @route('/add-user-page')
+    def add_user_page(self):
+        return render_template('loaded_views/add_user.html')
+
+    @route('delete-user', methods=['POST'])
     def delete_user(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
@@ -113,7 +138,7 @@ class SchedulesView(FlaskView):
             self.sc.set_alert('danger', 'You cannot delete your own account.')
             return 'error'
 
-    @route('edit_user', methods=['POST'])
+    @route('edit-user', methods=['POST'])
     def edit_user(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
@@ -125,7 +150,7 @@ class SchedulesView(FlaskView):
             self.sc.set_alert('danger', 'You cannot edit your own account.')
             return 'error'
 
-    @route('add_user', methods=['POST'])
+    @route('add-user', methods=['POST'])
     def add_user(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
@@ -133,10 +158,10 @@ class SchedulesView(FlaskView):
         result = db.add_user(username, role)
         return result
 
-    @route('render_modal', methods=['POST'])
-    def render_modal(self):
-        self.sc.check_roles_and_route(['Administrator'])
-        return render_template('/loaded_views/user_modal.html', **locals())
+    # @route('render_modal', methods=['POST'])
+    # def render_modal(self):
+    #     self.sc.check_roles_and_route(['Administrator'])
+    #     return render_template('/loaded_views/user_modal.html', **locals())
 
     @route('/shuttle-logs', methods=['GET', 'POST'])
     def shuttle_logs(self):

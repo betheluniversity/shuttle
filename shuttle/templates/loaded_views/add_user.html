@@ -1,0 +1,39 @@
+{% extends 'shuttle_base.html' %}
+    <title>Shuttle | {% block page_title %}Add a New User{% endblock %}</title>
+
+{% block body_content %}
+    <h4>Add a New User</h4>
+
+    <input type="text" id="f-name" placeholder="First Name">
+    <input type="text" id="l-name" placeholder="Last Name">
+    <button type="button" class="btn btn-primary" data-toggle="modal" onclick="searchButton()">Search</button>
+    <br>
+    <div class="dropdown-menu center-page" aria-labelledby="role-dropdown">
+        <a class="dropdown-item" onclick="adminButton()">Administrator</a>
+        <a class="dropdown-item" onclick="driverButton()">Driver</a>
+    </div>
+    <div id="results"></div>
+    <script>
+        function searchButton(){
+            let fname = document.getElementById("f-name").value;
+            let lname = document.getElementById("l-name").value;
+            console.log(fname)
+            console.log(lname)
+            $.ajax({
+                type:"POST",
+                url: "{{ url_for('SchedulesView:search_users') }}",
+                data: JSON.stringify({
+                    'firstName': fname,
+                    'lastName': lname
+                }),
+                contentType: 'application/json;charset=UTF-8',
+                success: function(response){
+                    $('#results').html('');
+                    $('#results').html(response);
+                },
+                error:function(error){
+                }
+            })
+        }
+    </script>
+{% endblock %}

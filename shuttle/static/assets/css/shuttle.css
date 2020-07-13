@@ -101,6 +101,15 @@ nav.navbar {
     max-width: 95%;
 }
 
+h4.user-title{
+    display:inline-block;
+}
+
+div.add-button{
+    display:inline-block;
+    float: right;
+}
+
 span.shuttle-title {
     color: #ffc600;
 }
