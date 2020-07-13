@@ -54,7 +54,6 @@ def active_requests():
         return 'Error'
 
 
-
 # Returns the user's position in the waitlist
 def get_position_in_waitlist():
     try:
