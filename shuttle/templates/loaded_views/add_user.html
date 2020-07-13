@@ -17,8 +17,6 @@
         function searchButton(){
             let fname = document.getElementById("f-name").value;
             let lname = document.getElementById("l-name").value;
-            console.log(fname)
-            console.log(lname)
             $.ajax({
                 type:"POST",
                 url: "{{ url_for('SchedulesView:search_users') }}",
@@ -28,8 +26,11 @@
                 }),
                 contentType: 'application/json;charset=UTF-8',
                 success: function(response){
-                    $('#results').html('');
-                    $('#results').html(response);
+                    if(response == "error"){
+                        window.location.reload();
+                    }else{
+                        $('#results').html(response);
+                    }
                 },
                 error:function(error){
                 }

@@ -4,9 +4,7 @@
 {% block body_content %}
     <div id="results"></div>
     <h4 class="user-title">Users</h4>
-    <div class="add-button">
-        <a class="navbar-brand" href="{{ url_for('SchedulesView:add_user_page') }}" class="btn-primary"><span class="txt-underline">Add New User</span></a>
-    </div>
+    <a class="btn btn-primary search-btn darkblue" href="{{ url_for('SchedulesView:add_user_page') }}">Add New User</a>
     <div class="card scrolling-wrapper">
         <table id="user-table" class="table table-hover display">
             <thead>
@@ -50,17 +48,6 @@
     $('#user-search').on('keyup', function(){
             userTable.search(this.value).draw();
     });
-
-    function addUserButton(){
-        $.ajax({
-            type:"POST",
-            url: "{{ url_for('SchedulesView:add_user_page') }}",
-            success: function(response){
-            },
-            error:function(error){
-            }
-        })
-    }
 
     function deleteButton(username){
         $.ajax({

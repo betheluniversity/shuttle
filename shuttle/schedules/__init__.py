@@ -114,6 +114,9 @@ class SchedulesView(FlaskView):
     def search_users(self):
         first_name = json.loads(request.data).get('firstName')
         last_name = json.loads(request.data).get('lastName')
+        if first_name == '' and last_name == '':
+            self.sc.set_alert('danger', 'Please enter a valid name.')
+            return 'error'
         results = self.wsapi.get_username_from_name(first_name, last_name)
         return render_template('loaded_views/user_search_results.html', **locals())
 

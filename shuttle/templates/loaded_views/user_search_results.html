@@ -42,9 +42,22 @@
 </div>
 
 <script type="text/javascript">
-    let userTable = $('#user-table').DataTable();
+    $(document).ready(function() {
+        let userTable = $('#user-table').DataTable();
 
-    $('#user-search').on('keyup', function(){
+        $('#user-search').on('keyup', function(){
             userTable.search(this.value).draw();
-     });
+        });
+    });
+
+    function addUserButton(){
+        $.ajax({
+            type:"POST",
+            url: "{{ url_for('SchedulesView:add_user') }}",
+            success: function(response){
+            },
+            error:function(error){
+            }
+        })
+    }
 </script>
