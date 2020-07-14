@@ -103,9 +103,10 @@ nav.navbar {
 
 h4.user-title{
     display:inline-block;
+    margin: 5px;
 }
 
-div.add-button{
+a.add-button{
     display:inline-block;
     float: right;
 }

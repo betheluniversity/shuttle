@@ -161,11 +161,6 @@ class SchedulesView(FlaskView):
         result = db.add_user(username, role)
         return result
 
-    # @route('render_modal', methods=['POST'])
-    # def render_modal(self):
-    #     self.sc.check_roles_and_route(['Administrator'])
-    #     return render_template('/loaded_views/user_modal.html', **locals())
-
     @route('/shuttle-logs', methods=['GET', 'POST'])
     def shuttle_logs(self):
         json_data = request.get_json()

@@ -1,5 +1,5 @@
-
 <div class="row">
+    <div class="results"></div>
     {% if results %}
         <table id="user-table">
             <thead>
@@ -26,8 +26,9 @@
                             {{ result['username'] }}
                         </td>
                         <td>
-                        <a href="{{ url_for('SchedulesView:select_user_roles', username=result['username'], first_name=result['firstName'], last_name=result['lastName']) }}"
-                            id="add-user" class="edit btn btn-primary search-btn darkblue">Add User</a>
+{#                        <a href="{{ url_for('SchedulesView:select_user_roles', username=result['username'], first_name=result['firstName'], last_name=result['lastName']) }}"#}
+{#                            id="add-user" class="edit btn btn-primary search-btn darkblue">Add User</a>#}
+                        <button type="button" class="btn btn-primary darkblue" onclick="addUserButton('{{ result['username'] }}')">Add User</button>
                         </td>
                     </div>
                     </tr>
@@ -50,11 +51,17 @@
         });
     });
 
-    function addUserButton(){
+    function addUserButton(username){
         $.ajax({
             type:"POST",
-            url: "{{ url_for('SchedulesView:add_user') }}",
+            url: "{{ url_for('SchedulesView:load_user_data') }}",
+            data: JSON.stringify({
+                    'username': username
+            }),
+            contentType: 'application/json;charset=UTF-8',
             success: function(response){
+                $('#results').html(response);
+                $('#edit-modal').modal('show');
             },
             error:function(error){
             }
