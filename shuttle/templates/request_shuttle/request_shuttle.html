@@ -1,5 +1,5 @@
 {% extends 'shuttle_base.html' %}
-<!-- TODO: Maybe reset waitlist every night. Maybe make submenu to shorten dropdown -->
+
 <title>Shuttle | {% block page_title %}Request{% endblock %}</title>
 {% block body_content %}
 
@@ -17,7 +17,6 @@
     {% else %}
         <div class="center-page shuttle-margins">
             <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning waitlist">{{ active_requests['waitlist-num'] }}</span></h3>
-            <hr>
         </div>
 
         <div class="center-page shuttle-margins">
