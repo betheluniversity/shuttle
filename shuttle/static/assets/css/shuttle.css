@@ -83,6 +83,10 @@ nav.navbar {
     font-size: 0.9em;
 }
 
+.request-info {
+    margin: 0 25%;
+}
+
 .row {
     display: block;
 }

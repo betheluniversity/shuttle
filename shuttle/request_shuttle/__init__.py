@@ -1,3 +1,5 @@
+import datetime
+
 from flask import render_template
 from flask_classy import FlaskView, route, request
 
@@ -35,6 +37,12 @@ class RequestShuttleView(FlaskView):
             self.sc.set_alert('danger', 'Please select two different locations')
         elif response == 'no location':
             self.sc.set_alert('danger', 'Please select a location')
+        elif response == 'bad time':
+            self.sc.set_alert('danger', 'You cannot request a shuttle at this time. Refer to the On Call Shuttle '
+                                        'Information below to see when the On Call Shuttle is available')
+        elif response == 'bad location':
+            self.sc.set_alert('danger', 'You can only request off campus locations at this time. Refer to the On Call '
+                                        'Shuttle Information below to see when the On Call Shuttle is available ')
         else:
             self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
                                         'Desk at 651-638-6500 for support')
