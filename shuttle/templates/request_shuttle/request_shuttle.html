@@ -6,6 +6,9 @@
     {% if active_requests['requested-pick-up'] %}
         <div class="center-page shuttle-margins">
             <h3>Your Position In The Waitlist: <span class="badge badge-pill badge-warning waitlist">{{ position_in_waitlist }}</span></h3>
+            {% if shuttle_requestable == False %}
+                <p>*Shuttle not requestable at this time so your request may not be fulfilled until the next time slot (see On Call Information below)*</p>
+            {% endif %}
             <div class="small-card">
                 <div class="card-body">
                     <h4>Pick Up: <span class="badge badge-pill badge-warning pick-up-status">{{ active_requests['requested-pick-up'] }}</span></h4>
@@ -14,11 +17,10 @@
                 </div>
             </div>
         </div>
-    {% else %}
+    {% elif shuttle_requestable == True %}
         <div class="center-page shuttle-margins">
             <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning waitlist">{{ active_requests['waitlist-num'] }}</span></h3>
         </div>
-
         <div class="center-page shuttle-margins">
             <h4>Select pick up and drop off location below to request a shuttle:</h4>
             <div class="center-page">
@@ -59,6 +61,8 @@
                 </div>
             </div>
         </div>
+    {% else %}
+        <div class="center-page" style="margin-bottom:1em"><h3>The On Call Shuttle is not available at this time</h3></div>
     {% endif %}
 
     <div class="request-info">

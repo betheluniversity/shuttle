@@ -1,4 +1,7 @@
 # Packages
+import time
+from datetime import datetime
+
 from flask import render_template
 from flask_classy import FlaskView, route, request
 
@@ -24,6 +27,24 @@ class RequestShuttleView(FlaskView):
         active_requests = db.number_active_requests()
         if active_requests['requested-pick-up']:
             position_in_waitlist = db.get_position_in_waitlist()[0]['rownumber']
+
+        now = datetime.now()
+        current_time = now.strftime('%H:%M')
+        current_time = time.strptime(current_time, '%H:%M')
+        day = now.strftime('%a')
+        shuttle_requestable = True
+        # If it is the weekend, the hours for an On Call shuttle are only from 12:30am to 9:00pm
+        if day == 'Sat' or day == 'Sun':
+            if current_time < time.strptime('12:30', '%H:%M') or current_time > time.strptime('21:00', '%H:%M'):
+                shuttle_requestable = False
+        # If it is a weekday, the hours of operation are specific
+        else:
+            if current_time < time.strptime('8:00', '%H:%M') \
+                    or time.strptime('9:00', '%H:%M') < current_time < time.strptime('9:45', '%H:%M') \
+                    or time.strptime('10:45', '%H:%M') < current_time < time.strptime('13:00', '%H:%M') \
+                    or time.strptime('13:45', '%H:%M') < current_time < time.strptime('14:30', '%H:%M') \
+                    or current_time > time.strptime('21:00', '%H:%M'):
+                shuttle_requestable = False
         return render_template('request_shuttle/request_shuttle.html', **locals())
 
     @route('/send-request', methods=['GET', 'POST'])
