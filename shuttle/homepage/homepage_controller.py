@@ -12,8 +12,7 @@ class HomePageController:
 
     def grab_check_in_driver_data(self):
         data = db.get_last_location()
-        now = datetime.now()
-        current_date = now.strftime('%b-%d-%y')
+        current_date = datetime.now().strftime('%b-%d-%y')
         if data['date'] != current_date:
             data['location'] = 'No check ins for today'
             data['time'] = 'N/A'
