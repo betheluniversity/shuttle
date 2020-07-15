@@ -13,6 +13,10 @@ class HomePageController:
 
     def grab_check_in_driver_data(self):
         data = db.get_last_location()
+        current_date = datetime.now().strftime('%b-%d-%y')
+        if data['date'] != current_date:
+            data['location'] = 'No check ins for today'
+            data['time'] = 'N/A'
         return data
 
     # Method takes the last time checked in by the driver and uses that to find the next closest

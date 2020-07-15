@@ -375,11 +375,13 @@ def get_last_location():
           "(SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOCATION IS NOT NULL ORDER BY ID DESC) Where ROWNUM = 1"
     results = query(sql, 'read')
     if results[0]['arrival_time']:
-        time = results[0]['arrival_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
-        recent_data = {"location": results[0]['location'], "time": time}
+        last_time = results[0]['arrival_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+        last_date = results[0]['arrival_time'].strftime('%b-%d-%y')
+        recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     elif results[0]['departure_time']:
-        time = results[0]['departure_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
-        recent_data = {"location": results[0]['location'], "time": time}
+        last_time = results[0]['departure_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+        last_date = results[0]['departure_time'].strftime('%b-%d-%y')
+        recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     else:
         return "Error"
     return recent_data
