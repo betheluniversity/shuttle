@@ -101,9 +101,13 @@ nav.navbar {
     max-width: 95%;
 }
 
-h4.user-title{
+h4.no-users{
+    padding: 1%;
+}
+
+h3.user-title{
     display:inline-block;
-    margin: 5px;
+    margin: 0.5%;
 }
 
 a.add-button{
@@ -114,6 +118,16 @@ a.add-button{
 span.shuttle-title {
     color: #ffc600;
 }
+
+.new-user-text{
+    margin-top: 1%;
+    margin-bottom: -1%;
+}
+
+.add-user-search{
+    text-align: center;
+}
+
 
 .spinner-img {
     height: auto;

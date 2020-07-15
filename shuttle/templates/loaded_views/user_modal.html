@@ -16,8 +16,8 @@
                         Role
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" onclick="adminButton()">Administrator</a>
-                        <a class="dropdown-item" onclick="driverButton()">Driver</a>
+                        <a class="dropdown-item" onclick="changeRole('Administrator')">Administrator</a>
+                        <a class="dropdown-item" onclick="changeRole('Driver')">Driver</a>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -91,6 +91,7 @@
                 }),
                 contentType:'application/json;charset=UTF-8',
                 success: function(){
+                    window.location.reload();
                 },
                 error: function(error){
                 }
@@ -130,12 +131,8 @@
             })
         }
 
-        function adminButton(){
+        function changeRole(newRole){
             document.getElementById("role-dropdown").innerText = "Administrator"
-            role = "Administrator"
-        }
-        function driverButton(){
-            document.getElementById("role-dropdown").innerText = "Driver"
-            role = "Driver";
+            role = newRole;
         }
     </script>

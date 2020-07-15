@@ -2,11 +2,15 @@
     <title>Shuttle | {% block page_title %}Add a New User{% endblock %}</title>
 
 {% block body_content %}
-    <h4>Add a New User</h4>
-    <input type="text" id="f-name" placeholder="First Name">
-    <input type="text" id="l-name" placeholder="Last Name">
-    <button type="button" class="btn btn-primary" data-toggle="modal" onclick="searchButton()">Search</button>
-    <br>
+    <div class="add-user-search">
+        <h4>Add a New User</h4>
+        <div class="new-user-text">
+            <input type="text" id="f-name" placeholder="First Name">
+            <input type="text" id="l-name" placeholder="Last Name">
+        </div>
+        <br>
+        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="searchButton()">Search</button>
+    </div>
     <div class="dropdown-menu center-page" aria-labelledby="role-dropdown">
         <a class="dropdown-item" onclick="adminButton()">Administrator</a>
         <a class="dropdown-item" onclick="driverButton()">Driver</a>

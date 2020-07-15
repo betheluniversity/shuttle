@@ -114,10 +114,14 @@ class SchedulesView(FlaskView):
     def search_users(self):
         first_name = json.loads(request.data).get('firstName')
         last_name = json.loads(request.data).get('lastName')
-        if first_name == '' and last_name == '':
-            self.sc.set_alert('danger', 'Please enter a valid name.')
+        try:
+            if first_name == '' and last_name == '':
+                self.sc.set_alert('danger', 'Please enter a valid name.')
+                return 'error'
+            results = self.wsapi.get_username_from_name(first_name, last_name)
+        except:
+            self.sc.set_alert('danger', 'Something went wrong.')
             return 'error'
-        results = self.wsapi.get_username_from_name(first_name, last_name)
         return render_template('loaded_views/user_search_results.html', **locals())
 
     @route('load-user-data', methods=['POST', 'GET'])
@@ -136,6 +140,8 @@ class SchedulesView(FlaskView):
         username = json.loads(request.data).get('username')
         if username != session['USERNAME']:
             result = db.delete_user(username)
+            if result == 'success':
+                self.sc.set_alert('success', 'User '+ username + ' successfully deleted.')
             return result
         else:
             self.sc.set_alert('danger', 'You cannot delete your own account.')
@@ -159,6 +165,10 @@ class SchedulesView(FlaskView):
         username = json.loads(request.data).get('username')
         role = json.loads(request.data).get('role')
         result = db.add_user(username, role)
+        if result == 'success':
+            self.sc.set_alert('success', 'User successfully added.')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong trying to add that user.')
         return result
 
     @route('/shuttle-logs', methods=['GET', 'POST'])
