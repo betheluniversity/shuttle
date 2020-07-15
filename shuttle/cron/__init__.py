@@ -41,7 +41,7 @@ class CronView(FlaskView):
         pass
 
     @requires_auth
-    @route('/clear-waitlist', methods=['Get'])
+    @route('/clear-waitlist', methods=['GET'])
     def clear_waitlist(self):
         try:
             db.clear_waitlist()
