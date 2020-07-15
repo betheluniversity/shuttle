@@ -1,8 +1,8 @@
-from datetime import datetime
-
+# Packages
 from flask import render_template, session
 from flask_classy import FlaskView, route, request
 
+# Local
 from shuttle.db import db_functions as db
 from shuttle.homepage.homepage_controller import HomePageController
 from shuttle.schedules.google_sheets_controller import SheetsController

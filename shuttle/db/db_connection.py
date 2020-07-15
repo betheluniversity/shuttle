@@ -1,7 +1,9 @@
+# Packages
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+# Local
 from shuttle import app
 
 engine = create_engine(app.config['DB_CONSTR'], max_identifier_length=128, convert_unicode=True)

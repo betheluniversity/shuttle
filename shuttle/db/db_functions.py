@@ -1,9 +1,12 @@
 import datetime
 import re
+import time
 
+# Packages
 from flask import abort
 from flask import session as flask_session
 
+# Local
 from shuttle.db import engine
 from shuttle import app, sentry_sdk
 
@@ -107,7 +110,7 @@ def username_search(username):
         # if mybethel can't get the data, then prevent anything from loading
         return abort(503)
 
-      
+
 def commit_schedule(table, all_locations):
     try:
         all_locations = [i.upper() for i in all_locations]
@@ -131,7 +134,7 @@ def commit_schedule(table, all_locations):
                 else:
                     return 'no match'
                 if j is not 0:
-                    sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION, ARRIVAL_TIME) VALUES ('{0}', '{1}')".format\
+                    sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION, ARRIVAL_TIME) VALUES ('{0}', '{1}')".format \
                         (location, arrival_time)
                     queries.append(sql)
         # Don't commit until finished in case it fails (memory inefficient but needed)
@@ -150,13 +153,38 @@ def commit_shuttle_request(pick_up_location, drop_off_location):
             return 'no location'
         if pick_up_location == drop_off_location:
             return 'same location'
+
+        now = datetime.datetime.now()
+        current_time = now.strftime('%H:%M')
+        current_time = time.strptime(current_time, '%H:%M')
+        day = now.strftime('%a')
+        # If it is the weekend, the hours for an On Call shuttle are only from 12:30am to 9:00pm
+        if day == 'Sat' or day == 'Sun':
+            if current_time < time.strptime('12:30', '%H:%M') or current_time > time.strptime('21:00', '%H:%M'):
+                return 'bad time'
+        # If it is a weekday, the hours of operation are specific
+        else:
+            if current_time < time.strptime('8:00', '%H:%M') \
+                    or time.strptime('9:00', '%H:%M') < current_time < time.strptime('9:45', '%H:%M') \
+                    or time.strptime('10:45', '%H:%M') < current_time < time.strptime('13:00', '%H:%M') \
+                    or time.strptime('13:45', '%H:%M') < current_time < time.strptime('14:30', '%H:%M') \
+                    or current_time > time.strptime('21:00', '%H:%M'):
+                return 'bad time'
+
+            # The shuttle only does off campus stops from 8:00am to 5:30pm during the week
+            db_locations = get_db_locations()
+            on_campus_locations = []
+            for location in db_locations:
+                on_campus_locations.append(db_locations[location]['location'])
+            if time.strptime('8:00', '%H:%M') < current_time < time.strptime('17:30', '%H:%M') and \
+                    pick_up_location in on_campus_locations and drop_off_location in on_campus_locations:
+                return 'bad location'
+
         username = flask_session['USERNAME']
-        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
-        query(sql, 'read')
-        date = datetime.datetime.now().strftime('%d-%b-%Y %I:%M %p')
+        date = now.strftime('%d-%b-%Y %I:%M %p')
         sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE, USERNAME, PICK_UP_LOCATION, DROP_OFF_LOCATION) " \
-              "VALUES (TO_DATE('{0}', 'dd-mon-yyyy hh:mi PM'), '{1}', '{2}', '{3}')".\
-               format(date, username, pick_up_location, drop_off_location)
+              "VALUES (TO_DATE('{0}', 'dd-mon-yyyy hh:mi PM'), '{1}', '{2}', '{3}')". \
+            format(date, username, pick_up_location, drop_off_location)
         query(sql, 'write')
         return 'success'
     except:
@@ -185,7 +213,7 @@ def number_active_requests():
     except:
         return 'Error'
 
-      
+
 def get_position_in_waitlist():
     username = flask_session['USERNAME']
     sql = "WITH NumberedRows AS(SELECT USERNAME, ROW_NUMBER() OVER (ORDER BY LOG_DATE) AS RowNumber from " \
@@ -193,13 +221,13 @@ def get_position_in_waitlist():
           "WHERE USERNAME = '{0}'".format(username)
     results = query(sql, 'read')
     return results
-    
-    
+
+
 def get_users():
     sql = "SELECT * FROM SHUTTLE_USERS"
     results = query(sql, 'read')
     return results
-  
+
 
 def delete_user(username):
     try:
@@ -218,7 +246,7 @@ def change_user_role(username, role):
     except Exception as error:
         return 'error'
 
-      
+
 # This method changes the user's active request to inactive
 def delete_current_request():
     try:
@@ -239,12 +267,14 @@ def commit_driver_check_in(location, direction):
         if location != '':
             if direction == 'departure':
                 sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES ('{0}', " \
-                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
+                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location,
+                                                                                     full_date)
                 query(sql, 'write')
                 return 'success departure'
             elif direction == 'arrival':
                 sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, ARRIVAL_TIME) VALUES ('{0}', " \
-                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
+                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location,
+                                                                                     full_date)
                 query(sql, 'write')
                 return 'success arrival'
             else:
@@ -290,7 +320,6 @@ def get_shuttle_logs():
     return results
 
 
-
 def get_shuttle_logs_by_username(date):
     date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' ORDER BY USERNAME," \
@@ -315,7 +344,7 @@ def get_requests():
     for result in results:
         real_name = username_search(results[result]['username'])
         results[result]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
-        results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M %p %b-%d-%Y')\
+        results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M %p %b-%d-%Y') \
             .lstrip("0").replace(" 0", " ")
     return results
 
@@ -368,3 +397,13 @@ def get_db_locations():
     sql = "Select DISTINCT LOCATION from SHUTTLE_SCHEDULE"
     results = query(sql, 'read')
     return results
+
+
+# Called as a cronjob that clears every active request every night
+def clear_waitlist():
+    try:
+        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE ACTIVE ='Y'"
+        query(sql, 'write')
+        return 'success'
+    except:
+        return 'Error'

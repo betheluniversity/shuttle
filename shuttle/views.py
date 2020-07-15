@@ -1,7 +1,9 @@
+# Packages
 from flask import render_template, make_response, redirect
 from flask import session as flask_session
 from flask_classy import FlaskView, route
 
+# Local
 from shuttle import app
 from shuttle.homepage.homepage_controller import HomePageController
 

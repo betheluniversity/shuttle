@@ -1,11 +1,13 @@
 {% extends 'shuttle_base.html' %}
-<!-- TODO: Maybe reset waitlist every night. Maybe make submenu to shorten dropdown -->
 <title>Shuttle | {% block page_title %}Request{% endblock %}</title>
 {% block body_content %}
 
     {% if active_requests['requested-pick-up'] %}
         <div class="center-page shuttle-margins">
             <h3>Your Position In The Waitlist: <span class="badge badge-pill badge-warning waitlist">{{ position_in_waitlist }}</span></h3>
+            {% if shuttle_requestable == False %}
+                <p>*Shuttle not requestable at this time so your request may not be fulfilled until the next time slot (see On Call Information below)*</p>
+            {% endif %}
             <div class="small-card">
                 <div class="card-body">
                     <h4>Pick Up: <span class="badge badge-pill badge-warning pick-up-status">{{ active_requests['requested-pick-up'] }}</span></h4>
@@ -14,12 +16,10 @@
                 </div>
             </div>
         </div>
-    {% else %}
+    {% elif shuttle_requestable == True %}
         <div class="center-page shuttle-margins">
             <h3>Current Shuttle Waitlist: <span class="badge badge-pill badge-warning waitlist">{{ active_requests['waitlist-num'] }}</span></h3>
-            <hr>
         </div>
-
         <div class="center-page shuttle-margins">
             <h4>Select pick up and drop off location below to request a shuttle:</h4>
             <div class="center-page">
@@ -60,7 +60,30 @@
                 </div>
             </div>
         </div>
+    {% else %}
+        <div class="center-page" style="margin-bottom:1em"><h3>The On Call Shuttle is not available at this time</h3></div>
     {% endif %}
+
+    <div class="request-info">
+        <div class="center-page">
+            <div class="small-card">
+                <div class="card-body">
+                    <h5><a href="https://www.bethel.edu/transportation/shuttle/weekend-schedule.pdf" rel="noopener" target="_blank">On Call Shuttle Information (pdf)</a></h5>
+                    <p>
+                        <b>The On Call Shuttle runs weekdays during business hours at the following times:
+                            8:00-9:00am; 9:45-10:45am; 1:00-1:45pm; 2:30-5:30pm.</b>
+                        During these times the shuttle only services to off campus stop locations.
+                        If you request a shuttle outside of these times, the shuttle will be unable to assist.
+                    </p>
+                    <p>
+                        <b>After Business hours on weekdays the shuttle runs 5:30-9:00pm and Weekends 12:30-9:00pm.</b>
+                        During these times the On Call shuttle services all campus and off campus shuttle stops.
+                        The On Call Shuttle only services <a href="https://www.bethel.edu/transportation/shuttle/stop-information" rel="noopener" target="_blank">approved shuttle stops</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         $(document).ready(function() {
