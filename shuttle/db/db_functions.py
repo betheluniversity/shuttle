@@ -398,7 +398,7 @@ def get_db_locations():
 
 
 # Called as a cronjob that clears every active request every night
-def clear_db_waitlist():
+def clear_waitlist():
     try:
         sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE ACTIVE ='Y'"
         query(sql, 'write')
