@@ -153,8 +153,7 @@ def commit_shuttle_request(pick_up_location, drop_off_location):
         username = flask_session['USERNAME']
         sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
         query(sql, 'read')
-        now = datetime.datetime.now()
-        date = now.strftime('%d-%b-%Y %I:%M %p')
+        date = datetime.datetime.now().strftime('%d-%b-%Y %I:%M %p')
         sql = "INSERT INTO SHUTTLE_REQUEST_LOGS(LOG_DATE, USERNAME, PICK_UP_LOCATION, DROP_OFF_LOCATION) " \
               "VALUES (TO_DATE('{0}', 'dd-mon-yyyy hh:mi PM'), '{1}', '{2}', '{3}')".\
                format(date, username, pick_up_location, drop_off_location)
@@ -347,11 +346,13 @@ def get_last_location():
           "(SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOCATION IS NOT NULL ORDER BY ID DESC) Where ROWNUM = 1"
     results = query(sql, 'read')
     if results[0]['arrival_time']:
-        time = results[0]['arrival_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
-        recent_data = {"location": results[0]['location'], "time": time}
+        last_time = results[0]['arrival_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+        last_date = results[0]['arrival_time'].strftime('%b-%d-%y')
+        recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     elif results[0]['departure_time']:
-        time = results[0]['departure_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
-        recent_data = {"location": results[0]['location'], "time": time}
+        last_time = results[0]['departure_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+        last_date = results[0]['departure_time'].strftime('%b-%d-%y')
+        recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     else:
         return "Error"
     return recent_data
