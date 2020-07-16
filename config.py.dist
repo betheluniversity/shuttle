@@ -2,6 +2,8 @@ ENVIRON = ''
 
 TEST_USERNAME = ''
 
+CRON_LOGIN = {'username': '', 'password': ''}
+
 DB_CONSTR = ''
 
 SECRET_KEY = ''

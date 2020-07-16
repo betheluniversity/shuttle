@@ -12,7 +12,7 @@ def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
-    return username == app.config['LAB_LOGIN']['username'] and password == app.config['LAB_LOGIN']['password']
+    return username == app.config['CRON_LOGIN']['username'] and password == app.config['CRON_LOGIN']['password']
 
 
 def authenticate():
