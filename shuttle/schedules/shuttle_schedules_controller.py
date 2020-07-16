@@ -60,9 +60,9 @@ class ScheduleController(object):
                 schedule_list.append(location_list)
                 location = schedule[i]['location']
                 location_list.append(location)
-            if schedule[i]['arrival_time'].strftime('%d-%b-%Y %I:%M %p') == '01-Aug-2000 01:00 PM':
+            if schedule[i]['departure_time'].strftime('%d-%b-%Y %I:%M %p') == '01-Aug-2000 01:00 PM':
                 location_list.append('-')
             else:
-                time = schedule[i]['arrival_time'].strftime('%I:%M').lstrip("0").replace(" 0", " ")
+                time = schedule[i]['departure_time'].strftime('%I:%M').lstrip("0").replace(" 0", " ")
                 location_list.append(time)
         return schedule_list
