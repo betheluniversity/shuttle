@@ -118,24 +118,24 @@ def commit_schedule(table, all_locations):
         for i in range(len(table)):
             location = ''
             for j in range(len(table[i])):
-                arrival_time = 0
+                departure_time = 0
                 if table[i][j].upper() in all_locations:
                     location = table[i][j]
                 elif table[i][j] == '-' or table[i][j] == 'DROP':
-                    arrival_time = '01-AUG-00 01.00.00.000000000PM'
+                    departure_time = '01-AUG-00 01.00.00.000000000PM'
                 elif re.search("^[\d]:[\d][\d]$", table[i][j]) or re.search("^[\d][\d]:[\d][\d]$", table[i][j]):
                     split_time = table[i][j].split(':')
                     if int(split_time[0]) == 12 or 1 <= int(split_time[0]) < 6:
                         joined_time = '.'.join(split_time)
-                        arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 PM'
+                        departure_time = '01-SEP-00 ' + joined_time + '.00.000000000 PM'
                     else:
                         joined_time = '.'.join(split_time)
-                        arrival_time = '01-SEP-00 ' + joined_time + '.00.000000000 AM'
+                        departure_time = '01-SEP-00 ' + joined_time + '.00.000000000 AM'
                 else:
                     return 'no match'
                 if j is not 0:
-                    sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION, ARRIVAL_TIME) VALUES ('{0}', '{1}')".format \
-                        (location, arrival_time)
+                    sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION, DEPARTURE_TIME) VALUES ('{0}', '{1}')".format \
+                        (location, departure_time)
                     queries.append(sql)
         # Don't commit until finished in case it fails (memory inefficient but needed)
         sql = "DELETE FROM SHUTTLE_SCHEDULE"
@@ -388,7 +388,7 @@ def get_last_location():
 
 
 def get_db_schedule():
-    sql = "SELECT LOCATION, ARRIVAL_TIME FROM SHUTTLE_SCHEDULE ORDER BY ID"
+    sql = "SELECT LOCATION, DEPARTURE_TIME FROM SHUTTLE_SCHEDULE ORDER BY ID"
     results = query(sql, 'read')
     return results
 
