@@ -51,18 +51,22 @@ class ScheduleController(object):
 
     def grab_db_schedule(self):
         schedule = db.get_db_schedule()
-        location = ''
         schedule_list = []
-        location_list = []
+        row = []
+        iterator = 0
+        row_length = db.get_db_row_length()[0]['COUNT(*)']
         for i in range(len(schedule)):
-            if schedule[i]['location'] != location:
-                location_list = []
-                schedule_list.append(location_list)
-                location = schedule[i]['location']
-                location_list.append(location)
-            if schedule[i]['departure_time'].strftime('%d-%b-%Y %I:%M %p') == '01-Aug-2000 01:00 PM':
-                location_list.append('-')
+            iterator += 1
+            if schedule[i]['arrival_time'].strftime('%b') == 'Jul':
+                row.append(schedule[i]['location'])
+            elif schedule[i]['arrival_time'].strftime('%b') == 'Aug':
+                row.append('-')
             else:
-                time = schedule[i]['departure_time'].strftime('%I:%M').lstrip("0").replace(" 0", " ")
-                location_list.append(time)
+                row.append(schedule[i]['arrival_time'].strftime('%I:%M').lstrip("0").replace(" 0", " "))
+            if iterator == row_length:
+                schedule_list.append(row)
+                iterator = 0
+                row = []
+
+
         return schedule_list

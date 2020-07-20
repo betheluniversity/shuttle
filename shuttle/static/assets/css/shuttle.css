@@ -31,10 +31,6 @@ body {
     padding-top: 1em;
 }
 
-.log-body{
-    padding: 0rem;
-}
-
 .center-page {
     text-align: center;
 }
@@ -62,7 +58,7 @@ div.footer {
     margin-bottom: 1em;
 }
 
-.even-row {
+.even-column {
     background: hsla(240, 100%, 85%, 0.25);
 }
 

@@ -111,17 +111,19 @@ def username_search(username):
         return abort(503)
 
 
+# Commits schedule to the db. Assumes first row has the locations with its times in the same column
 def commit_schedule(table, all_locations):
     try:
         all_locations = [i.upper() for i in all_locations]
         queries = []
+        locations = {}
         for i in range(len(table)):
-            location = ''
             for j in range(len(table[i])):
                 departure_time = 0
                 if table[i][j].upper() in all_locations:
-                    location = table[i][j]
+                    locations.update({j: table[i][j]})
                 elif table[i][j] == '-' or table[i][j] == 'DROP':
+                    # August will be used to tell if it has no time
                     departure_time = '01-AUG-00 01.00.00.000000000PM'
                 elif re.search("^[\d]:[\d][\d]$", table[i][j]) or re.search("^[\d][\d]:[\d][\d]$", table[i][j]):
                     split_time = table[i][j].split(':')
@@ -133,10 +135,12 @@ def commit_schedule(table, all_locations):
                         departure_time = '01-SEP-00 ' + joined_time + '.00.000000000 AM'
                 else:
                     return 'no match'
-                if j is not 0:
-                    sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION, DEPARTURE_TIME) VALUES ('{0}', '{1}')".format \
-                        (location, departure_time)
-                    queries.append(sql)
+                if i is 0:
+                    # July will be used to tell if it is a location row
+                    departure_time = '01-JUL-00 01.00.00.000000000PM'
+                sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION, DEPARTURE_TIME) VALUES ('{0}', '{1}')".format \
+                    (locations[j], departure_time)
+                queries.append(sql)
         # Don't commit until finished in case it fails (memory inefficient but needed)
         sql = "DELETE FROM SHUTTLE_SCHEDULE"
         query(sql, 'write')
@@ -407,3 +411,9 @@ def clear_waitlist():
         return 'success'
     except:
         return 'Error'
+
+
+def get_db_row_length():
+    sql = "SELECT COUNT (*) FROM SHUTTLE_SCHEDULE WHERE DEPARTURE_TIME = '01-JUL-00 01.00.00.000000000 PM'"
+    results = query(sql, 'read')
+    return results
