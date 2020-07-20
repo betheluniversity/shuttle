@@ -20,7 +20,7 @@ class HomePageController:
         return data
 
     # Method takes the last time checked in by the driver and uses that to find the next closest
-    # time based on the spreadsheet. Method assumes the location is the first column in the spreadsheet
+    # time based on the spreadsheet. Method assumes the location is the first row in the spreadsheet
     def grab_current_route(self):
         try:
             day = datetime.now().strftime('%a')

@@ -120,8 +120,11 @@ def commit_schedule(table, all_locations):
         for i in range(len(table)):
             for j in range(len(table[i])):
                 departure_time = 0
-                if table[i][j].upper() in all_locations:
-                    locations.update({j: table[i][j]})
+                if i == 0:
+                    if table[i][j].upper() in all_locations:
+                        locations.update({j: table[i][j]})
+                    else:
+                        return 'no match'
                 elif table[i][j] == '-' or table[i][j] == 'DROP':
                     # August will be used to tell if it has no time
                     departure_time = '01-AUG-00 01.00.00.000000000PM'
@@ -138,8 +141,8 @@ def commit_schedule(table, all_locations):
                 if i is 0:
                     # July will be used to tell if it is a location row
                     departure_time = '01-JUL-00 01.00.00.000000000PM'
-                sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION, DEPARTURE_TIME) VALUES ('{0}', '{1}')".format \
-                    (locations[j], departure_time)
+                sql = "INSERT INTO SHUTTLE_SCHEDULE (LOCATION, DEPARTURE_TIME) VALUES ('{0}', '{1}')"\
+                    .format(locations[j], departure_time)
                 queries.append(sql)
         # Don't commit until finished in case it fails (memory inefficient but needed)
         sql = "DELETE FROM SHUTTLE_SCHEDULE"
