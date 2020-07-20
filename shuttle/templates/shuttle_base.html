@@ -48,60 +48,62 @@
     </head>
 
     <body>
-        {% block scripts %}
-            <script src="{{ url_for('static', filename='assets/js/shuttle.js') }}" type="text/javascript"></script>
+        <div id="container">
+            {% block scripts %}
+                <script src="{{ url_for('static', filename='assets/js/shuttle.js') }}" type="text/javascript"></script>
 
-            <!-- Font Awesome -->
-            <script src="https://kit.fontawesome.com/ef15f9ef70.js" crossorigin="anonymous"></script>
+                <!-- Font Awesome -->
+                <script src="https://kit.fontawesome.com/ef15f9ef70.js" crossorigin="anonymous"></script>
 
-            {% block styles %}
-                <!-- FontAwesome CSS -->
-                <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+                {% block styles %}
+                    <!-- FontAwesome CSS -->
+                    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+                {% endblock %}
+
+                 <!-- jQuery library -->
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+                <!-- DropDown Menu -->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+                <!-- Latest compiled bootstrap JavaScript -->
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
+
+                <!-- DataTable Javascript-->
+                <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
+
             {% endblock %}
 
-             <!-- jQuery library -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            {% block nav %}{% include 'nav.html' %}{% endblock %}
 
-            <!-- DropDown Menu -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+             <div class="nav margins">{% block subnav %}{% endblock %}</div>
 
-            <!-- Latest compiled bootstrap JavaScript -->
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
-
-            <!-- DataTable Javascript-->
-            <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
-
-
-        {% endblock %}
-
-        {% block nav %}{% include 'nav.html' %}{% endblock %}
-
-         <div class="nav margins">{% block subnav %}{% endblock %}</div>
-
-        {# SHOWS ALERTS #}
-        {% if alert %}
-            {% for a in alert %}
-                <div>
-                    <div class="alert alert-{{ a.type }} alert-dismissible fade show" role="alert">
-                        {{ a.message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+            {# SHOWS ALERTS #}
+            {% if alert %}
+                {% for a in alert %}
+                    <div>
+                        <div class="alert alert-{{ a.type }} alert-dismissible fade show" role="alert">
+                            {{ a.message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
-        {% endif %}
+                {% endfor %}
+            {% endif %}
 
-         <div class="shuttle-margins">{% block body_content %}{% endblock %}</div>
+             <div class="shuttle-margins">{% block body_content %}{% endblock %}</div>
+        </div>
 
-        <div class="footer">
+        <footer id="footer">
             <div class="card-body">
                 {% block footer %}
                     <p class="card-text">&copy; 2020-{{ now.strftime('%Y') }} Bethel University</p>
                 {% endblock %}
             </div>
-        </div>
+        </footer>
     </body>
 {% endblock %}
 
