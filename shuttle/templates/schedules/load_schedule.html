@@ -1,6 +1,6 @@
 {% block body_content %}
 
-<div class="card scrolling-wrapper">
+<div class="small-card scrolling-wrapper ">
     <div class="card-body log-body">
         <table class="table table-hover">
             <tbody>
@@ -13,9 +13,9 @@
                             <td>
                         {% endif %}
                     {% if i == 0 %}
-                        <p class="schedule-time"><b>{{ schedule[i][j] }}</b></p>
+                        <h7 class="schedule-time"><b>{{ schedule[i][j] }}</b></h7>
                     {% else %}
-                        <p class="schedule-time">{{ schedule[i][j] }}</p>
+                        <h7 class="schedule-time">{{ schedule[i][j] }}</h7>
                     {% endif %}
                     </td>
                     {% endfor %}
