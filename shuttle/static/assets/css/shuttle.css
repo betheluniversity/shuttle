@@ -44,14 +44,10 @@ body {
   width: auto;
 }
 
-div.footer {
-    background-color: #fafafa;
-    border-color: #d8d8d8;
-    text-align: left;
-    border-top: 1px solid #eee;
-    margin-top: 3em;
-    color: #6c757d;
-    font-size: 0.9em;
+#container {
+    min-height: 100%;
+    overflow: auto;
+    padding-bottom: 4em;
 }
 
 .dropdown {
@@ -66,7 +62,20 @@ div.footer {
     background: hsla(240, 100%, 85%, 0.25);
 }
 
+#footer {
+    background-color: #fafafa;
+    border-color: #d8d8d8;
+    text-align: left;
+    border-top: 1px solid #eee;
+    color: #6c757d;
+    font-size: 0.9em;
+    position: relative;
+    margin-top: -4.6em;
+    clear: both;
+}
+
 html, body {
+    height: 100%;
     background-color: #fafafa;
 }
 
