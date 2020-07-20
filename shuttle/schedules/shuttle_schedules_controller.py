@@ -57,16 +57,14 @@ class ScheduleController(object):
         row_length = db.get_db_row_length()[0]['COUNT(*)']
         for i in range(len(schedule)):
             iterator += 1
-            if schedule[i]['arrival_time'].strftime('%b') == 'Jul':
+            if schedule[i]['departure_time'].strftime('%b') == 'Jul':
                 row.append(schedule[i]['location'])
-            elif schedule[i]['arrival_time'].strftime('%b') == 'Aug':
+            elif schedule[i]['departure_time'].strftime('%b') == 'Aug':
                 row.append('-')
             else:
-                row.append(schedule[i]['arrival_time'].strftime('%I:%M').lstrip("0").replace(" 0", " "))
+                row.append(schedule[i]['departure_time'].strftime('%I:%M').lstrip("0").replace(" 0", " "))
             if iterator == row_length:
                 schedule_list.append(row)
                 iterator = 0
                 row = []
-
-
         return schedule_list

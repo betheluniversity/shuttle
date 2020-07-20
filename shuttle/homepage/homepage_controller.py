@@ -27,10 +27,8 @@ class HomePageController:
             # If it is the weekend, show there are no stops
             if day == 'Sun' or day == 'Sat':
                 return {'location': 'No stops on the weekend', 'time': 'N/A'}
-            time = datetime.today().strftime('%I:%M %p')
-            latest_time = datetime.strptime(time, '%I:%M %p')
+            latest_time = datetime.strptime(datetime.today().strftime('%I:%M %p'), '%I:%M %p')
             schedule = self.ssc.grab_db_schedule()
-            closest_time_greater = -1
             next_stop = {'location': 'No more stops today', 'time': 'N/A'}
             for i in range(len(schedule)):
                 for j in range(len(schedule[i])):
@@ -45,11 +43,11 @@ class HomePageController:
                             schedule_time = (schedule[i][j] + ' AM')
                         schedule_time = datetime.strptime(schedule_time, '%I:%M %p')
                         # Checks for the next closest time that is greater than the driver's last check in
+                        # Next biggest time is automatically the next time with security's schedule format
                         if schedule_time > latest_time:
-                            closest_time_greater = schedule_time
                             next_stop = {
                                 'location': schedule[0][j],
-                                'time': closest_time_greater.strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+                                'time': schedule_time.strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
                             }
                             return next_stop
             return next_stop
