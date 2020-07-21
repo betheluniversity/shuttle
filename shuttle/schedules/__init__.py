@@ -164,11 +164,14 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
         role = json.loads(request.data).get('role')
+        if role == '':
+            self.sc.set_alert('danger', 'Please select a role for the new user.')
+            return 'error'
         result = db.add_user(username, role)
         if result == 'success':
             self.sc.set_alert('success', 'User successfully added.')
         else:
-            self.sc.set_alert('danger', 'Something went wrong trying to add that user.')
+            self.sc.set_alert('danger', result)
         return result
 
     @route('/shuttle-logs', methods=['GET', 'POST'])

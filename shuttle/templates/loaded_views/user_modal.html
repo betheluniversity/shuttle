@@ -79,7 +79,7 @@
             $('#results').html('');
         });
 
-        let role = "Driver"
+        let role = "";
 
         function addUser(username){
             $.ajax({
@@ -132,7 +132,7 @@
         }
 
         function changeRole(newRole){
-            document.getElementById("role-dropdown").innerText = "Administrator"
+            document.getElementById("role-dropdown").innerText = newRole;
             role = newRole;
         }
     </script>

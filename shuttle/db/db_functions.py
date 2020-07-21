@@ -95,7 +95,7 @@ def add_user(username, role):
         results = query(sql, 'write')
         return 'success'
     except Exception as error:
-        return 'Error'
+        return 'Cannot add a user that is already in the database.'
 
 def username_search(username):
     conn = None

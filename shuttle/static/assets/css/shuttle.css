@@ -113,6 +113,7 @@ h3.user-title{
 a.add-button{
     display:inline-block;
     float: right;
+    margin: 0.5%;
 }
 
 span.shuttle-title {
