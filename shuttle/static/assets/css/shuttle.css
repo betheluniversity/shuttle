@@ -142,3 +142,7 @@ span.shuttle-title {
 .table td {
     padding: 0.5rem;
 }
+
+.table {
+    margin-bottom: 0;
+}
