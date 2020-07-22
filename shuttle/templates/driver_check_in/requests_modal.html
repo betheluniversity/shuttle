@@ -1,0 +1,66 @@
+<!-- Delete Modal -->
+    <div class="modal fade" id="delete-request-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete {{ username }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You are going to delete {{ username }}'s shuttle request. Are you sure you want to do that?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="deleteRequest('{{ username }}')">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Complete Modal -->
+    <div class="modal fade" id="complete-request-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Complete {{ username }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You are going to complete {{ username }}'s shuttle request. Are you sure you want to do that?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" onclick="completeRequest('{{ username }}')">Complete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#complete-request-modal').on('hidden.bs.modal', function() {
+            $('#request-results').html('');
+        });
+        $('#delete-request-modal').on('hidden.bs.modal', function() {
+            $('#request-results').html('');
+        });
+
+        function deleteRequest() {
+            alert('TODO: Make this button delete request and log to table')
+        }
+        function completeRequest(username) {
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('DriverCheckInView:complete_request') }}",
+                data: JSON.stringify({
+                    'username': username
+                }),
+                contentType: 'application/json',
+                success: function () {
+                    window.location.reload();
+                },
+            })
+        }
+    </script>
