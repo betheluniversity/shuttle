@@ -85,12 +85,12 @@
     <script>
         function deleteRequestButton(username) {
             // Deletes user's request
-            var data = {"username": username}
+            var data = {'username': username}
             $.ajax({
-                type:'POST',
+                type: 'POST',
                 url: '{{ url_for('DriverCheckInView:load_request') }}',
                 contentType: 'application/json',
-                data: JSON.stringify((data)),
+                data: JSON.stringify(data),
                 success: function(response){
                     $('#request-results').html(response);
                     $('#delete-request-modal').modal('show');
@@ -99,12 +99,12 @@
         }
         function completeRequestButton(username) {
             // completes user's shuttle request
-            var data = {"username": username}
+            var data = {'username': username}
             $.ajax({
                 type: 'POST',
                 url: '{{ url_for('DriverCheckInView:load_request') }}',
                 contentType: 'application/json',
-                data: JSON.stringify((data)),
+                data: JSON.stringify(data),
                 success: function (response) {
                     $('#request-results').html(response);
                     $('#complete-request-modal').modal('show');
@@ -114,25 +114,25 @@
         $(document).ready(function() {
             $('.check-out-btn').click(function () {
                 // Sends break info to database
-                var data = {"break": "request-to-clock-out"}
+                var data = {'break': 'request-to-clock-out'}
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: "{{ url_for('DriverCheckInView:send_driver_break_info') }}",
-                    data: JSON.stringify((data)),
-                }).done(function (data) {
+                    url: '{{ url_for('DriverCheckInView:send_driver_break_info') }}',
+                    data: JSON.stringify(data),
+                }).done(function () {
                     location.reload()
                 })
             });
             $('.check-in-btn').click(function () {
                 // sends check-in from break info to database
-                var data = {"break": "request-to-clock-in"}
+                var data = {'break': 'request-to-clock-in'}
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: "{{ url_for('DriverCheckInView:send_driver_break_info') }}",
+                    url: '{{ url_for('DriverCheckInView:send_driver_break_info') }}',
                     data: JSON.stringify(data),
-                }).done(function (data) {
+                }).done(function () {
                     location.reload()
                 })
             });

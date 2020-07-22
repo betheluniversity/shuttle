@@ -49,7 +49,7 @@ class DriverCheckInView(FlaskView):
             current_break_status = db.break_status()
             return render_template('driver_check_in/load_driver_check_requests.html', **locals())
 
-    @route('/load-request', methods=['POST', 'GET'])
+    @route('/load-request', methods=['POST'])
     def load_request(self):
         json_data = request.get_json()
         username = json_data['username']

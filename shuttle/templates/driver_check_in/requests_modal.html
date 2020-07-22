@@ -51,12 +51,11 @@
             alert('TODO: Make this button delete request and log to table')
         }
         function completeRequest(username) {
+            var data = {'username': username}
             $.ajax({
-                type: "POST",
-                url: "{{ url_for('DriverCheckInView:complete_request') }}",
-                data: JSON.stringify({
-                    'username': username
-                }),
+                type: 'POST',
+                url: '{{ url_for('DriverCheckInView:complete_request') }}',
+                data: JSON.stringify(data),
                 contentType: 'application/json',
                 success: function () {
                     window.location.reload();

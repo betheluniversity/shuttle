@@ -29,7 +29,7 @@ class UsersView(FlaskView):
                                         ' ' + db.username_search(shuttle_user[key]['username'])[0]['lastName']
         return render_template('users/users.html', **locals())
 
-    @route('/load_user_data', methods=['POST', 'GET'])
+    @route('/load_user_data', methods=['POST'])
     def load_user_data(self):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
