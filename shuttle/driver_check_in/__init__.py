@@ -23,6 +23,7 @@ class DriverCheckInView(FlaskView):
         requests = db.get_requests()
         active_requests = db.number_active_requests()['waitlist-num']
         driver_select = session['DRIVER-SELECT']
+        current_break_status = db.break_status()
         return render_template('driver_check_in/driver_check_in.html', **locals())
 
     # Loads in the selected driver view
@@ -40,13 +41,11 @@ class DriverCheckInView(FlaskView):
             next_time = next_check_in['time']
             if next_location == 'No more stops today' or next_location == 'No stops on the weekend':
                 next_location = 'North'
-            current_break_status = db.break_status()
             return render_template('driver_check_in/load_driver_check_locations.html', **locals())
         if json_data['view'] == 'Active Requests':
             load = 'requests'
             requests = db.get_requests()
             active_requests = db.number_active_requests()['waitlist-num']
-            current_break_status = db.break_status()
             return render_template('driver_check_in/load_driver_check_requests.html', **locals())
 
     @route('/complete-request', methods=['GET', 'POST'])
