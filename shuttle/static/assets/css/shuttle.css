@@ -31,10 +31,6 @@ body {
     padding-top: 1em;
 }
 
-.log-body{
-    padding: 0rem;
-}
-
 .center-page {
     text-align: center;
 }
@@ -58,7 +54,7 @@ body {
     margin-bottom: 1em;
 }
 
-.even-row {
+.even-column {
     background: hsla(240, 100%, 85%, 0.25);
 }
 
@@ -154,4 +150,8 @@ span.shuttle-title {
 
 .table td {
     padding: 0.5rem;
+}
+
+.table {
+    margin-bottom: 0;
 }
