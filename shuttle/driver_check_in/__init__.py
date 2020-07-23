@@ -71,7 +71,7 @@ class DriverCheckInView(FlaskView):
     def delete_request(self):
         json_data = request.get_json()
         username = json_data['username']
-        results = db.complete_shuttle_request(username)
+        results = db.driver_deleted_request(username)
         if results == 'success':
             self.sc.set_alert('success', 'The request has been deleted')
         else:

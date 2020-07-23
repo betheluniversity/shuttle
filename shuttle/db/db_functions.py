@@ -195,7 +195,7 @@ def commit_shuttle_request(pick_up_location, drop_off_location):
 # location is currently being requested by the user (if any)
 def number_active_requests():
     try:
-        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y'"
+        sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE COMPLETED_AT IS NULL"
         results = query(sql, 'read')
         username = flask_session['USERNAME']
         pick_up_location = ''
@@ -217,7 +217,7 @@ def number_active_requests():
 def get_position_in_waitlist():
     username = flask_session['USERNAME']
     sql = "WITH NumberedRows AS(SELECT USERNAME, ROW_NUMBER() OVER (ORDER BY LOG_DATE) AS RowNumber from " \
-          "SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y') SELECT RowNumber FROM NumberedRows " \
+          "SHUTTLE_REQUEST_LOGS WHERE COMPLETED_AT IS NULL) SELECT RowNumber FROM NumberedRows " \
           "WHERE USERNAME = '{0}'".format(username)
     results = query(sql, 'read')
     return results
@@ -232,7 +232,7 @@ def get_users():
 def delete_user(username):
     try:
         sql = "DELETE FROM SHUTTLE_USERS WHERE USERNAME = '{0}'".format(username)
-        results = query(sql, 'write')
+        query(sql, 'write')
         return 'success'
     except Exception as error:
         return 'error'
@@ -247,11 +247,11 @@ def change_user_role(username, role):
         return 'error'
 
 
-# This method changes the user's active request to inactive
-def delete_current_request():
+# This method deletes the user's active request
+def user_deleted_request():
     try:
         username = flask_session['USERNAME']
-        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE USERNAME = '{0}'".format(username)
+        sql = "DELETE FROM SHUTTLE_REQUEST_LOGS WHERE COMPLETED_AT IS NULL AND USERNAME = '{0}'".format(username)
         query(sql, 'write')
         return 'success'
     except:
@@ -267,8 +267,7 @@ def commit_driver_check_in(location, direction):
         if location != '':
             if direction == 'departure':
                 sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES ('{0}', " \
-                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location,
-                                                                                     full_date)
+                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
                 query(sql, 'write')
                 return 'success departure'
             elif direction == 'arrival':
@@ -339,7 +338,7 @@ def get_shuttle_logs_by_date(date):
 
 
 def get_requests():
-    sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE ACTIVE = 'Y' ORDER BY LOG_DATE"
+    sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE COMPLETED_AT IS NULL ORDER BY LOG_DATE"
     results = query(sql, 'read')
     for result in results:
         real_name = username_search(results[result]['username'])
@@ -354,7 +353,7 @@ def complete_shuttle_request(username):
         now = datetime.datetime.now()
         full_date = now.strftime('%d-%b-%Y %I:%M %p')
         driver_username = flask_session['USERNAME']
-        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N', COMPLETED_AT = TO_DATE('{0}','dd-mon-yyyy hh:mi PM'), " \
+        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET COMPLETED_AT = TO_DATE('{0}','dd-mon-yyyy hh:mi PM'), " \
               "COMPLETED_BY = '{1}' WHERE USERNAME = '{2}'".format(full_date, driver_username, username)
         query(sql, 'write')
         return 'success'
@@ -362,14 +361,14 @@ def complete_shuttle_request(username):
         return 'Error'
 
 
-def delete_shuttle_request(username):
+# deletes a user's request but doesn't remove it from logs
+def driver_deleted_request(username):
     try:
         now = datetime.datetime.now()
         full_date = now.strftime('%d-%b-%Y %I:%M %p')
         driver_username = flask_session['USERNAME']
-        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N', DELETED = 'Y', " \
-              "COMPLETED_AT = TO_DATE('{0}','dd-mon-yyyy hh:mi PM'), " \
-              "COMPLETED_BY = '{1}' WHERE USERNAME = '{2}'".format(full_date, driver_username, username)
+        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET DELETED = 'Y', COMPLETED_AT = TO_DATE('{0}','dd-mon-yyyy hh:mi PM'), " \
+              "COMPLETED_BY = '{1}' WHERE USERNAME = '{2}' AND COMPLETED_AT IS NULL".format(full_date, driver_username, username)
         query(sql, 'write')
         return 'success'
     except:
@@ -420,7 +419,10 @@ def get_db_locations():
 # Called as a cronjob that clears every active request every night
 def clear_waitlist():
     try:
-        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE ACTIVE ='Y'"
+        now = datetime.datetime.now()
+        full_date = now.strftime('%d-%b-%Y %I:%M %p')
+        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET COMPLETED_AT = TO_DATE('{0}','dd-mon-yyyy hh:mi PM'), " \
+              "SET DELETED = 'Y' WHERE COMPLETED_AT IS NULL".format(full_date)
         query(sql, 'write')
         return 'success'
     except:
