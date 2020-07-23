@@ -67,6 +67,18 @@ class DriverCheckInView(FlaskView):
                                         'Desk at 651-638-6500 for support')
         return results
 
+    @route('/delete-request', methods=['GET', 'POST'])
+    def delete_request(self):
+        json_data = request.get_json()
+        username = json_data['username']
+        results = db.complete_shuttle_request(username)
+        if results == 'success':
+            self.sc.set_alert('success', 'The request has been deleted')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                        'Desk at 651-638-6500 for support')
+        return results
+
     @route('/driver-check', methods=['Get', 'POST'])
     def send_driver_check_in_info(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])

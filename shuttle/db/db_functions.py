@@ -351,7 +351,25 @@ def get_requests():
 
 def complete_shuttle_request(username):
     try:
-        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N' WHERE USERNAME = '{0}'".format(username)
+        now = datetime.datetime.now()
+        full_date = now.strftime('%d-%b-%Y %I:%M %p')
+        driver_username = flask_session['USERNAME']
+        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N', COMPLETED_AT = TO_DATE('{0}','dd-mon-yyyy hh:mi PM'), " \
+              "COMPLETED_BY = '{1}' WHERE USERNAME = '{2}'".format(full_date, driver_username, username)
+        query(sql, 'write')
+        return 'success'
+    except:
+        return 'Error'
+
+
+def delete_shuttle_request(username):
+    try:
+        now = datetime.datetime.now()
+        full_date = now.strftime('%d-%b-%Y %I:%M %p')
+        driver_username = flask_session['USERNAME']
+        sql = "UPDATE SHUTTLE_REQUEST_LOGS SET ACTIVE = 'N', DELETED = 'Y', " \
+              "COMPLETED_AT = TO_DATE('{0}','dd-mon-yyyy hh:mi PM'), " \
+              "COMPLETED_BY = '{1}' WHERE USERNAME = '{2}'".format(full_date, driver_username, username)
         query(sql, 'write')
         return 'success'
     except:
