@@ -48,6 +48,12 @@ class DriverCheckInView(FlaskView):
             active_requests = db.number_active_requests()['waitlist-num']
             return render_template('driver_check_in/load_driver_check_requests.html', **locals())
 
+    @route('/load-request', methods=['POST'])
+    def load_request(self):
+        json_data = request.get_json()
+        username = json_data['username']
+        return render_template('driver_check_in/requests_modal.html', **locals())
+
     @route('/complete-request', methods=['GET', 'POST'])
     def complete_request(self):
         json_data = request.get_json()
@@ -55,6 +61,18 @@ class DriverCheckInView(FlaskView):
         results = db.complete_shuttle_request(username)
         if results == 'success':
             self.sc.set_alert('success', 'The request has been completed')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                        'Desk at 651-638-6500 for support')
+        return results
+
+    @route('/delete-request', methods=['GET', 'POST'])
+    def delete_request(self):
+        json_data = request.get_json()
+        username = json_data['username']
+        results = db.driver_deleted_request(username)
+        if results == 'success':
+            self.sc.set_alert('success', 'The request has been deleted')
         else:
             self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
                                         'Desk at 651-638-6500 for support')

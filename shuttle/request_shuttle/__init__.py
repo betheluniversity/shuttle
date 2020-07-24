@@ -72,7 +72,7 @@ class RequestShuttleView(FlaskView):
     @route('/delete-request')
     def delete_request(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
-        request_to_delete = db.delete_current_request()
+        request_to_delete = db.user_deleted_request()
         if request_to_delete == 'success':
             self.sc.set_alert('success', 'Your request has been deleted')
         else:

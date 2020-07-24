@@ -51,19 +51,19 @@
 
         function deleteButton(username){
             $.ajax({
-                    type:"POST",
-                    url: "{{ url_for('UsersView:load_user_data') }}",
-                    data: JSON.stringify({
-                        'username': username
-                    }),
-                    contentType: 'application/json;charset=UTF-8',
-                    success: function(response){
-                        $('#results').html(response);
-                        $('#delete-modal').modal('show');
-                    },
-                    error:function(error){
-                    }
-                })
+                type:"POST",
+                url: "{{ url_for('UsersView:load_user_data') }}",
+                data: JSON.stringify({
+                    'username': username
+                }),
+                contentType: 'application/json;charset=UTF-8',
+                success: function(response){
+                    $('#results').html(response);
+                    $('#delete-modal').modal('show');
+                },
+                error:function(error){
+                }
+            })
         }
 
         function editButton(username){
