@@ -16,9 +16,6 @@
                 {% if 'Administrator' in session['USER-ROLES'] or 'Driver' in session['USER-ROLES'] or 'User' in session['USER-ROLES'] %}
                 <a class="navbar-brand" href="{{ url_for('RequestShuttleView:request') }}"><span class="txt-underline">Request Shuttle</span></a>
                 {% endif %}
-                {% if 'Administrator' in session['USER-ROLES'] %}
-                    <a class="navbar-brand" href="{{ url_for('SchedulesView:edit_schedule') }}"><span class="txt-underline">Edit Schedule</span></a>
-                {% endif %}
                 {% if 'Administrator' in session['USER-ROLES'] or 'Driver' in session['USER-ROLES'] %}
                     <a class="navbar-brand" href="{{ url_for('DriverCheckInView:check_in') }}"><span class="txt-underline">Driver Check In</span></a>
                 {% endif %}
