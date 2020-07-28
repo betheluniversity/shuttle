@@ -1,5 +1,5 @@
 # Packages
-from flask import render_template, session
+from flask import render_template
 from flask_classy import FlaskView, route
 
 # Local
@@ -19,10 +19,7 @@ class SchedulesView(FlaskView):
     def schedule(self):
         # Shows schedule from database
         schedule = self.ssc.grab_db_schedule()
-        if 'Administrator' in session['USER-ROLES']:
-            return render_template('schedules/edit_shuttle_schedule.html', **locals())
-        else:
-            return render_template('schedules/shuttle_schedule.html', **locals())
+        return render_template('schedules/shuttle_schedule.html', **locals())
 
     @route('/send-schedule')
     def send_schedule_path(self):
