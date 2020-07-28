@@ -322,13 +322,19 @@ def commit_break(driver_break):
         return 'Error'
 
 
-def get_shuttle_logs():
-    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS ORDER BY LOG_DATE"
+def get_scheduled_shuttle_logs():
+    sql = "SELECT DISTINCT LOG_DATE FROM SHUTTLE_DRIVER_LOGS ORDER BY LOG_DATE"
     results = query(sql, 'read')
     return results
 
 
-def get_shuttle_logs_by_username(date):
+def get_on_call_shuttle_logs():
+    sql = "SELECT DISTINCT LOG_DATE FROM SHUTTLE_REQUEST_LOGS ORDER BY LOG_DATE"
+    results = query(sql, 'read')
+    return results
+
+
+def get_scheduled_shuttle_logs_by_username(date):
     date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' ORDER BY USERNAME," \
           "CASE WHEN ARRIVAL_TIME < DEPARTURE_TIME THEN ARRIVAL_TIME " \
@@ -337,11 +343,27 @@ def get_shuttle_logs_by_username(date):
     return results
 
 
-def get_shuttle_logs_by_date(date):
+def get_on_call_logs_by_username(date):
+    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
+    sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE TRUNC(LOG_DATE) = '{0}' " \
+          "AND COMPLETED_AT IS NOT NULL ORDER BY USERNAME".format(date)
+    results = query(sql, 'read')
+    return results
+
+
+def get_scheduled_shuttle_logs_by_date(date):
     date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' ORDER BY " \
           "CASE WHEN ARRIVAL_TIME < DEPARTURE_TIME THEN ARRIVAL_TIME " \
           "ELSE coalesce(DEPARTURE_TIME, ARRIVAL_TIME) END".format(date)
+    results = query(sql, 'read')
+    return results
+
+
+def get_on_call_shuttle_logs_by_date(date):
+    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
+    sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE TRUNC(LOG_DATE) = '{0}' " \
+          "AND COMPLETED_AT IS NOT NULL ORDER BY COMPLETED_AT".format(date)
     results = query(sql, 'read')
     return results
 
