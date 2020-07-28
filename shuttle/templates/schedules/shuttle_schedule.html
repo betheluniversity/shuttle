@@ -4,11 +4,47 @@
 
 {% block body_content %}
 
-    <div class="center-page">
-        <h4 class="card-title">Shuttle Schedule</h4>
-    </div>
-    <div class="center-page">
-        {% include 'schedules/load_schedule.html' %}
-    </div>
+    {% if 'Administrator' in session['USER-ROLES'] %}
+        <div class="center-page" style="padding-bottom: 1em">
+            <div class="small-card">
+                <div class="card-body">
+                    <h6>Use <a href="https://docs.google.com/spreadsheets/d/1VGuZm58MfKW7TBFG09oGT8eIEAH1A4iFUg1utj1AA4s/edit?usp=sharing">this link </a>to change the schedule</h6>
+                    <h6>Please enter locations into the first row</h6>
+                    <h6>Times should be in the format (00:00 / 0:00) or (-) if the location has no time</h6>
+                    <div class="center-page">
+                        <input id="submit-schedule-button" class="btn btn-warning btn-sm" type="submit" value="Submit to Database">
+                        <img id="img-spinner" class="spinner-img" src="https://cdn1.bethel.edu/images/load.gif" alt="Loading" style="display:none; padding-top:0em"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="center-page">
+            <h4>Shuttle Schedule From The Database</h4>
+        </div>
+        <div class="center-page">
+            {% include 'schedules/load_schedule.html' %}
+        </div>
+        <script>
+            $(document).ready(function() {
+                $("#submit-schedule-button").click(function () {
+                    $('.spinner-img').show();
+                    // Sends google sheets schedule to database (erases old schedule)
+                    $.ajax({
+                        url: "{{ url_for('SchedulesView:send_schedule_path') }}",
+                    }).done(function(data) {
+                        $('img-spinner').hide();
+                        location.reload()
+                    })
+                });
+            });
+        </script>
+    {% else %}
+        <div class="center-page">
+            <h4>Shuttle Schedule</h4>
+        </div>
+        <div class="center-page">
+            {% include 'schedules/load_schedule.html' %}
+        </div>
+    {% endif %}
 
 {% endblock %}

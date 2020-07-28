@@ -21,13 +21,6 @@ class SchedulesView(FlaskView):
         schedule = self.ssc.grab_db_schedule()
         return render_template('schedules/shuttle_schedule.html', **locals())
 
-    @route('/edit-schedule')
-    def edit_schedule(self):
-        self.sc.check_roles_and_route(['Administrator'])
-        # Show schedule directly from sheets
-        schedule = self.shc.grab_schedule()
-        return render_template('schedules/edit_shuttle_schedule.html', **locals())
-
     @route('/send-schedule')
     def send_schedule_path(self):
         self.sc.check_roles_and_route(['Administrator'])
