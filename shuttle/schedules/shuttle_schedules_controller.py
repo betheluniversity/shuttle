@@ -7,15 +7,19 @@ class ScheduleController(object):
         pass
 
     def grab_dates(self, log_type):
-        date_list = []
         if log_type == 'Scheduled Shuttle Logs':
             # Grabs every date for scheduled logs
             shuttle_logs = db.get_scheduled_shuttle_logs()
         else:
             # Grabs every date for on call logs
             shuttle_logs = db.get_on_call_shuttle_logs()
+        # Changes dates to format that can be compared easily. Then adds it to list if it hasn't already shown up
+        date_list_formatted = []
+        date_list = []
         for i in range(len(shuttle_logs)):
-            if shuttle_logs[i]['log_date'] not in date_list:
+            date = shuttle_logs[i]['log_date'].strftime('%b-%d-%Y')
+            if date not in date_list_formatted:
+                date_list_formatted.append(date)
                 date_list.append(shuttle_logs[i]['log_date'])
         # Sorts dates and makes them more readable
         date_list.sort(reverse=True)

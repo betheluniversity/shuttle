@@ -14,20 +14,20 @@
     <div class="align-side-by-side">
         <div class="dropdown">
             <button class="btn btn-primary btn-lg dropdown-toggle date-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{date}}</button>
-                 <div class="dropdown-menu scrollable-menu date-dropdown" aria-labelledby="dropdownMenuButton">
-                    <div id="scheduled-dropdown">
-                        {% for i in range(date_list_scheduled|length) %}
-                            <a class="dropdown-item" href="#">{{ date_list_scheduled[i] }}</a>
-                        {% endfor %}
-                    </div>
+            <div class="dropdown-menu scrollable-menu date-dropdown" aria-labelledby="dropdownMenuButton">
+                <div id="scheduled-dropdown">
+                    {% for i in range(date_list_scheduled|length) %}
+                        <a class="dropdown-item" href="#">{{ date_list_scheduled[i] }}</a>
+                    {% endfor %}
+                </div>
 
-                    <div id="on-call-dropdown" style="display: none">
-                        {% for i in range(date_list_on_call|length) %}
-                            <a class="dropdown-item" href="#">{{ date_list_on_call[i] }}</a>
-                        {% endfor %}
-                    </div>
+                <div id="on-call-dropdown" style="display: none">
+                    {% for i in range(date_list_on_call|length) %}
+                        <a class="dropdown-item" href="#">{{ date_list_on_call[i] }}</a>
+                    {% endfor %}
                 </div>
             </div>
+        </div>
     </div>
     <div class="align-side-by-side">
         <div class="dropdown">
