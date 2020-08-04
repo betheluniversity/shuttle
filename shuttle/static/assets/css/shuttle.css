@@ -103,8 +103,7 @@ nav.navbar {
 }
 
 .scrolling-wrapper {
-  overflow-x: scroll;
-  overflow-y: hidden;
+  overflow: auto;
   white-space: nowrap;
 }
 
@@ -155,3 +154,21 @@ span.shuttle-title {
 .table {
     margin-bottom: 0;
 }
+
+.schedule-info {
+    padding-top: 1em;
+}
+
+@media screen and (min-width: 992px) {
+    .wrapper {
+        display: inline-flex;
+    }
+    .caption-card {
+        padding: 0;
+        display: table-caption;
+    }
+    .schedule-info {
+        padding:  0  0 0 1em;
+    }
+}
+
