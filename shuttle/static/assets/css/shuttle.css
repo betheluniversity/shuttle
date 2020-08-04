@@ -103,8 +103,7 @@ nav.navbar {
 }
 
 .scrolling-wrapper {
-  overflow-x: scroll;
-  overflow-y: hidden;
+  overflow: auto;
   white-space: nowrap;
 }
 
@@ -154,4 +153,12 @@ span.shuttle-title {
 
 .table {
     margin-bottom: 0;
+}
+
+.wrapper {
+    display: inline-flex;
+}
+
+.caption-card {
+    display: table-caption;
 }
