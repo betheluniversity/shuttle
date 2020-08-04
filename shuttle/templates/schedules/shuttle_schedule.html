@@ -12,14 +12,17 @@
             <div class="small-card card-body">
                 <div class="wrapper">
                     {% include 'schedules/load_schedule.html' %}
-                    <div class="center-page" style="padding-left: 1em">
+                    <div class="center-page schedule-info">
                         <div class="small-card caption-card">
                             <div class="card-body">
                                 <h5>Use <a href="https://docs.google.com/spreadsheets/d/1VGuZm58MfKW7TBFG09oGT8eIEAH1A4iFUg1utj1AA4s/edit?usp=sharing" target="_blank">this link</a> to update the schedule</h5>
                                 In the spreadsheet, locations should be in Row 1 and Columns A-Z (but keep entire schedule close together and on the left).
                                 Each column will show the times for the location that is declared in the first row.
                                 Each time should increase as the schedule goes from left to right and from up to down.
-                                Times should be in the format (00:00 / 0:00) or (-) if the location has no time.</h6>
+                                Times should be in the format (00:00 / 0:00) or (-) if the location has no time.<hr>
+                                Please also update the locations tab on the bottom of the spreadsheet page
+                                with all of the on-campus and off-campus shuttle locations</h6>
+                                <hr>
                                 <div class="center-page">
                                     <input id="submit-schedule-button" class="btn btn-warning btn-sm" type="submit" value="Sync Schedule With Spreadsheet">
                                     <img id="img-spinner" class="spinner-img" src="https://cdn1.bethel.edu/images/load.gif" alt="Loading" style="display:none; padding-top:0em"/>
