@@ -4,28 +4,11 @@
     <h4>Please select a date below to view its corresponding logs</h4>
     <div class="align-side-by-side">
         <div class="dropdown">
-            <button class="btn btn-primary btn-lg dropdown-toggle log-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Scheduled Shuttle Logs</button>
-            <div class="dropdown-menu log-dropdown" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Scheduled Shuttle Logs</a>
-                <a class="dropdown-item" href="#">On Call Shuttle Logs</a>
-            </div>
-        </div>
-    </div>
-    <div class="align-side-by-side">
-        <div class="dropdown">
             <button class="btn btn-primary btn-lg dropdown-toggle date-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{date}}</button>
             <div class="dropdown-menu scrollable-menu date-dropdown" aria-labelledby="dropdownMenuButton">
-                <div id="scheduled-dropdown">
-                    {% for i in range(date_list_scheduled|length) %}
-                        <a class="dropdown-item" href="#">{{ date_list_scheduled[i] }}</a>
-                    {% endfor %}
-                </div>
-
-                <div id="on-call-dropdown" style="display: none">
-                    {% for i in range(date_list_on_call|length) %}
-                        <a class="dropdown-item" href="#">{{ date_list_on_call[i] }}</a>
-                    {% endfor %}
-                </div>
+                {% for i in range(date_list|length) %}
+                    <a class="dropdown-item" href="#">{{ date_list[i] }}</a>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -44,7 +27,7 @@
 
     <script>
         $(document).ready(function() {
-            window.onload = load_data({"log":'Scheduled Shuttle Logs', "date":{{ date|tojson }}, "sort":'Sort By Time'});
+            window.onload = load_data({"date":{{ date|tojson }}, "sort":'Sort By Time'});
             function load_data(data){
                 $('#img-spinner').show();
                 $.ajax({
@@ -57,32 +40,18 @@
                     $("#driver_log_display").html(data);
                 });
             }
-            $(".log-dropdown a").click(function() {
-                // Dropdown shows location selected
-                $(".log-menu:first-child").text($(this).text());
-                $('.date-menu').text({{date|tojson}});
-                if($('.log-menu').text() == 'Scheduled Shuttle Logs'){
-                    $('#on-call-dropdown').hide();
-                    $('#scheduled-dropdown').show();
-                }else{
-                    $('#scheduled-dropdown').hide();
-                    $('#on-call-dropdown').show();
-                }
-                var data = {"log": $('.log-menu').text(), "date": $('.date-menu').text(), "sort": $('.sort-menu').text()}
-                load_data(data);
-            });
             $(".date-dropdown a").click(function() {
                 // Dropdown shows location selected
                 $(".date-menu:first-child").text($(this).text());
                 // Sends data to be shown on screen
-                var data = {"log": $('.log-menu').text(), "date": $('.date-menu').text(), "sort": $('.sort-menu').text()}
+                var data = {"date": $('.date-menu').text(), "sort": $('.sort-menu').text()}
                 load_data(data);
             });
             $(".sort-dropdown a").click(function() {
                 // Dropdown shows location selected
                 $(".sort-menu:first-child").text($(this).text());
                 // Sends data to be shown on screen
-                var data = {"log": $('.log-menu').text(), "date": $('.date-menu').text(), "sort": $('.sort-menu').text()}
+                var data = {"date": $('.date-menu').text(), "sort": $('.sort-menu').text()}
                 load_data(data);
             });
          });

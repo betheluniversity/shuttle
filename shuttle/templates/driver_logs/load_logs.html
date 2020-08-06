@@ -1,0 +1,217 @@
+{% block body_content %}
+
+    <div id="accordion">
+        {% if shuttle_logs %}
+            <div class="card scrolling-wrapper">
+                <div class="card-header" id="headingShuttle">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseShuttle" aria-expanded="false" aria-controls="collapseShuttle">
+                        <h5>Location Check In Logs</h5>
+                    </button>
+                </div>
+                <div id="collapseShuttle" class="collapse" aria-labelledby="headingShuttle" data-parent="#accordion">
+                    <div class="card-body log-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Driver</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Arrival</th>
+                                <th scope="col">Departure</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                {% for i in range(shuttle_logs|length) %}
+                                    <td class="driver">
+                                        {% if shuttle_logs[i]['name'] != None %}
+                                            {{ shuttle_logs[i]['name'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="location">
+                                        {% if shuttle_logs[i]['location'] != None %}
+                                            {{ shuttle_logs[i]['location'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="check-in">
+                                        {% if shuttle_logs[i]['arrival_time'] != None %}
+                                            {{ shuttle_logs[i]['arrival_time'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="check-out">
+                                        {% if shuttle_logs[i]['departure_time'] != None %}
+                                            {{ shuttle_logs[i]['departure_time'] }}
+                                        {% endif %}
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if break_logs %}
+            <div class="card scrolling-wrapper">
+                <div class="card-header" id="headingShuttle">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseBreak" aria-expanded="false" aria-controls="collapseBreak">
+                        <h5>Driver Break Logs</h5>
+                    </button>
+                </div>
+                <div id="collapseBreak" class="collapse" aria-labelledby="headingBreak" data-parent="#accordion">
+                    <div class="card-body log-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Driver</th>
+                                <th scope="col">Clock Out</th>
+                                <th scope="col">Clock In</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                {% for i in range(break_logs|length) %}
+                                    <td class="driver">
+                                        {% if break_logs[i]['name'] != None %}
+                                            {{ break_logs[i]['name'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="check-out">
+                                        {% if break_logs[i]['departure_time'] != None %}
+                                            {{ break_logs[i]['departure_time'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="check-in">
+                                        {% if break_logs[i]['arrival_time'] != None %}
+                                            {{ break_logs[i]['arrival_time'] }}
+                                        {% endif %}
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if completed_requests %}
+            <div class="card scrolling-wrapper">
+                <div class="card-header" id="headingCompleted">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseCompleted" aria-expanded="false" aria-controls="collapseCompleted">
+                        <h5>Completed Request Logs</h5>
+                    </button>
+                </div>
+                <div id="collapseCompleted" class="collapse" aria-labelledby="headingCompleted" data-parent="#accordion">
+                    <div class="card-body log-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Driver</th>
+                                <th scope="col">User</th>
+                                <th scope="col">Picked Up</th>
+                                <th scope="col">Dropped Off</th>
+                                <th scope="col">Completed At</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                {% for i in range(completed_requests|length) %}
+                                    <td class="driver">
+                                        {% if completed_requests[i]['driver_name'] != None %}
+                                            {{ completed_requests[i]['driver_name'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="user">
+                                        {% if completed_requests[i]['user_name'] != None %}
+                                            {{ completed_requests[i]['user_name'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="pick-up-location">
+                                        {% if completed_requests[i]['pick_up_location'] != None %}
+                                            {{ completed_requests[i]['pick_up_location'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="drop-off-location">
+                                        {% if completed_requests[i]['drop_off_location'] != None %}
+                                            {{ completed_requests[i]['drop_off_location'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="completed">
+                                        {% if completed_requests[i]['completed_at'] != None %}
+                                            {{ completed_requests[i]['completed_at'] }}
+                                        {% endif %}
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if deleted_requests %}
+            <div class="card scrolling-wrapper">
+                <div class="card-header" id="headingDeleted">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseDeleted" aria-expanded="false" aria-controls="collapseDeleted">
+                        <h5>Deleted Requests Logs</h5>
+                    </button>
+                </div>
+                <div id="collapseDeleted" class="collapse" aria-labelledby="headingDeleted" data-parent="#accordion">
+                    <div class="card-body log-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Driver</th>
+                                <th scope="col">User</th>
+                                <th scope="col">Picked Up</th>
+                                <th scope="col">Dropped Off</th>
+                                <th scope="col">Deleted At</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                {% for i in range(deleted_requests|length) %}
+                                    <td class="driver">
+                                        {% if deleted_requests[i]['driver_name'] != None %}
+                                            {{ deleted_requests[i]['driver_name'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="user">
+                                        {% if deleted_requests[i]['user_name'] != None %}
+                                            {{ deleted_requests[i]['user_name'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="pick-up-location">
+                                        {% if deleted_requests[i]['pick_up_location'] != None %}
+                                            {{ deleted_requests[i]['pick_up_location'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="drop-off-location">
+                                        {% if deleted_requests[i]['drop_off_location'] != None %}
+                                            {{ deleted_requests[i]['drop_off_location'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="deleted">
+                                        {% if deleted_requests[i]['completed_at'] != None %}
+                                            {{ deleted_requests[i]['completed_at'] }}
+                                        {% endif %}
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="center-page" style="padding-top: 1em">
+        {% if not shuttle_logs and not break_logs and not completed_requests and not deleted_requests %}
+            <h4>There are no Driver logs available for today's date</h4>
+        {% endif %}
+    </div>
+
+{% endblock %}

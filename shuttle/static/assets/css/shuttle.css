@@ -35,6 +35,10 @@ body {
     text-align: center;
 }
 
+.collapsed {
+    color: black;
+}
+
 .column {
   float: left;
   width: auto;
