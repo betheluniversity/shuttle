@@ -107,8 +107,7 @@ nav.navbar {
 }
 
 .scrolling-wrapper {
-  overflow-x: scroll;
-  overflow-y: hidden;
+  overflow: auto;
   white-space: nowrap;
 }
 
