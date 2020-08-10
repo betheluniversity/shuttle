@@ -64,14 +64,23 @@
                     </div>
                 </div>
             </div>
-            <form>
+            {% if phone_number %}
                 <div class="align-side-by-side">
-                    <h4>Phone number (Optional):</h4>
+                    <p>Phone number On Record: <b>{{ phone_number }}</b></p>
                 </div>
-                <div class="align-side-by-side">
-                    <input type="tel" id="phone" name="phone" placeholder="___-___-____" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
-                </div>
-            </form>
+            {% else %}
+                <form>
+                    <div class="align-side-by-side">
+                        <h4>Phone number:</h4>
+                    </div>
+                    <div class="align-side-by-side">
+                        <input class="phone-number" type="tel" id="phone" name="phone" placeholder="ex. 123-123-1234" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+                    </div>
+                    <div class="align-side-by-side">
+                        <h6>(Optional)</h6>
+                    </div>
+                </form>
+            {% endif %}
             <div class="center-page">
                 <div class="align-side-by-side">
                     <div class="submit">
@@ -141,7 +150,8 @@
                 }
                 var data = {
                     "pick-up-location":pick_up,
-                    "drop-off-location":drop_off
+                    "drop-off-location":drop_off,
+                    "phone-number":$('.phone-number').val()
                 }
                 $.ajax({
                     type: 'POST',

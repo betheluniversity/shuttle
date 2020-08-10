@@ -45,12 +45,22 @@ class RequestShuttleView(FlaskView):
                     or time.strptime('13:45', '%H:%M') < current_time < time.strptime('14:30', '%H:%M') \
                     or current_time > time.strptime('21:00', '%H:%M'):
                 shuttle_requestable = False
+        phone_number = db.check_for_number()
+        if phone_number:
+            phone_number = phone_number[0]['phone_number']
         return render_template('request_shuttle/request_shuttle.html', **locals())
 
     @route('/send-request', methods=['GET', 'POST'])
     def send_shuttle_request_path(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
         json_data = request.get_json()
+        phone_number = json_data['phone-number']
+        if phone_number:
+            send_number = db.send_phone_number(phone_number)
+            if send_number == 'Error':
+                self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
+                                            'Desk at 651-638-6500 for support')
+                return send_number
         response = db.commit_shuttle_request(json_data['pick-up-location'], json_data['drop-off-location'])
         if response == 'success':
             self.sc.set_alert('success', 'Your request has been submitted')

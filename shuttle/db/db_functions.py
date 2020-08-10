@@ -464,3 +464,20 @@ def get_campus_locations():
     sql = "Select LOCATION from SHUTTLE_CAMPUS_LOCATIONS ORDER BY ID"
     results = query(sql, 'read')
     return results
+
+
+def check_for_number():
+    username = flask_session['USERNAME']
+    sql = "Select PHONE_NUMBER FROM SHUTTLE_PHONE_LOOKUP WHERE USERNAME = '{0}'".format(username)
+    results = query(sql, 'read')
+    return results
+
+
+def send_phone_number(phone_number):
+    try:
+        username = flask_session['USERNAME']
+        sql = "INSERT INTO SHUTTLE_PHONE_LOOKUP(USERNAME, PHONE_NUMBER) VALUES ('{0}','{1}')".format(username, phone_number)
+        query(sql, 'write')
+        return 'success'
+    except:
+        return 'Error'
