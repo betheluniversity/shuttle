@@ -33,7 +33,13 @@
                             {% for location in locations %}
                                 <a class="dropdown-item" href="#">{{ location }}</a>
                             {% endfor %}
+                            <a class="dropdown-item" href="#">Other</a>
                         </div>
+                    </div>
+                </div>
+                <div class="align-side-by-side">
+                    <div class="pick-up-other" style="display: none">
+                        <input class="pick-up-input" type="tel" id="phone" name="phone" placeholder="Please Enter Location">
                     </div>
                 </div>
             </div>
@@ -48,10 +54,24 @@
                             {% for location in locations %}
                                 <a class="dropdown-item" href="#">{{ location }}</a>
                             {% endfor %}
+                            <a class="dropdown-item" href="#">Other</a>
                         </div>
                     </div>
                 </div>
+                <div class="align-side-by-side">
+                    <div class="drop-off-other" style="display: none">
+                        <input class="drop-off-input" type="tel" id="phone" name="phone" placeholder="Please Enter Location">
+                    </div>
+                </div>
             </div>
+            <form>
+                <div class="align-side-by-side">
+                    <h4>Phone number (Optional):</h4>
+                </div>
+                <div class="align-side-by-side">
+                    <input type="tel" id="phone" name="phone" placeholder="___-___-____" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+                </div>
+            </form>
             <div class="center-page">
                 <div class="align-side-by-side">
                     <div class="submit">
@@ -91,23 +111,43 @@
                 // Dropdown shows location selected
                 $(".pick-up-menu:first-child").text($(this).text());
                 $(".pick-up-menu:first-child").val($(this).text());
+                if($(".pick-up-menu:first-child").text() == 'Other'){
+                    $('.pick-up-other').show()
+                }else{
+                    $('.pick-up-other').hide()
+                }
             });
             $(".dropdown-drop-off a").click(function(){
                 // Dropdown shows location selected
                 $(".drop-off-menu:first-child").text($(this).text());
                 $(".drop-off-menu:first-child").val($(this).text());
+                if($(".drop-off-menu:first-child").text() == 'Other'){
+                    $('.drop-off-other').show()
+                }else{
+                    $('.drop-off-other').hide()
+                }
             });
             $('.submit-btn').click(function () {
                 // Sends selected location and user info to database. Updates waitlist
+                if($(".pick-up-menu:first-child").text() == 'Other'){
+                    var pick_up = $('.pick-up-input').val()
+                }else{
+                    var pick_up = $('.pick-up-menu').val()
+                }
+                if($(".drop-off-menu:first-child").text() == 'Other'){
+                    var drop_off = $('.drop-off-input').val()
+                }else{
+                    var drop_off = $('.drop-off-menu').val()
+                }
                 var data = {
-                    "pick-up-location":$('.pick-up-menu').val(),
-                    "drop-off-location":$('.drop-off-menu').val()
+                    "pick-up-location":pick_up,
+                    "drop-off-location":drop_off
                 }
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
                     url: "{{ url_for('RequestShuttleView:send_shuttle_request_path') }}",
-                    data: JSON.stringify((data)),
+                    data: JSON.stringify(data),
                 }).done(function () {
                     location.reload();
                 })
