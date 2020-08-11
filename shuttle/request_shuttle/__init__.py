@@ -1,8 +1,9 @@
 # Packages
+import re
 import time
 from datetime import datetime
 
-from flask import render_template
+from flask import render_template, session
 from flask_classy import FlaskView, route, request
 
 # Local
@@ -45,7 +46,8 @@ class RequestShuttleView(FlaskView):
                     or time.strptime('13:45', '%H:%M') < current_time < time.strptime('14:30', '%H:%M') \
                     or current_time > time.strptime('21:00', '%H:%M'):
                 shuttle_requestable = False
-        phone_number = db.check_for_number()
+        username = session['USERNAME']
+        phone_number = db.check_for_number(username)
         if phone_number:
             phone_number = phone_number[0]['phone_number']
         return render_template('request_shuttle/request_shuttle.html', **locals())
@@ -56,6 +58,9 @@ class RequestShuttleView(FlaskView):
         json_data = request.get_json()
         phone_number = json_data['phone-number']
         if phone_number:
+            if not re.search("^[0-9]{3}-[0-9]{3}-[0-9]{4}$", phone_number):
+                self.sc.set_alert('danger', 'Please keep phone number in format 123-123-1234')
+                return 'failed'
             send_number = db.send_phone_number(phone_number)
             if send_number == 'Error':
                 self.sc.set_alert('danger', 'Something went wrong. Please call the ITS Help '
@@ -85,6 +90,17 @@ class RequestShuttleView(FlaskView):
         request_to_delete = db.user_deleted_request()
         if request_to_delete == 'success':
             self.sc.set_alert('success', 'Your request has been deleted')
+        else:
+            self.sc.set_alert('danger', 'Something went wrong. Please try again or '
+                                        'call the ITS Help Desk at 651-638-6500')
+        return request_to_delete
+
+    @route('/delete-number')
+    def delete_number(self):
+        self.sc.check_roles_and_route(['Administrator', 'Driver', 'User'])
+        request_to_delete = db.delete_number()
+        if request_to_delete == 'success':
+            self.sc.set_alert('success', 'Your number has been deleted')
         else:
             self.sc.set_alert('danger', 'Something went wrong. Please try again or '
                                         'call the ITS Help Desk at 651-638-6500')

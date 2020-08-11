@@ -14,6 +14,7 @@
                             <thead>
                             <tr>
                                 <th scope="col">Name</th>
+                                <th scope="col">Phone Number</th>
                                 <th scope="col">Time Of Request</th>
                                 <th scope="col">Pick Up At</th>
                                 <th scope="col">Drop Off At</th>
@@ -29,17 +30,22 @@
                                             {{ requests[request]['name'] }}
                                         {% endif %}
                                     </td>
-                                    <td class="location">
+                                    <td class="number">
+                                        {% if requests[request]['phone_number'] != None %}
+                                            {{ requests[request]['phone_number'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="request-time">
                                         {% if requests[request]['log_date'] != None %}
                                             {{ requests[request]['log_date'] }}
                                         {% endif %}
                                     </td>
-                                    <td class="check-out">
+                                    <td class="pick-up">
                                         {% if requests[request]['pick_up_location'] != None %}
                                             {{ requests[request]['pick_up_location'] }}
                                         {% endif %}
                                     </td>
-                                    <td class="check-in">
+                                    <td class="drop-off">
                                         {% if requests[request]['drop_off_location'] != None %}
                                             {{ requests[request]['drop_off_location'] }}
                                         {% endif %}

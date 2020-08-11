@@ -376,6 +376,9 @@ def get_requests():
         results[result]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
         results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M %p %b-%d-%Y') \
             .lstrip("0").replace(" 0", " ")
+        number = check_for_number(results[result]['username'])
+        if number:
+            results[result]['phone_number'] = number[0]['phone_number']
     return results
 
 
@@ -466,8 +469,7 @@ def get_campus_locations():
     return results
 
 
-def check_for_number():
-    username = flask_session['USERNAME']
+def check_for_number(username):
     sql = "Select PHONE_NUMBER FROM SHUTTLE_PHONE_LOOKUP WHERE USERNAME = '{0}'".format(username)
     results = query(sql, 'read')
     return results
@@ -477,6 +479,16 @@ def send_phone_number(phone_number):
     try:
         username = flask_session['USERNAME']
         sql = "INSERT INTO SHUTTLE_PHONE_LOOKUP(USERNAME, PHONE_NUMBER) VALUES ('{0}','{1}')".format(username, phone_number)
+        query(sql, 'write')
+        return 'success'
+    except:
+        return 'Error'
+
+
+def delete_number():
+    try:
+        username = flask_session['USERNAME']
+        sql = "DELETE FROM SHUTTLE_PHONE_LOOKUP WHERE USERNAME = '{0}'".format(username)
         query(sql, 'write')
         return 'success'
     except:
