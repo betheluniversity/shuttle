@@ -50,11 +50,11 @@ class ScheduleController(object):
             if scheduled_shuttle_logs[i]['arrival_time']:
                 format_am_pm = '.'.join(scheduled_shuttle_logs[i]['arrival_time'].strftime('%p').lower()) + '.'
                 scheduled_shuttle_logs[i]['arrival_time'] = scheduled_shuttle_logs[i]['arrival_time']\
-                    .strftime('%I:%M ' + format_am_pm + ' | %m/%d/%y').lstrip("0").replace(" 0", " ").replace("/0", "/")
+                    .strftime('%I:%M ' + format_am_pm + ' | %-m/%-d/%y')
             elif scheduled_shuttle_logs[i]['departure_time']:
                 format_am_pm = '.'.join(scheduled_shuttle_logs[i]['departure_time'].strftime('%p').lower()) + '.'
                 scheduled_shuttle_logs[i]['departure_time'] = scheduled_shuttle_logs[i]['departure_time']\
-                    .strftime('%I:%M ' + format_am_pm + ' | %m/%d/%y').lstrip("0").replace(" 0", " ").replace("/0", "/")
+                    .strftime('%I:%M ' + format_am_pm + ' | %-m/%-d/%y')
             if scheduled_shuttle_logs[i]['location']:
                 shuttle_logs[shuttle_iter] = scheduled_shuttle_logs[i]
                 shuttle_iter += 1
@@ -78,7 +78,7 @@ class ScheduleController(object):
 
             format_am_pm = '.'.join(on_call_shuttle_logs[i]['completed_at'].strftime('%p').lower()) + '.'
             on_call_shuttle_logs[i]['completed_at'] = on_call_shuttle_logs[i]['completed_at']. \
-                strftime('%I:%M ' + format_am_pm + ' | %m/%d/%y').lstrip("0").replace(" 0", " ").replace("/0", "/")
+                strftime('%I:%M ' + format_am_pm + ' | %-m/%-d/%y')
             if on_call_shuttle_logs[i]['deleted'] == 'Y':
                 deleted_logs[deleted_iter] = on_call_shuttle_logs[i]
                 deleted_iter += 1
@@ -105,7 +105,7 @@ class ScheduleController(object):
                 row.append('-')
             else:
                 format_am_pm = '.'.join(schedule[i]['departure_time'].strftime('%p').lower()) + '.'
-                row.append(schedule[i]['departure_time'].strftime('%I:%M ' + format_am_pm).lstrip("0").replace(" 0", " "))
+                row.append(schedule[i]['departure_time'].strftime('%-I:%M ' + format_am_pm))
             if iterator == row_length:
                 schedule_list.append(row)
                 iterator = 0

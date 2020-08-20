@@ -376,8 +376,7 @@ def get_requests():
         results[result]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
 
         format_am_pm = '.'.join(results[result]['log_date'].strftime('%p').lower()) + '.'
-        results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M ' + format_am_pm + ' | %m/%d/%y') \
-            .lstrip("0").replace(" 0", " ").replace("/0", "/")
+        results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M ' + format_am_pm + ' | %-m/%-d/%y')
     return results
 
 
@@ -426,12 +425,12 @@ def get_last_location():
     results = query(sql, 'read')
     if results[0]['arrival_time']:
         format_am_pm = '.'.join(results[0]['arrival_time'].strftime('%p').lower()) + '.'
-        last_time = results[0]['arrival_time'].strftime('%I:%M ' + format_am_pm).lstrip("0").replace(" 0", " ")
+        last_time = results[0]['arrival_time'].strftime('%-I:%M ' + format_am_pm)
         last_date = results[0]['arrival_time'].strftime('%b-%d-%y')
         recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     elif results[0]['departure_time']:
         format_am_pm = '.'.join(results[0]['departure_time'].strftime('%p').lower()) + '.'
-        last_time = results[0]['departure_time'].strftime('%I:%M ' + format_am_pm).lstrip("0").replace(" 0", " ")
+        last_time = results[0]['departure_time'].strftime('%-I:%M ' + format_am_pm)
         last_date = results[0]['departure_time'].strftime('%b-%d-%y')
         recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     else:
