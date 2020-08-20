@@ -375,8 +375,8 @@ def get_requests():
         real_name = username_search(results[result]['username'])
         results[result]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
 
-        format_am_pm = '.'.join(results[result]['log_date'].strftime('%p').lower()) + '.'
-        results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M ' + format_am_pm + ' | %-m/%-d/%y')
+        log_time = results[result]['log_date']
+        results[result]['log_date'] = log_time.strftime('%-I:%M %p. | %-m/%-d/%y').lower()
     return results
 
 
@@ -424,13 +424,11 @@ def get_last_location():
           "(SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOCATION IS NOT NULL ORDER BY ID DESC) Where ROWNUM = 1"
     results = query(sql, 'read')
     if results[0]['arrival_time']:
-        format_am_pm = '.'.join(results[0]['arrival_time'].strftime('%p').lower()) + '.'
-        last_time = results[0]['arrival_time'].strftime('%-I:%M ' + format_am_pm)
+        last_time = results[0]['arrival_time'].strftime('%-I:%M %p.').lower()
         last_date = results[0]['arrival_time'].strftime('%b-%d-%y')
         recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     elif results[0]['departure_time']:
-        format_am_pm = '.'.join(results[0]['departure_time'].strftime('%p').lower()) + '.'
-        last_time = results[0]['departure_time'].strftime('%-I:%M ' + format_am_pm)
+        last_time = results[0]['departure_time'].strftime('%-I:%M %p.').lower()
         last_date = results[0]['departure_time'].strftime('%b-%d-%y')
         recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     else:
