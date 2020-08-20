@@ -30,6 +30,7 @@ class DriverLogsView(FlaskView):
         date = json_data['date']
         name_sort = json_data['sort']
         selected_logs = self.ssc.grab_selected_logs(date, name_sort)
+
         shuttle_logs = selected_logs[0]
         break_logs = selected_logs[1]
         completed_requests = selected_logs[2]

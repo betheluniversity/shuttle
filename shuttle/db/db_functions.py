@@ -374,8 +374,10 @@ def get_requests():
     for result in results:
         real_name = username_search(results[result]['username'])
         results[result]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
-        results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M %p %b-%d-%Y') \
-            .lstrip("0").replace(" 0", " ")
+
+        format_am_pm = '.'.join(results[result]['log_date'].strftime('%p').lower()) + '.'
+        results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M ' + format_am_pm + ' | %m/%d/%y') \
+            .lstrip("0").replace(" 0", " ").replace("/0", "/")
     return results
 
 
@@ -423,11 +425,13 @@ def get_last_location():
           "(SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOCATION IS NOT NULL ORDER BY ID DESC) Where ROWNUM = 1"
     results = query(sql, 'read')
     if results[0]['arrival_time']:
-        last_time = results[0]['arrival_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+        format_am_pm = '.'.join(results[0]['arrival_time'].strftime('%p').lower()) + '.'
+        last_time = results[0]['arrival_time'].strftime('%I:%M ' + format_am_pm).lstrip("0").replace(" 0", " ")
         last_date = results[0]['arrival_time'].strftime('%b-%d-%y')
         recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     elif results[0]['departure_time']:
-        last_time = results[0]['departure_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+        format_am_pm = '.'.join(results[0]['departure_time'].strftime('%p').lower()) + '.'
+        last_time = results[0]['departure_time'].strftime('%I:%M ' + format_am_pm).lstrip("0").replace(" 0", " ")
         last_date = results[0]['departure_time'].strftime('%b-%d-%y')
         recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     else:
