@@ -20,28 +20,6 @@
         <div class="center-page shuttle-margins">
             <h3>Number Of Users Waiting For On Call Shuttle: <span class="badge badge-pill badge-warning waitlist">{{ active_requests['waitlist-num'] }}</span></h3>
         </div>
-        <div class="center-page">
-            {% if phone_number %}
-                <div class="align-side-by-side">
-                    <h4>Phone number On Record: <b>{{ phone_number }}</b></h4>
-                </div>
-                <div class="align-side-by-side">
-                    <input class="btn btn-danger btn-sm delete-number" type="button" value="Delete">
-                </div>
-            {% else %}
-                <form>
-                    <div class="align-side-by-side">
-                        <h4>Phone number:</h4>
-                    </div>
-                    <div class="align-side-by-side">
-                        <input class="phone-number" type="tel" id="phone" name="phone" placeholder="ex. 123-123-1234">
-                    </div>
-                    <div class="align-side-by-side">
-                        <h6>(Optional)</h6>
-                    </div>
-                </form>
-            {% endif %}
-        </div>
         <div class="center-page shuttle-margins">
             <h4>Select pick up and drop off location below to request a shuttle</h4>
             <div class="center-page">
@@ -85,6 +63,25 @@
                         <input class="drop-off-input" placeholder="Please Enter Location">
                     </div>
                 </div>
+            </div>
+            <div class="center-page">
+                {% if phone_number %}
+                    <div class="align-side-by-side">
+                        <h4>Phone number: <b>{{ phone_number }}</b></h4>
+                    </div>
+                    <div class="align-side-by-side">
+                        <input class="btn btn-danger btn-sm delete-number" type="button" value="Delete">
+                    </div>
+                {% else %}
+                    <form>
+                        <div class="align-side-by-side">
+                            <h4>Phone number:</h4>
+                        </div>
+                        <div class="align-side-by-side">
+                            <input class="phone-number" type="tel" id="phone" name="phone" placeholder="ex. 123-123-1234">
+                        </div>
+                    </form>
+                {% endif %}
             </div>
             <div class="center-page">
                 <div class="align-side-by-side">
