@@ -30,8 +30,13 @@
                     <div class="dropdown">
                         <button class="btn btn-primary btn-lg dropdown-toggle pick-up-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
                         <div class="dropdown-menu scrollable-menu dropdown-pick-up" aria-labelledby="dropdownMenuButton">
-                            {% for location in locations %}
-                                <a class="dropdown-item" href="#">{{ location }}</a>
+                            {% for i in range(locations|length) %}
+                                {% if i%2 == 0 %}
+                                    <a class="dropdown-item even-element" href="#">
+                                {% else %}
+                                    <a class="dropdown-item" href="#">
+                                {% endif %}
+                                {{ locations[i] }}</a>
                             {% endfor %}
                         </div>
                     </div>
@@ -45,8 +50,13 @@
                     <div class="dropdown">
                         <button class="btn btn-primary btn-lg dropdown-toggle drop-off-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
                         <div class="dropdown-menu scrollable-menu dropdown-drop-off" aria-labelledby="dropdownMenuButton">
-                            {% for location in locations %}
-                                <a class="dropdown-item" href="#">{{ location }}</a>
+                            {% for i in range(locations|length) %}
+                                {% if i%2 == 0 %}
+                                    <a class="dropdown-item even-element" href="#">
+                                {% else %}
+                                    <a class="dropdown-item" href="#">
+                                {% endif %}
+                                {{ locations[i] }}</a>
                             {% endfor %}
                         </div>
                     </div>

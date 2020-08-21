@@ -7,7 +7,12 @@
             <button class="btn btn-primary btn-lg dropdown-toggle date-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{date}}</button>
             <div class="dropdown-menu scrollable-menu date-dropdown" aria-labelledby="dropdownMenuButton">
                 {% for i in range(date_list|length) %}
-                    <a class="dropdown-item" href="#">{{ date_list[i] }}</a>
+                    {% if i%2 == 0 %}
+                        <a class="dropdown-item even-element" href="#">
+                    {% else %}
+                        <a class="dropdown-item" href="#">
+                    {% endif %}
+                    {{ date_list[i] }}</a>
                 {% endfor %}
             </div>
         </div>
@@ -17,7 +22,7 @@
             <button class="btn btn-primary btn-lg dropdown-toggle sort-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By Time</button>
             <img id="img-spinner" class="spinner-img" src="https://cdn1.bethel.edu/images/load.gif" alt="Loading" style=""/>
             <div class="dropdown-menu scrollable-menu sort-dropdown" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Sort By Time</a>
+                <a class="dropdown-item even-element" href="#">Sort By Time</a>
                 <a class="dropdown-item" href="#">Sort By Name</a>
             </div>
         </div>
