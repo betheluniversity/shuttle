@@ -47,7 +47,7 @@ class HomePageController:
                         if schedule_time > latest_time:
                             next_stop = {
                                 'location': schedule[0][j],
-                                'time': schedule_time.strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
+                                'time': schedule_time.strftime('%-I:%M %p')
                             }
                             return next_stop
             return next_stop
