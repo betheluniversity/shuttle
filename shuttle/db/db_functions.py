@@ -352,7 +352,7 @@ def get_on_call_logs_by_username(date):
 
 
 def get_scheduled_shuttle_logs_by_date(date):
-    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
+    date = datetime.datetime.strptime(date.strip(), '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' ORDER BY " \
           "CASE WHEN ARRIVAL_TIME < DEPARTURE_TIME THEN ARRIVAL_TIME " \
           "ELSE coalesce(DEPARTURE_TIME, ARRIVAL_TIME) END".format(date)
@@ -361,7 +361,7 @@ def get_scheduled_shuttle_logs_by_date(date):
 
 
 def get_on_call_shuttle_logs_by_date(date):
-    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
+    date = datetime.datetime.strptime(date.strip(), '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE TRUNC(LOG_DATE) = '{0}' " \
           "AND COMPLETED_AT IS NOT NULL ORDER BY COMPLETED_AT".format(date)
     results = query(sql, 'read')
@@ -374,9 +374,8 @@ def get_requests():
     for result in results:
         real_name = username_search(results[result]['username'])
         results[result]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
-
-        log_time = results[result]['log_date']
-        results[result]['log_date'] = log_time.strftime('%-I:%M %p | %-m/%-d/%y').lower()
+        results[result]['log_date'] = results[result]['log_date'].strftime('%I:%M %p %b-%d-%Y') \
+            .lstrip("0").replace(" 0", " ")
     return results
 
 
@@ -424,11 +423,11 @@ def get_last_location():
           "(SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOCATION IS NOT NULL ORDER BY ID DESC) Where ROWNUM = 1"
     results = query(sql, 'read')
     if results[0]['arrival_time']:
-        last_time = results[0]['arrival_time'].strftime('%-I:%M %p').lower()
+        last_time = results[0]['arrival_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
         last_date = results[0]['arrival_time'].strftime('%b-%d-%y')
         recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     elif results[0]['departure_time']:
-        last_time = results[0]['departure_time'].strftime('%-I:%M %p').lower()
+        last_time = results[0]['departure_time'].strftime('%I:%M %p').lstrip("0").replace(" 0", " ")
         last_date = results[0]['departure_time'].strftime('%b-%d-%y')
         recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
     else:

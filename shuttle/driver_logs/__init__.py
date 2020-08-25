@@ -2,7 +2,9 @@ from datetime import datetime
 
 # Packages
 from flask import render_template
-from flask_classy import FlaskView, route, request
+from flask_classy import FlaskView, route, request, Response
+from io import StringIO
+import csv
 
 # Local
 from shuttle.schedules.shuttle_schedules_controller import ScheduleController
@@ -36,3 +38,22 @@ class DriverLogsView(FlaskView):
         completed_requests = selected_logs[2]
         deleted_requests = selected_logs[3]
         return render_template('driver_logs/load_logs.html', **locals())
+
+    @route('/download-logs/<date>/<sort>', methods=['GET', 'POST'])
+    def download_logs(self, date, sort):
+        selected_logs = self.ssc.grab_selected_logs(date, sort)
+
+        def generate():
+            data = StringIO()
+            for i in range(len(selected_logs)):
+                for j in range(len(selected_logs[i])):
+                    w = csv.DictWriter(data, fieldnames=selected_logs[i][j].keys())
+                    w.writerow(selected_logs[i][j])
+                    yield data.getvalue()
+                    data.seek(0)
+                    data.truncate(0)
+
+        file_headers = {"Content-disposition": "attachment; filename=" 'export.csv'}
+        return Response(generate(),
+                        mimetype='text/csv',
+                        headers=file_headers)
