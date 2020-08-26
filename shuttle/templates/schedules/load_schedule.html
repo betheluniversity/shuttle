@@ -1,29 +1,38 @@
 {% block body_content %}
 
-    <div class="small-card">
-        <div class="card-body log-body scrolling-wrapper">
-            <table class="table table-hover">
-                <tbody>
-                {% for i in range(schedule|length) %}
-                    <tr>
-                        {% for j in range(schedule[i]|length) %}
-                            {% if j % 2 == 0 %}
-                                <td class="even-element">
-                                    {% else %}
-                                <td>
+    {% if schedule != [[]] %}
+        <div class="small-card">
+            <div class="card-body log-body scrolling-wrapper">
+                <table class="table table-hover">
+                    <tbody>
+                    {% for i in range(schedule|length) %}
+                        <tr>
+                            {% for j in range(schedule[i]|length) %}
+                                {% if j % 2 == 0 %}
+                                    <td class="even-element">
+                                        {% else %}
+                                    <td>
+                                {% endif %}
+                            {% if i == 0 %}
+                                <h7 class="schedule-time"><b>{{ schedule[i][j] }}</b></h7>
+                            {% else %}
+                                <h7 class="schedule-time">{{ schedule[i][j] }}</h7>
                             {% endif %}
-                        {% if i == 0 %}
-                            <h7 class="schedule-time"><b>{{ schedule[i][j] }}</b></h7>
-                        {% else %}
-                            <h7 class="schedule-time">{{ schedule[i][j] }}</h7>
-                        {% endif %}
-                        </td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    {% else %}
+        <div class="small-card">
+            <div class="center-page">
+                <h4>Schedule Currently Unavailable</h4>
+                <p>Please call the ITS Help Desk at 651-638-6500 for support</p>
+            </div>
+        </div>
+    {% endif %}
 
 {% endblock %}

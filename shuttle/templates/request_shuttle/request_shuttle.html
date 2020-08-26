@@ -31,12 +31,11 @@
                         <button class="btn btn-primary btn-lg dropdown-toggle pick-up-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Location</button>
                         <div class="dropdown-menu scrollable-menu dropdown-pick-up" aria-labelledby="dropdownMenuButton">
                             {% for i in range(locations|length) %}
-                                {% if i%2 == 0 %}
-                                    <a class="dropdown-item even-element" href="#">
+                                {% if i % 2 == 0 %}
+                                    <a class="dropdown-item even-element" href="#">{{ locations[i] }}</a>
                                 {% else %}
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="#">{{ locations[i] }}</a>
                                 {% endif %}
-                                {{ locations[i] }}</a>
                             {% endfor %}
                         </div>
                     </div>
@@ -52,11 +51,10 @@
                         <div class="dropdown-menu scrollable-menu dropdown-drop-off" aria-labelledby="dropdownMenuButton">
                             {% for i in range(locations|length) %}
                                 {% if i%2 == 0 %}
-                                    <a class="dropdown-item even-element" href="#">
+                                    <a class="dropdown-item even-element" href="#">{{ locations[i] }}</a>
                                 {% else %}
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="#">{{ locations[i] }}</a>
                                 {% endif %}
-                                {{ locations[i] }}</a>
                             {% endfor %}
                         </div>
                     </div>

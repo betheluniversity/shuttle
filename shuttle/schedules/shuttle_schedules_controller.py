@@ -32,39 +32,38 @@ class ScheduleController(object):
         if name_sort == 'Sort By Name':
             scheduled_shuttle_logs = db.get_scheduled_shuttle_logs_by_username(date)
             on_call_shuttle_logs = db.get_on_call_logs_by_username(date)
+            driver_break_logs = db.get_break_logs_by_username(date)
         else:
             scheduled_shuttle_logs = db.get_scheduled_shuttle_logs_by_date(date)
             on_call_shuttle_logs = db.get_on_call_shuttle_logs_by_date(date)
+            driver_break_logs = db.get_break_logs_by_date(date)
 
         shuttle_logs = {}
-        break_logs = {}
         shuttle_iter = 0
-        break_iter = 0
-
         # Adds in the user's real name to the logs, changes times/dates to be more readable,
         # and separates logs into shuttle logs and break logs
         for i in range(len(scheduled_shuttle_logs)):
             real_name = db.username_search(scheduled_shuttle_logs[i]['username'])
             scheduled_shuttle_logs[i]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
             scheduled_shuttle_logs[i]['log_date'] = scheduled_shuttle_logs[i]['log_date'].strftime('%b-%d-%Y')
-            if scheduled_shuttle_logs[i]['arrival_time']:
-                arrival_time = scheduled_shuttle_logs[i]['arrival_time']
-                scheduled_shuttle_logs[i]['arrival_time'] = arrival_time.strftime('%-I:%M %p | %-m/%-d/%y').lower()
-            elif scheduled_shuttle_logs[i]['departure_time']:
-                depart_time = scheduled_shuttle_logs[i]['departure_time']
-                scheduled_shuttle_logs[i]['departure_time'] = depart_time.strftime('%-I:%M %p | %-m/%-d/%y').lower()
-            if scheduled_shuttle_logs[i]['location']:
-                shuttle_logs[shuttle_iter] = scheduled_shuttle_logs[i]
-                shuttle_iter += 1
-            else:
-                break_logs[break_iter] = scheduled_shuttle_logs[i]
-                break_iter += 1
+            scheduled_shuttle_logs[i]['departure_time'] = scheduled_shuttle_logs[i]['departure_time'].strftime('%-I:%M %p | %-m/%-d/%y').lower()
+            shuttle_logs[shuttle_iter] = scheduled_shuttle_logs[i]
+            shuttle_iter += 1
+
+        break_logs = {}
+        break_iter = 0
+        # Changes times to be in correct format
+        for i in range(len(driver_break_logs)):
+            if driver_break_logs[i]['clock_in']:
+                driver_break_logs[i]['clock_in'] = driver_break_logs[i]['clock_in'].strftime('%I:%M %p | %m/%d/%y')
+            driver_break_logs[i]['clock_out'] = driver_break_logs[i]['clock_out'].strftime('%I:%M %p | %m/%d/%y')
+            break_logs[i] = driver_break_logs[i]
+            break_iter += 1
 
         completed_logs = {}
         deleted_logs = {}
         completed_iter = 0
         deleted_iter = 0
-
         # Adds in the user's real name to the logs, changes times/dates to be more readable,
         # and separates logs into completed logs and deleted logs
         for i in range(len(on_call_shuttle_logs)):
@@ -73,7 +72,6 @@ class ScheduleController(object):
             driver_name = db.username_search(on_call_shuttle_logs[i]['completed_by'])
             on_call_shuttle_logs[i]['driver_name'] = driver_name[0]['firstName'] + ' ' + driver_name[0]['lastName']
             on_call_shuttle_logs[i]['log_date'] = on_call_shuttle_logs[i]['log_date'].strftime('%b-%d-%Y')
-
             completed_time = on_call_shuttle_logs[i]['completed_at']
             on_call_shuttle_logs[i]['completed_at'] = completed_time.strftime('%-I:%M %p | %-m/%-d/%y').lower()
             if on_call_shuttle_logs[i]['deleted'] == 'Y':

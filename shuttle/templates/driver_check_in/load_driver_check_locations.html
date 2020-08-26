@@ -12,35 +12,19 @@
     <div class="card">
         <div class="center-page">
             <div class="align-side-by-side">
-                <h4>Arriving at:</h4>
-            </div>
-            <div class="align-side-by-side">
-                <div class="align-side-by-side">
-                    <div class="dropdown">
-                        <button class="btn btn-primary btn-lg dropdown-toggle arriving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ next_location }}</button>
-                        <div class="dropdown-menu arriving-drop" aria-labelledby="dropdownMenuButton">
-                            {% for key in locations %}
-                                <a class="dropdown-item" href="#">{{ locations[key]['location'] }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div class="align-side-by-side">
-                    <input class="btn btn-warning btn-lg submit-arriving" type="submit" value="Submit">
-                </div>
-            </div>
-        </div>
-        <div class="center-page">
-            <div class="align-side-by-side">
                 <h4>Leaving from:</h4>
             </div>
             <div class="align-side-by-side">
                 <div class="align-side-by-side">
                     <div class="dropdown">
-                        <button class="btn btn-primary btn-lg dropdown-toggle leaving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ last_location }}</button>
+                        <button class="btn btn-primary btn-lg dropdown-toggle leaving-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ next_location }}</button>
                         <div class="dropdown-menu leaving-drop" aria-labelledby="dropdownMenuButton">
-                            {% for key in locations %}
-                                <a class="dropdown-item" href="#">{{ locations[key]['location'] }}</a>
+                            {% for i in range(locations|length) %}
+                                {% if i % 2 == 0 %}
+                                    <a class="dropdown-item even-element" href="#">{{ locations[i]['location'] }}</a>
+                                {% else %}
+                                    <a class="dropdown-item" href="#">{{ locations[i]['location'] }}</a>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>
@@ -69,61 +53,44 @@
                 $(".leaving-menu:first-child").text($(this).text());
                 $(".leaving-menu:first-child").val($(this).text());
             });
-            $(".arriving-drop a").click(function () {
-                // Dropdown shows arriving location selected
-                $(".arriving-menu:first-child").text($(this).text());
-                $(".arriving-menu:first-child").val($(this).text());
-            });
             $('.submit-leaving').click(function () {
                 // Sends selected location and user info to database.
-                var data = {"location": $('.leaving-menu').text(), "direction": "departure"}
+                var data = {"location": $('.leaving-menu').text()}
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
                     url: "{{ url_for('DriverCheckInView:send_driver_check_in_info') }}",
-                    data: JSON.stringify((data)),
-                }).done(function (data) {
+                    data: JSON.stringify(data),
+                }).done(function () {
                     location.reload();
                 })
             });
-            $('.submit-arriving').click(function () {
-                // Sends selected location and user info to database.
-                var data = {"location": $('.arriving-menu').text(), "direction": "arrival"}
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/json',
-                    url: "{{ url_for('DriverCheckInView:send_driver_check_in_info') }}",
-                    data: JSON.stringify((data)),
-                }).done(function (data) {
-                    location.reload();
-                })
-            });
-        });
 
-        $('.check-out-btn').click(function () {
-            // Sends break info to database
-            var data = {"break": "request-to-clock-out"}
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json',
-                url: "{{ url_for('DriverCheckInView:send_driver_break_info') }}",
-                data: JSON.stringify((data)),
-            }).done(function (data) {
-                location.reload()
+            $('.check-out-btn').click(function () {
+                // Sends break info to database
+                var data = {"break": "request-to-clock-out"}
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: "{{ url_for('DriverCheckInView:send_driver_break_info') }}",
+                    data: JSON.stringify(data),
+                }).done(function () {
+                    location.reload()
+                })
+            });
+            $('.check-in-btn').click(function () {
+                // sends check-in from break info to database
+                var data = {"break": "request-to-clock-in"}
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: "{{ url_for('DriverCheckInView:send_driver_break_info') }}",
+                    data: JSON.stringify(data),
+                }).done(function () {
+                    location.reload()
+                })
             })
         });
-        $('.check-in-btn').click(function () {
-            // sends check-in from break info to database
-            var data = {"break": "request-to-clock-in"}
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json',
-                url: "{{ url_for('DriverCheckInView:send_driver_break_info') }}",
-                data: JSON.stringify((data)),
-            }).done(function (data) {
-                location.reload()
-            })
-        })
     </script>
 
 {% endblock %}
