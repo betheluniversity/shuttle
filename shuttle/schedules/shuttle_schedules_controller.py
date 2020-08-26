@@ -84,24 +84,27 @@ class ScheduleController(object):
         return shuttle_logs, break_logs, completed_logs, deleted_logs
 
     def grab_db_schedule(self):
-        schedule = db.get_db_schedule()
-        locations = db.get_campus_locations()
-        schedule_list = []
-        row = []
-        iterator = 0
-        for location in locations:
-            row.append(locations[location]['location'])
-        schedule_list.append(row)
-        row_length = len(row)
-        row = []
-        for i in range(len(schedule)):
-            iterator += 1
-            if schedule[i]['departure_time'] is None:
-                row.append('-')
-            else:
-                row.append(schedule[i]['departure_time'].strftime('%-I:%M %p').lower())
-            if iterator == row_length:
-                schedule_list.append(row)
-                iterator = 0
-                row = []
-        return schedule_list
+        try:
+            schedule = db.get_db_schedule()
+            locations = db.get_campus_locations()
+            schedule_list = []
+            row = []
+            iterator = 0
+            for location in locations:
+                row.append(locations[location]['location'])
+            schedule_list.append(row)
+            row_length = len(row)
+            row = []
+            for i in range(len(schedule)):
+                iterator += 1
+                if schedule[i]['departure_time'] is None:
+                    row.append('-')
+                else:
+                    row.append(schedule[i]['departure_time'].strftime('%-I:%M %p'))
+                if iterator == row_length:
+                    schedule_list.append(row)
+                    iterator = 0
+                    row = []
+            return schedule_list
+        except:
+            return ''
