@@ -205,6 +205,8 @@
     <div class="center-page" style="padding-top: 1em">
         {% if not shuttle_logs and not break_logs and not completed_requests and not deleted_requests %}
             <h4>There are no Driver logs available for today's date</h4>
+        {% else %}
+            <a class="btn btn-warning btn-sm" href="{{ url_for('DriverLogsView:export_logs', date=date, name_sort=name_sort) }}">Export Logs</a>
         {% endif %}
     </div>
 
