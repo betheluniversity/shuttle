@@ -322,18 +322,22 @@ def get_on_call_shuttle_logs():
     return results
 
 
-def get_break_logs(date):
-    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
+def get_break_logs():
     sql = "SELECT * FROM SHUTTLE_BREAK_LOGS"
     results = query(sql, 'read')
+    return results
+
+
+def get_specific_break_logs(date):
+    logs = get_break_logs()
     logs_for_date = {}
     logs_for_date_iter = 0
     # Break logs don't have a log date so we need to split the clock_out time to date
     # Then we sort it in another method
-    for i in range(len(results)):
-        date_of_log = results[i]['clock_out'].strftime('%d-%b-%Y')
+    for i in range(len(logs)):
+        date_of_log = logs[i]['clock_out'].strftime('%d-%b-%Y')
         if date_of_log == date:
-            logs_for_date[logs_for_date_iter] = results[i]
+            logs_for_date[logs_for_date_iter] = logs[i]
             real_name = username_search(logs_for_date[logs_for_date_iter]['username'])
             logs_for_date[logs_for_date_iter]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
             logs_for_date_iter += 1
@@ -341,7 +345,7 @@ def get_break_logs(date):
 
 
 def get_break_logs_by_username(date):
-    logs = get_break_logs(date)
+    logs = get_specific_break_logs(date)
     sort = sorted(logs, key=lambda i: ((logs[i]['name']), logs[i]['clock_out']))
     sorted_logs = {}
     for i in range(len(sort)):
@@ -350,7 +354,7 @@ def get_break_logs_by_username(date):
 
 
 def get_break_logs_by_date(date):
-    logs = get_break_logs(date)
+    logs = get_specific_break_logs(date)
     sort = sorted(logs, key=lambda i: (logs[i]['clock_out']))
     sorted_logs = {}
     for i in range(len(sort)):
@@ -359,7 +363,6 @@ def get_break_logs_by_date(date):
 
 
 def get_scheduled_shuttle_logs_by_username(date):
-    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' " \
           "ORDER BY USERNAME, DEPARTURE_TIME ASC".format(date)
     results = query(sql, 'read')
@@ -367,7 +370,6 @@ def get_scheduled_shuttle_logs_by_username(date):
 
 
 def get_scheduled_shuttle_logs_by_date(date):
-    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' " \
           "ORDER BY DEPARTURE_TIME ASC".format(date)
     results = query(sql, 'read')
@@ -375,15 +377,13 @@ def get_scheduled_shuttle_logs_by_date(date):
 
 
 def get_on_call_logs_by_username(date):
-    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE TRUNC(LOG_DATE) = '{0}' " \
-          "AND COMPLETED_AT IS NOT NULL ORDER BY USERNAME".format(date)
+          "AND COMPLETED_AT IS NOT NULL ORDER BY COMPLETED_BY, COMPLETED_AT".format(date)
     results = query(sql, 'read')
     return results
 
 
 def get_on_call_shuttle_logs_by_date(date):
-    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE TRUNC(LOG_DATE) = '{0}' " \
           "AND COMPLETED_AT IS NOT NULL ORDER BY COMPLETED_AT".format(date)
     results = query(sql, 'read')
@@ -447,7 +447,7 @@ def get_last_location():
         results = query(sql, 'read')
         if results[0]['departure_time']:
             last_time = results[0]['departure_time'].strftime('%-I:%M %p').lower()
-            last_date = results[0]['departure_time'].strftime('%b-%d-%y')
+            last_date = results[0]['departure_time'].strftime('%d-%b-%y')
             recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
         else:
             return {'location': 'Error', 'time': 'Error', 'date': 'Error'}

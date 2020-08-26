@@ -5,7 +5,7 @@ from flask import render_template
 from flask_classy import FlaskView, route, request
 
 # Local
-from shuttle.schedules.shuttle_schedules_controller import ScheduleController
+from shuttle.driver_logs.driver_logs_controller import DriverLogsController
 from shuttle.shuttle_controller import ShuttleController
 
 
@@ -14,14 +14,14 @@ class DriverLogsView(FlaskView):
 
     def __init__(self):
         self.sc = ShuttleController()
-        self.ssc = ScheduleController()
+        self.dlc = DriverLogsController()
 
     @route('/driver-logs')
     def shuttle_logs(self):
         self.sc.check_roles_and_route(['Administrator'])
-        date_list = self.ssc.grab_dates()
+        date_list = self.dlc.grab_dates()
         now = datetime.now()
-        date = now.strftime('%b-%d-%Y')
+        date = now.strftime('%d-%b-%Y')
         return render_template('driver_logs/driver_logs.html', **locals())
 
     @route('/shuttle-logs', methods=['GET', 'POST'])
@@ -29,7 +29,7 @@ class DriverLogsView(FlaskView):
         json_data = request.get_json()
         date = json_data['date']
         name_sort = json_data['sort']
-        selected_logs = self.ssc.grab_selected_logs(date, name_sort)
+        selected_logs = self.dlc.grab_selected_logs(date, name_sort)
 
         shuttle_logs = selected_logs[0]
         break_logs = selected_logs[1]
