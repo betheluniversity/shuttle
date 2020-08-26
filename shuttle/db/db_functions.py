@@ -383,7 +383,7 @@ def get_on_call_logs_by_username(date):
 
 
 def get_on_call_shuttle_logs_by_date(date):
-    date = datetime.datetime.strptime(date.strip(), '%b-%d-%Y').strftime('%d-%b-%Y')
+    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE TRUNC(LOG_DATE) = '{0}' " \
           "AND COMPLETED_AT IS NOT NULL ORDER BY COMPLETED_AT".format(date)
     results = query(sql, 'read')
