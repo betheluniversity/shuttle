@@ -267,26 +267,17 @@ def user_deleted_request():
         return 'Error'
 
 
-def commit_driver_check_in(location, direction):
+def commit_driver_check_in(location):
     try:
         now = datetime.datetime.now()
         date = now.strftime('%d-%b-%Y')
         full_date = now.strftime('%d-%b-%Y %I:%M %p')
         username = flask_session['USERNAME']
         if location != '':
-            if direction == 'departure':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES ('{0}', " \
-                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
-                query(sql, 'write')
-                return 'success departure'
-            elif direction == 'arrival':
-                sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, ARRIVAL_TIME) VALUES ('{0}', " \
-                      "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location,
-                                                                                     full_date)
-                query(sql, 'write')
-                return 'success arrival'
-            else:
-                return 'Error'
+            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, LOCATION, DEPARTURE_TIME) VALUES ('{0}', " \
+                  "'{1}', '{2}', TO_DATE('{3}', 'dd-mon-yyyy hh:mi PM'))".format(date, username, location, full_date)
+            query(sql, 'write')
+            return 'Success'
         return 'bad location'
     except:
         return 'Error'
@@ -302,18 +293,15 @@ def commit_break(driver_break):
         if driver_break == 'request-to-clock-in':
             if status == 'Not on break':
                 return 'error: not on break'
-            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, ARRIVAL_TIME, ON_BREAK) VALUES ('{0}'," \
-                  "'{1}', TO_DATE('{2}', 'dd-mon-yyyy hh:mi PM'), 'N')".format(date, username, full_date)
-            query(sql, 'write')
-            sql = "UPDATE SHUTTLE_DRIVER_LOGS SET ON_BREAK = 'N' WHERE ON_BREAK = 'Y' AND " \
-                  "USERNAME = '{0}'".format(username)
+            sql = "UPDATE SHUTTLE_BREAK_LOGS SET CLOCK_IN = TO_DATE('{0}','dd-mon-yyyy hh:mi PM') " \
+                  "WHERE USERNAME = '{1}' AND CLOCK_IN IS NULL".format(full_date, username)
             query(sql, 'write')
             return 'off break success'
         elif driver_break == 'request-to-clock-out':
             if status == 'On break':
                 return 'error: already on break'
-            sql = "INSERT INTO SHUTTLE_DRIVER_LOGS (LOG_DATE, USERNAME, DEPARTURE_TIME, ON_BREAK) VALUES ('{0}', " \
-                  "'{1}', TO_DATE('{2}', 'dd-mon-yyyy hh:mi PM'), 'Y')".format(date, username, full_date)
+            sql = "INSERT INTO SHUTTLE_BREAK_LOGS (USERNAME, CLOCK_OUT) " \
+                  "VALUES ('{0}', TO_DATE('{1}','dd-mon-yyyy hh:mi PM'))".format(username, full_date)
             query(sql, 'write')
             return 'on break success'
         else:
@@ -334,11 +322,54 @@ def get_on_call_shuttle_logs():
     return results
 
 
+def get_break_logs(date):
+    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
+    sql = "SELECT * FROM SHUTTLE_BREAK_LOGS"
+    results = query(sql, 'read')
+    logs_for_date = {}
+    logs_for_date_iter = 0
+    # Break logs don't have a log date so we need to split the clock_out time to date
+    # Then we sort it in another method
+    for i in range(len(results)):
+        date_of_log = results[i]['clock_out'].strftime('%d-%b-%Y')
+        if date_of_log == date:
+            logs_for_date[logs_for_date_iter] = results[i]
+            real_name = username_search(logs_for_date[logs_for_date_iter]['username'])
+            logs_for_date[logs_for_date_iter]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
+            logs_for_date_iter += 1
+    return logs_for_date
+
+
+def get_break_logs_by_username(date):
+    logs = get_break_logs(date)
+    sort = sorted(logs, key=lambda i: ((logs[i]['name']), logs[i]['clock_out']))
+    sorted_logs = {}
+    for i in range(len(sort)):
+        sorted_logs[i] = logs[sort[i]]
+    return sorted_logs
+
+
+def get_break_logs_by_date(date):
+    logs = get_break_logs(date)
+    sort = sorted(logs, key=lambda i: (logs[i]['clock_out']))
+    sorted_logs = {}
+    for i in range(len(sort)):
+        sorted_logs[i] = logs[sort[i]]
+    return sorted_logs
+
+
 def get_scheduled_shuttle_logs_by_username(date):
     date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
-    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' ORDER BY USERNAME," \
-          "CASE WHEN ARRIVAL_TIME < DEPARTURE_TIME THEN ARRIVAL_TIME " \
-          "ELSE coalesce(DEPARTURE_TIME, ARRIVAL_TIME) END".format(date)
+    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' " \
+          "ORDER BY USERNAME, DEPARTURE_TIME ASC".format(date)
+    results = query(sql, 'read')
+    return results
+
+
+def get_scheduled_shuttle_logs_by_date(date):
+    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
+    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' " \
+          "ORDER BY DEPARTURE_TIME ASC".format(date)
     results = query(sql, 'read')
     return results
 
@@ -347,15 +378,6 @@ def get_on_call_logs_by_username(date):
     date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
     sql = "SELECT * FROM SHUTTLE_REQUEST_LOGS WHERE TRUNC(LOG_DATE) = '{0}' " \
           "AND COMPLETED_AT IS NOT NULL ORDER BY USERNAME".format(date)
-    results = query(sql, 'read')
-    return results
-
-
-def get_scheduled_shuttle_logs_by_date(date):
-    date = datetime.datetime.strptime(date, '%b-%d-%Y').strftime('%d-%b-%Y')
-    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOG_DATE = '{0}' ORDER BY " \
-          "CASE WHEN ARRIVAL_TIME < DEPARTURE_TIME THEN ARRIVAL_TIME " \
-          "ELSE coalesce(DEPARTURE_TIME, ARRIVAL_TIME) END".format(date)
     results = query(sql, 'read')
     return results
 
@@ -374,7 +396,6 @@ def get_requests():
     for result in results:
         real_name = username_search(results[result]['username'])
         results[result]['name'] = real_name[0]['firstName'] + ' ' + real_name[0]['lastName']
-
         log_time = results[result]['log_date']
         results[result]['log_date'] = log_time.strftime('%-I:%M %p | %-m/%-d/%y').lower()
     return results
@@ -409,7 +430,7 @@ def driver_deleted_request(username):
 
 def break_status():
     username = flask_session['USERNAME']
-    sql = "SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE ON_BREAK = 'Y' AND USERNAME = '{0}'".format(username)
+    sql = "SELECT * FROM SHUTTLE_BREAK_LOGS WHERE CLOCK_IN IS NULL AND USERNAME = '{0}'".format(username)
     results = query(sql, 'read')
     if results:
         return 'On break'
@@ -420,20 +441,19 @@ def break_status():
 # Method that grabs the last data that was inserted into the database
 # This assumes the latest data has the largest id and that there is only one driver submitting records
 def get_last_location():
-    sql = "SELECT * FROM " \
-          "(SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOCATION IS NOT NULL ORDER BY ID DESC) Where ROWNUM = 1"
-    results = query(sql, 'read')
-    if results[0]['arrival_time']:
-        last_time = results[0]['arrival_time'].strftime('%-I:%M %p').lower()
-        last_date = results[0]['arrival_time'].strftime('%b-%d-%y')
-        recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
-    elif results[0]['departure_time']:
-        last_time = results[0]['departure_time'].strftime('%-I:%M %p').lower()
-        last_date = results[0]['departure_time'].strftime('%b-%d-%y')
-        recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
-    else:
-        return "Error"
-    return recent_data
+    try:
+        sql = "SELECT * FROM " \
+              "(SELECT * FROM SHUTTLE_DRIVER_LOGS WHERE LOCATION IS NOT NULL ORDER BY ID DESC) Where ROWNUM = 1"
+        results = query(sql, 'read')
+        if results[0]['departure_time']:
+            last_time = results[0]['departure_time'].strftime('%-I:%M %p').lower()
+            last_date = results[0]['departure_time'].strftime('%b-%d-%y')
+            recent_data = {'location': results[0]['location'], 'time': last_time, 'date': last_date}
+        else:
+            return {'location': 'Error', 'time': 'Error', 'date': 'Error'}
+        return recent_data
+    except:
+        return {'location': 'Error', 'time': 'Error', 'date': 'Error'}
 
 
 def get_db_schedule():

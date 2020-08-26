@@ -15,7 +15,6 @@
                             <tr>
                                 <th scope="col">Driver</th>
                                 <th scope="col">Location</th>
-                                <th scope="col">Arrival</th>
                                 <th scope="col">Departure</th>
                             </tr>
                             </thead>
@@ -30,11 +29,6 @@
                                     <td class="location">
                                         {% if shuttle_logs[i]['location'] != None %}
                                             {{ shuttle_logs[i]['location'] }}
-                                        {% endif %}
-                                    </td>
-                                    <td class="check-in">
-                                        {% if shuttle_logs[i]['arrival_time'] != None %}
-                                            {{ shuttle_logs[i]['arrival_time'] }}
                                         {% endif %}
                                     </td>
                                     <td class="check-out">
@@ -77,13 +71,13 @@
                                         {% endif %}
                                     </td>
                                     <td class="check-out">
-                                        {% if break_logs[i]['departure_time'] != None %}
-                                            {{ break_logs[i]['departure_time'] }}
+                                        {% if break_logs[i]['clock_out'] != None %}
+                                            {{ break_logs[i]['clock_out'] }}
                                         {% endif %}
                                     </td>
                                     <td class="check-in">
-                                        {% if break_logs[i]['arrival_time'] != None %}
-                                            {{ break_logs[i]['arrival_time'] }}
+                                        {% if break_logs[i]['clock_in'] != None %}
+                                            {{ break_logs[i]['clock_in'] }}
                                         {% endif %}
                                     </td>
                                     </tr>

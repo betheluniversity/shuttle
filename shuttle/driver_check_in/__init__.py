@@ -35,7 +35,6 @@ class DriverCheckInView(FlaskView):
         if json_data['view'] == 'Location Check In':
             load = 'locations'
             locations = db.get_db_locations()
-            last_location = db.get_last_location()['location']
             next_check_in = self.hc.grab_current_route()
             next_location = next_check_in['location']
             next_time = next_check_in['time']
@@ -82,16 +81,11 @@ class DriverCheckInView(FlaskView):
     def send_driver_check_in_info(self):
         self.sc.check_roles_and_route(['Administrator', 'Driver'])
         json_data = request.get_json()
-        response = db.commit_driver_check_in(json_data['location'], json_data['direction'])
-        if response == 'success arrival':
-            self.sc.set_alert('success', 'Your arrival at ' + json_data['location'] + ' has been recorded')
-        elif response == 'success departure':
+        response = db.commit_driver_check_in(json_data['location'])
+        if response == 'Success':
             self.sc.set_alert('success', 'Your departure from ' + json_data['location'] + ' has been recorded')
         elif response == 'bad location':
             self.sc.set_alert('danger', 'Please select a location')
-        else:
-            self.sc.set_alert('danger', 'Something went wrong. Please try again or '
-                                        'call the ITS Help Desk at 651-638-6500')
         return response
 
     @route('/send-break-info', methods=['Get', 'POST'])
