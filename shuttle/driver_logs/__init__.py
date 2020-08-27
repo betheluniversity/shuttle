@@ -61,9 +61,6 @@ class DriverLogsView(FlaskView):
                     # grabs a log, adds its data if its not empty
                     log_dict = selected_logs[i][j]
                     if log_dict:
-                        if 'arrival_time' in log_dict:
-                            del log_dict['arrival_time']
-
                         dict_writer = csv.DictWriter(data, fieldnames=log_dict.keys())
                         if j == 0:
                             writer.writerow([log_type[i]])
