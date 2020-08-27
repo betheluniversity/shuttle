@@ -15,7 +15,7 @@ class HomePageController:
         data = db.get_last_location()
         if data['date'] == 'Error':
             return data
-        current_date = datetime.now().strftime('%b-%d-%y')
+        current_date = datetime.now().strftime('%d-%b-%y')
         if data['date'] != current_date:
             data['location'] = 'No check ins for today'
             data['time'] = 'N/A'
