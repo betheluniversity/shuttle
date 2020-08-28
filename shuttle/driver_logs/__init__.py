@@ -63,7 +63,9 @@ class DriverLogsView(FlaskView):
                     if log_dict:
                         dict_writer = csv.DictWriter(data, fieldnames=log_dict.keys())
                         if j == 0:
-                            writer.writerow([log_type[i]])
+                            header_space = ['----------------------------------'] * 10
+                            writer.writerow(header_space)
+                            writer.writerow(log_type[i])
                             dict_writer.writeheader()
                         dict_writer.writerow(log_dict)
                         yield data.getvalue()
