@@ -64,8 +64,8 @@ class SchedulesView(FlaskView):
             return render_template('loaded_views/load_dci_requests.html', **locals())
 
     def select_user_roles(self, username, first_name, last_name):
-        # roles = self.uc.get_all_roles()
-        # existing_user = self.uc.get_user_by_username(username)
+        roles = self.uc.get_all_roles()
+        existing_user = self.uc.get_user_by_username(username)
         if existing_user:  # User exists in system
             if existing_user.deletedAt:  # Has been deactivated in the past
                 success = self.uc.activate_existing_user(existing_user.id)
@@ -152,8 +152,10 @@ class SchedulesView(FlaskView):
         self.sc.check_roles_and_route(['Administrator'])
         username = json.loads(request.data).get('username')
         role = json.loads(request.data).get('role')
+        print("here\n")
         if username != session['USERNAME']:
             result = db.change_user_role(username, role)
+            print(result)
             return result
         else:
             self.sc.set_alert('danger', 'You cannot edit your own account.')
